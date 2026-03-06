@@ -1,0 +1,3282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reading Endorsement Web Activities — MAH</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Bangers&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+
+  :root {
+    --navy:#0f2240;--teal:#0d9488;--teal-lt:#ccfbf1;--gold:#f59e0b;--gold-lt:#fef3c7;
+    --cream:#faf8f4;--white:#ffffff;--mist:#f1f5f9;--slate:#475569;--border:#e2e8f0;
+    --shadow:0 8px 32px rgba(15,34,64,0.10);--shadow-hover:0 16px 48px rgba(15,34,64,0.18);
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--navy);min-height:100vh;overflow-x:hidden;}
+  .hero{background:var(--navy);position:relative;overflow:hidden;padding:72px 24px 80px;text-align:center;}
+  .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 20% 50%,rgba(13,148,136,0.22) 0%,transparent 70%),radial-gradient(ellipse 60% 80% at 80% 30%,rgba(245,158,11,0.12) 0%,transparent 70%);}
+  .hero::after{content:'';position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,0.07) 1px,transparent 1px);background-size:28px 28px;pointer-events:none;}
+  .hero-inner{position:relative;z-index:1;max-width:780px;margin:0 auto;}
+  .hero-badge{display:inline-block;background:rgba(13,148,136,0.18);border:1.5px solid rgba(13,148,136,0.45);color:#5eead4;font-size:0.78rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:6px 16px;border-radius:99px;margin-bottom:22px;}
+  .hero h1{font-family:'Playfair Display',serif;font-size:clamp(2rem,5vw,3.4rem);font-weight:900;color:var(--white);line-height:1.15;margin-bottom:10px;}
+  .hero h1 span{color:var(--gold);}
+  .hero-sub{color:#94a3b8;font-size:1.05rem;font-weight:500;margin-bottom:36px;}
+  .hero-stats{display:flex;gap:32px;justify-content:center;flex-wrap:wrap;}
+  .stat{text-align:center;}
+  .stat-num{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;color:var(--teal);line-height:1;}
+  .stat-label{color:#64748b;font-size:0.78rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;margin-top:4px;}
+  .filter-bar{background:var(--white);border-bottom:1px solid var(--border);padding:16px 24px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;position:sticky;top:0;z-index:50;box-shadow:0 2px 12px rgba(15,34,64,0.06);}
+  .filter-btn{font-family:'DM Sans',sans-serif;font-size:0.85rem;font-weight:700;padding:8px 18px;border-radius:99px;border:2px solid var(--border);background:transparent;color:var(--slate);cursor:pointer;transition:all 0.2s;}
+  .filter-btn:hover,.filter-btn.active{background:var(--navy);color:var(--white);border-color:var(--navy);}
+  main{max-width:1100px;margin:0 auto;padding:52px 24px 80px;}
+  .section-label{font-size:0.75rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--teal);margin-bottom:8px;}
+  .section-title{font-family:'Playfair Display',serif;font-size:1.9rem;font-weight:700;color:var(--navy);margin-bottom:6px;}
+  .section-desc{color:var(--slate);font-size:0.97rem;margin-bottom:36px;max-width:560px;}
+  .activity-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:24px;}
+  .activity-card{background:var(--white);border-radius:20px;overflow:hidden;box-shadow:var(--shadow);transition:transform 0.25s,box-shadow 0.25s;display:flex;flex-direction:column;animation:fadeUp 0.5s ease both;border:1.5px solid transparent;}
+  .activity-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-hover);border-color:var(--teal);}
+  .card-banner{height:10px;}
+  .card-body{padding:24px 24px 20px;flex:1;display:flex;flex-direction:column;}
+  .card-meta{display:flex;align-items:center;gap:8px;margin-bottom:14px;}
+  .card-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;}
+  .card-tags{display:flex;gap:6px;flex-wrap:wrap;}
+  .tag{font-size:0.7rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;padding:3px 10px;border-radius:99px;}
+  .card-lesson{font-size:0.7rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;padding:3px 10px;border-radius:99px;background:var(--navy);color:var(--white);}
+  .card-title{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;color:var(--navy);margin-bottom:8px;line-height:1.3;}
+  .card-desc{color:var(--slate);font-size:0.9rem;line-height:1.6;flex:1;margin-bottom:16px;}
+  .card-features{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;}
+  .feature-pill{font-size:0.72rem;font-weight:600;padding:3px 9px;border-radius:99px;background:var(--mist);color:var(--slate);}
+  .card-footer{display:flex;align-items:center;justify-content:space-between;gap:10px;padding-top:16px;border-top:1px solid var(--border);}
+  .card-time{font-size:0.8rem;font-weight:600;color:#94a3b8;}
+  .btn-launch{display:inline-flex;align-items:center;gap:6px;font-family:'DM Sans',sans-serif;font-size:0.85rem;font-weight:700;padding:9px 18px;border-radius:12px;border:none;cursor:pointer;text-decoration:none;transition:all 0.2s;white-space:nowrap;}
+  .btn-launch:hover{transform:scale(1.04);}
+  .btn-teal{background:var(--teal);color:#fff;}
+  .btn-orange{background:#ea580c;color:#fff;}
+  .btn-green{background:#16a34a;color:#fff;}
+  .btn-navy{background:var(--navy);color:#fff;}
+  .theme-teal .card-banner{background:linear-gradient(90deg,#0d9488,#14b8a6);}
+  .theme-teal .card-icon{background:var(--teal-lt);}
+  .theme-teal .tag-main{background:var(--teal-lt);color:#0f766e;}
+  .theme-orange .card-banner{background:linear-gradient(90deg,#ea580c,#f97316);}
+  .theme-orange .card-icon{background:#fff7ed;}
+  .theme-orange .tag-main{background:#fff7ed;color:#c2410c;}
+  .theme-green .card-banner{background:linear-gradient(90deg,#16a34a,#22c55e);}
+  .theme-green .card-icon{background:#dcfce7;}
+  .theme-green .tag-main{background:#dcfce7;color:#14532d;}
+  .theme-navy .card-banner{background:linear-gradient(90deg,#0f2240,#1e3a5f);}
+  .theme-navy .card-icon{background:#dbeafe;}
+  .theme-navy .tag-main{background:#dbeafe;color:#1e40af;}
+  .tag-grade{background:#f1f5f9;color:#475569;}
+  footer{background:var(--navy);color:#475569;text-align:center;padding:32px 24px;font-size:0.85rem;}
+  footer strong{color:var(--teal);}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+  .activity-card:nth-child(1){animation-delay:0.05s;}
+  .activity-card:nth-child(2){animation-delay:0.12s;}
+  .activity-card:nth-child(3){animation-delay:0.19s;}
+  .activity-card:nth-child(4){animation-delay:0.26s;}
+
+</style>
+<style>
+
+  :root {
+    --bg: #0e1a2b;
+    --panel: #162236;
+    --panel2: #1c2d45;
+    --gold: #f0b429;
+    --gold-lt: #fef3c7;
+    --teal: #06b6d4;
+    --teal-lt: #cffafe;
+    --rose: #fb7185;
+    --rose-lt: #ffe4e6;
+    --green: #34d399;
+    --green-lt: #d1fae5;
+    --violet: #a78bfa;
+    --violet-lt: #ede9fe;
+    --white: #f8fafc;
+    --muted: #64748b;
+    --border: rgba(255,255,255,0.08);
+    --shadow: 0 8px 32px rgba(0,0,0,0.35);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--bg);
+    color: var(--white);
+    min-height: 100vh;
+    padding: 0 0 60px;
+    overflow-x: hidden;
+  }
+
+  /* ── Header ── */
+  .hero {
+    background: linear-gradient(135deg, #0e1a2b 0%, #1a2f4a 50%, #0e1a2b 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 40px 24px 36px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 70% 80% at 50% 0%, rgba(6,182,212,0.12) 0%, transparent 70%);
+  }
+  .lesson-tag {
+    display: inline-block;
+    background: rgba(6,182,212,0.15);
+    border: 1.5px solid rgba(6,182,212,0.4);
+    color: var(--teal);
+    font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em;
+    text-transform: uppercase; padding: 5px 14px; border-radius: 99px;
+    margin-bottom: 16px;
+    position: relative; z-index: 1;
+  }
+  .hero h1 {
+    font-family: 'Abril Fatface', serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    color: var(--white);
+    line-height: 1.1;
+    position: relative; z-index: 1;
+    margin-bottom: 10px;
+  }
+  .hero h1 em { color: var(--gold); font-style: normal; }
+  .hero p {
+    color: #94a3b8; font-size: 1rem; font-weight: 500;
+    position: relative; z-index: 1; max-width: 540px; margin: 0 auto;
+  }
+
+  /* ── Progress ── */
+  .progress-bar-wrap {
+    background: rgba(255,255,255,0.06);
+    height: 6px; border-radius: 99px;
+    max-width: 400px; margin: 20px auto 0;
+    position: relative; z-index: 1; overflow: hidden;
+  }
+  .progress-bar {
+    height: 100%; border-radius: 99px;
+    background: linear-gradient(90deg, var(--teal), var(--violet));
+    transition: width 0.5s ease;
+    width: 0%;
+  }
+
+  /* ── Root Key ── */
+  .root-key {
+    display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
+    padding: 28px 24px 0;
+    max-width: 900px; margin: 0 auto;
+  }
+  .root-card {
+    flex: 1 1 200px;
+    background: var(--panel);
+    border-radius: 20px;
+    padding: 20px 22px;
+    border: 1.5px solid var(--border);
+    box-shadow: var(--shadow);
+    text-align: center;
+    animation: fadeUp 0.5s ease both;
+  }
+  .root-card:nth-child(1) { animation-delay: 0.1s; border-color: rgba(240,180,41,0.3); }
+  .root-card:nth-child(2) { animation-delay: 0.2s; border-color: rgba(6,182,212,0.3); }
+  .root-card .root-word {
+    font-family: 'Abril Fatface', serif;
+    font-size: 2rem; margin-bottom: 4px;
+  }
+  .root-card:nth-child(1) .root-word { color: var(--gold); }
+  .root-card:nth-child(2) .root-word { color: var(--teal); }
+  .root-card .root-lang { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+  .root-card .root-meaning { font-size: 1rem; font-weight: 600; color: #e2e8f0; }
+  .root-card .root-hint { font-size: 0.82rem; color: #64748b; margin-top: 4px; }
+
+  /* ── Main Layout ── */
+  .workspace {
+    max-width: 1060px;
+    margin: 28px auto 0;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  /* ── Word Bank ── */
+  .word-bank {
+    background: var(--panel);
+    border-radius: 20px;
+    padding: 22px 20px;
+    border: 1.5px solid var(--border);
+    box-shadow: var(--shadow);
+  }
+  .section-head {
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--muted); margin-bottom: 14px;
+  }
+  .word-tiles { display: flex; flex-direction: column; gap: 10px; }
+  .word-tile {
+    background: var(--panel2);
+    border: 2px solid rgba(255,255,255,0.1);
+    border-radius: 14px;
+    padding: 14px 16px;
+    cursor: grab;
+    user-select: none;
+    transition: transform 0.15s, box-shadow 0.15s, opacity 0.2s;
+    display: flex; flex-direction: column; gap: 2px;
+  }
+  .word-tile:hover { transform: scale(1.03); box-shadow: 0 6px 20px rgba(0,0,0,0.4); border-color: rgba(255,255,255,0.25); }
+  .word-tile.dragging { opacity: 0.35; }
+  .word-tile.used { opacity: 0.2; pointer-events: none; }
+  .word-tile .wt-name { font-size: 1.1rem; font-weight: 800; color: var(--white); }
+  .word-tile .wt-parts { font-size: 0.78rem; font-weight: 600; color: #64748b; }
+
+  /* ── Government Cards ── */
+  .gov-cards { display: flex; flex-direction: column; gap: 14px; }
+
+  .gov-card {
+    background: var(--panel);
+    border-radius: 20px;
+    border: 1.5px solid var(--border);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    transition: border-color 0.3s;
+  }
+  .gov-card.correct-card { border-color: var(--green) !important; }
+  .gov-card.wrong-card   { border-color: var(--rose) !important; }
+
+  .gov-card-header {
+    padding: 14px 18px 10px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .gov-icon { font-size: 1.8rem; }
+  .gov-name {
+    font-family: 'Abril Fatface', serif;
+    font-size: 1.3rem;
+  }
+  .gov-name.dem  { color: var(--teal); }
+  .gov-name.auto { color: var(--rose); }
+  .gov-name.theo { color: var(--violet); }
+
+  .gov-card-body {
+    padding: 0 18px 16px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+  }
+
+  .drop-slot {
+    min-height: 52px;
+    border-radius: 12px;
+    border: 2px dashed rgba(255,255,255,0.15);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem; font-weight: 700;
+    color: #475569; text-transform: uppercase; letter-spacing: 0.06em;
+    transition: background 0.2s, border-color 0.2s;
+    position: relative;
+  }
+  .drop-slot .slot-label {
+    position: absolute; top: 4px; left: 8px;
+    font-size: 0.6rem; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .drop-slot.slot-prefix .slot-label { color: rgba(240,180,41,0.6); }
+  .drop-slot.slot-root   .slot-label { color: rgba(255,255,255,0.25); }
+  .drop-slot.slot-meaning .slot-label { color: rgba(6,182,212,0.6); }
+
+  .drop-slot.drag-over { background: rgba(6,182,212,0.12); border-color: var(--teal); color: var(--teal); }
+  .drop-slot.filled { border-style: solid; }
+
+  .placed {
+    width: 100%; height: 100%; min-height: 50px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 10px;
+    font-size: 0.9rem; font-weight: 800;
+    padding: 8px; text-align: center;
+    cursor: pointer;
+  }
+  .placed:hover::after { content: '✕'; position: absolute; top: 4px; right: 6px; font-size: 0.65rem; opacity: 0.5; }
+
+  /* slot color themes */
+  .slot-prefix.filled { border-color: rgba(240,180,41,0.5); }
+  .slot-prefix .placed { background: rgba(240,180,41,0.12); color: var(--gold); }
+  .slot-meaning.filled { border-color: rgba(6,182,212,0.5); }
+  .slot-meaning .placed { background: rgba(6,182,212,0.12); color: var(--teal); }
+  .slot-root.filled { border-color: rgba(255,255,255,0.2); }
+  .slot-root .placed { background: rgba(255,255,255,0.07); color: #cbd5e1; }
+
+  /* ── Meaning bank ── */
+  .meaning-bank {
+    grid-column: 1 / -1;
+    background: var(--panel);
+    border-radius: 20px;
+    padding: 20px;
+    border: 1.5px solid var(--border);
+  }
+  .meaning-tiles { display: flex; gap: 10px; flex-wrap: wrap; }
+  .meaning-tile {
+    background: rgba(6,182,212,0.1);
+    border: 2px solid rgba(6,182,212,0.3);
+    border-radius: 12px;
+    padding: 10px 16px;
+    cursor: grab;
+    font-size: 0.9rem; font-weight: 700; color: var(--teal);
+    user-select: none;
+    transition: transform 0.15s, box-shadow 0.15s, opacity 0.2s;
+  }
+  .meaning-tile:hover { transform: scale(1.05); box-shadow: 0 4px 14px rgba(6,182,212,0.2); }
+  .meaning-tile.dragging { opacity: 0.3; }
+  .meaning-tile.used { opacity: 0.2; pointer-events: none; }
+
+  /* ── Buttons ── */
+  .btn-row {
+    grid-column: 1 / -1;
+    display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+    margin-top: 4px;
+  }
+  button {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700; font-size: 0.9rem;
+    padding: 11px 22px; border-radius: 14px; border: none; cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  button:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,0.3); }
+  .btn-check  { background: var(--green); color: #064e3b; }
+  .btn-reset  { background: rgba(255,255,255,0.08); color: #94a3b8; border: 1.5px solid rgba(255,255,255,0.1); }
+  .btn-reveal { background: var(--teal); color: #0c4a6e; }
+  .btn-quiz   { background: var(--gold); color: #78350f; }
+
+  /* ── Feedback ── */
+  #feedback {
+    grid-column: 1/-1;
+    text-align: center; font-weight: 700; font-size: 1rem;
+    min-height: 28px; transition: all 0.3s;
+  }
+  .fb-ok  { color: var(--green); }
+  .fb-err { color: var(--rose); }
+
+  /* ── Quiz Overlay ── */
+  #quiz-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.75); z-index: 100;
+    align-items: center; justify-content: center;
+  }
+  #quiz-overlay.active { display: flex; }
+  .quiz-box {
+    background: var(--panel);
+    border: 1.5px solid rgba(255,255,255,0.1);
+    border-radius: 28px; padding: 40px 36px;
+    max-width: 520px; width: 92%;
+    text-align: center; box-shadow: 0 24px 64px rgba(0,0,0,0.5);
+    animation: popIn 0.3s ease;
+  }
+  @keyframes popIn { from { transform: scale(0.88); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  .quiz-box h2 { font-family: 'Abril Fatface', serif; font-size: 1.9rem; color: var(--gold); margin-bottom: 8px; }
+  .quiz-box .qsub { color: #64748b; font-size: 0.9rem; margin-bottom: 22px; }
+  #q-timer-wrap { height: 8px; background: rgba(255,255,255,0.08); border-radius: 99px; margin-bottom: 24px; overflow: hidden; }
+  #q-timer-bar { height: 100%; background: linear-gradient(90deg, var(--green), var(--teal)); border-radius: 99px; transition: width 1s linear; }
+  .q-text { font-size: 1.3rem; font-weight: 800; color: var(--white); margin-bottom: 22px; line-height: 1.4; }
+  .q-choices { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+  .q-choice {
+    background: rgba(255,255,255,0.06); border: 2px solid rgba(255,255,255,0.1);
+    color: var(--white); font-family: 'Outfit', sans-serif; font-weight: 700;
+    font-size: 0.95rem; padding: 13px 18px; border-radius: 14px; cursor: pointer;
+    transition: all 0.15s; text-align: left;
+  }
+  .q-choice:hover { background: rgba(6,182,212,0.15); border-color: var(--teal); }
+  .q-choice.correct { background: rgba(52,211,153,0.2); border-color: var(--green); color: var(--green); }
+  .q-choice.wrong   { background: rgba(251,113,133,0.2); border-color: var(--rose); color: var(--rose); }
+  #q-score { font-family: 'Abril Fatface', serif; font-size: 1.5rem; color: var(--gold); }
+  .btn-close-quiz { background: rgba(255,255,255,0.07); color: #94a3b8; margin-top: 14px; }
+
+  /* ── Confetti ── */
+  #confetti-wrap { position: fixed; inset: 0; pointer-events: none; z-index: 200; overflow: hidden; }
+  .cp { position: absolute; width: 9px; height: 9px; border-radius: 2px; animation: fall 2.4s ease-in forwards; top: -20px; }
+  @keyframes fall { to { transform: translateY(110vh) rotate(720deg); opacity: 0; } }
+
+  /* ── Animations ── */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+
+  @media (max-width: 700px) {
+    .workspace { grid-template-columns: 1fr; }
+    .gov-card-body { grid-template-columns: 1fr 1fr; }
+  }
+
+</style>
+<style>
+
+  :root {
+    --bg: #fdf6ee;
+    --panel: #ffffff;
+    --orange: #ea580c;
+    --orange-lt: #fff7ed;
+    --amber: #f59e0b;
+    --amber-lt: #fef3c7;
+    --teal: #0f766e;
+    --teal-lt: #ccfbf1;
+    --slate: #334155;
+    --muted: #94a3b8;
+    --border: #e2e8f0;
+    --shadow: 0 6px 24px rgba(234,88,12,0.08);
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Mulish',sans-serif;background:var(--bg);color:var(--slate);min-height:100vh;padding:0 0 60px;}
+
+  /* Hero */
+  .hero{background:var(--orange);padding:40px 24px 36px;text-align:center;position:relative;overflow:hidden;}
+  .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 100%,rgba(0,0,0,0.15) 0%,transparent 70%);}
+  .lesson-tag{display:inline-block;background:rgba(255,255,255,0.2);border:1.5px solid rgba(255,255,255,0.4);color:#fff;font-size:0.75rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:5px 14px;border-radius:99px;margin-bottom:14px;position:relative;z-index:1;}
+  .hero h1{font-family:'Syne',sans-serif;font-size:clamp(2rem,5vw,3rem);color:#fff;position:relative;z-index:1;margin-bottom:8px;}
+  .hero p{color:rgba(255,255,255,0.85);font-size:0.97rem;font-weight:600;position:relative;z-index:1;max-width:520px;margin:0 auto 20px;}
+  .score-strip{display:flex;gap:28px;justify-content:center;position:relative;z-index:1;}
+  .score-item{text-align:center;}
+  .score-num{font-family:'Syne',sans-serif;font-size:1.8rem;color:#fff;line-height:1;}
+  .score-lbl{font-size:0.72rem;font-weight:700;color:rgba(255,255,255,0.6);letter-spacing:0.1em;text-transform:uppercase;}
+
+  /* Instructions */
+  .instructions{max-width:860px;margin:28px auto 0;padding:0 20px;}
+  .instr-box{background:var(--panel);border-radius:18px;padding:20px 24px;border:1.5px solid var(--border);box-shadow:var(--shadow);display:flex;gap:16px;align-items:flex-start;}
+  .instr-icon{font-size:2rem;flex-shrink:0;margin-top:2px;}
+  .instr-text h3{font-family:'Syne',sans-serif;font-size:1rem;color:var(--orange);margin-bottom:4px;}
+  .instr-text p{font-size:0.88rem;color:#64748b;line-height:1.6;}
+
+  /* Rule Cards */
+  .rules{max-width:860px;margin:20px auto 0;padding:0 20px;display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .rule-card{background:var(--panel);border-radius:16px;padding:16px 18px;border-left:4px solid;box-shadow:var(--shadow);}
+  .rule-card.closed{border-color:var(--orange);}
+  .rule-card.silente{border-color:var(--teal);}
+  .rule-card h4{font-family:'Syne',sans-serif;font-size:0.9rem;margin-bottom:4px;}
+  .rule-card.closed h4{color:var(--orange);}
+  .rule-card.silente h4{color:var(--teal);}
+  .rule-card p{font-size:0.82rem;color:#64748b;line-height:1.5;}
+  .rule-card .example{display:inline-block;margin-top:6px;background:var(--orange-lt);border-radius:8px;padding:3px 10px;font-weight:800;font-size:0.82rem;color:var(--orange);}
+  .rule-card.silente .example{background:var(--teal-lt);color:var(--teal);}
+
+  /* Word Stage */
+  .stage{max-width:860px;margin:24px auto 0;padding:0 20px;}
+  .stage-panel{background:var(--panel);border-radius:22px;padding:28px 28px 24px;box-shadow:var(--shadow);border:1.5px solid var(--border);}
+  .word-counter{font-size:0.75rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px;}
+
+  /* The word display */
+  .word-display{
+    display:flex;flex-wrap:wrap;gap:0;
+    justify-content:center;margin-bottom:22px;
+    border:2px solid var(--border);border-radius:18px;
+    overflow:hidden;min-height:90px;align-items:stretch;
+  }
+  .letter-group{
+    display:flex;align-items:center;
+    position:relative;
+    border-right:2px solid transparent;
+    transition:border-color 0.2s;
+  }
+  .letter-group.cut{border-right:3px dashed var(--orange);}
+  .letter{
+    font-family:'Syne',sans-serif;font-size:2.4rem;font-weight:800;
+    color:var(--slate);padding:16px 8px;
+    cursor:default;user-select:none;
+    transition:background 0.15s,color 0.15s;
+  }
+  .cut-btn{
+    position:absolute;right:-16px;top:50%;transform:translateY(-50%);
+    width:28px;height:28px;border-radius:50%;
+    background:var(--orange);color:#fff;
+    font-size:0.9rem;font-weight:800;
+    border:2px solid #fff;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    z-index:10;box-shadow:0 2px 8px rgba(234,88,12,0.3);
+    transition:transform 0.15s,box-shadow 0.15s;
+  }
+  .cut-btn:hover{transform:translateY(-50%) scale(1.2);box-shadow:0 4px 12px rgba(234,88,12,0.4);}
+  .cut-btn.active{background:#fff;color:var(--orange);}
+
+  /* Syllable preview */
+  .syllable-preview{
+    min-height:44px;margin-bottom:20px;
+    display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;
+  }
+  .syl-chip{
+    background:var(--orange-lt);border:2px solid var(--orange);
+    border-radius:10px;padding:6px 14px;
+    font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;color:var(--orange);
+    animation:popIn 0.25s ease;
+  }
+  @keyframes popIn{from{transform:scale(0.7);opacity:0;}to{transform:scale(1);opacity:1;}}
+  .syl-dash{color:var(--muted);font-size:1.1rem;font-weight:800;}
+
+  /* Syllable type selector */
+  .type-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;}
+  .type-btn{
+    flex:1 1 140px;
+    background:var(--orange-lt);border:2px solid var(--orange);
+    border-radius:12px;padding:10px 14px;
+    font-family:'Mulish',sans-serif;font-weight:800;font-size:0.85rem;color:var(--orange);
+    cursor:pointer;transition:all 0.15s;text-align:left;
+  }
+  .type-btn:hover,.type-btn.selected{background:var(--orange);color:#fff;}
+  .type-btn .tb-label{display:block;font-size:0.72rem;opacity:0.75;font-weight:600;margin-bottom:1px;}
+
+  /* Navigation */
+  .nav-row{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;}
+  .word-nav-btn{
+    font-family:'Mulish',sans-serif;font-weight:700;font-size:0.88rem;
+    padding:10px 20px;border-radius:12px;border:2px solid var(--border);
+    background:transparent;color:var(--slate);cursor:pointer;transition:all 0.15s;
+  }
+  .word-nav-btn:hover{border-color:var(--orange);color:var(--orange);}
+  .btn-check-word{background:var(--orange);color:#fff;border-color:var(--orange);}
+  .btn-check-word:hover{background:#c2410c;border-color:#c2410c;color:#fff;}
+
+  /* Result row */
+  .result-row{margin-top:16px;min-height:28px;text-align:center;font-weight:700;font-size:0.95rem;}
+  .res-ok{color:var(--teal);}
+  .res-err{color:var(--orange);}
+
+  /* Answer history */
+  .history{max-width:860px;margin:20px auto 0;padding:0 20px 0;}
+  .history-panel{background:var(--panel);border-radius:18px;padding:20px 22px;box-shadow:var(--shadow);border:1.5px solid var(--border);}
+  .history h3{font-family:'Syne',sans-serif;font-size:1rem;color:var(--slate);margin-bottom:14px;}
+  .history-list{display:flex;flex-direction:column;gap:8px;}
+  .hist-item{display:flex;align-items:center;gap:12px;background:var(--bg);border-radius:10px;padding:10px 14px;}
+  .hist-word{font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;color:var(--slate);min-width:160px;}
+  .hist-syl{font-size:0.88rem;color:var(--orange);font-weight:700;flex:1;}
+  .hist-badge{font-size:0.75rem;font-weight:700;padding:3px 10px;border-radius:99px;}
+  .hist-badge.ok{background:var(--teal-lt);color:var(--teal);}
+  .hist-badge.wrong{background:#fee2e2;color:#991b1b;}
+
+  @media(max-width:600px){.rules{grid-template-columns:1fr;}.type-row{flex-direction:column;}}
+
+</style>
+<style>
+
+  :root{
+    --bg:#f0fdf4;--panel:#fff;
+    --green:#16a34a;--green-lt:#dcfce7;--green-dk:#14532d;
+    --red:#dc2626;--red-lt:#fee2e2;
+    --blue:#2563eb;--blue-lt:#dbeafe;
+    --gold:#d97706;--gold-lt:#fef3c7;
+    --violet:#7c3aed;--violet-lt:#ede9fe;
+    --slate:#334155;--muted:#94a3b8;--border:#e2e8f0;
+    --shadow:0 6px 24px rgba(22,163,74,0.09);
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--slate);min-height:100vh;padding:0 0 60px;}
+
+  /* Hero */
+  .hero{background:linear-gradient(135deg,#14532d,#16a34a);padding:40px 24px 36px;text-align:center;position:relative;overflow:hidden;}
+  .hero::after{content:'';position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,0.06) 1px,transparent 1px);background-size:24px 24px;pointer-events:none;}
+  .lesson-tag{display:inline-block;background:rgba(255,255,255,0.15);border:1.5px solid rgba(255,255,255,0.35);color:#fff;font-size:0.75rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:5px 14px;border-radius:99px;margin-bottom:14px;position:relative;z-index:1;}
+  .hero h1{font-family:'Fraunces',serif;font-size:clamp(2rem,5vw,3rem);color:#fff;position:relative;z-index:1;margin-bottom:8px;line-height:1.1;}
+  .hero h1 em{font-style:italic;color:#86efac;}
+  .hero p{color:rgba(255,255,255,0.8);font-size:0.97rem;font-weight:500;position:relative;z-index:1;max-width:520px;margin:0 auto;}
+
+  /* Tabs */
+  .tabs{display:flex;gap:0;background:var(--panel);border-bottom:2px solid var(--border);overflow-x:auto;}
+  .tab{flex:1;padding:14px 20px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:0.88rem;cursor:pointer;border:none;background:transparent;color:var(--muted);border-bottom:3px solid transparent;transition:all 0.2s;white-space:nowrap;min-width:120px;text-align:center;}
+  .tab.active{color:var(--green);border-bottom-color:var(--green);}
+  .tab:hover{color:var(--green);}
+
+  /* Main */
+  main{max-width:980px;margin:0 auto;padding:28px 20px;}
+
+  /* Word Focus Card */
+  .focus-card{background:var(--panel);border-radius:22px;padding:26px 28px;box-shadow:var(--shadow);border:1.5px solid var(--border);margin-bottom:24px;display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap;}
+  .focus-left{flex:0 0 auto;}
+  .focus-word{font-family:'Fraunces',serif;font-size:2.8rem;font-weight:900;color:var(--green);line-height:1;}
+  .focus-phonetic{color:var(--muted);font-size:0.85rem;font-weight:600;margin-top:2px;}
+  .focus-pos{display:inline-block;background:var(--green-lt);color:var(--green-dk);font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:3px 10px;border-radius:99px;margin-top:6px;}
+  .focus-right{flex:1;min-width:200px;}
+  .focus-def{font-size:1rem;font-weight:600;color:var(--slate);line-height:1.5;margin-bottom:8px;}
+  .focus-sentence{font-size:0.88rem;color:#64748b;font-style:italic;line-height:1.5;border-left:3px solid var(--green-lt);padding-left:12px;}
+
+  /* Sort Arena */
+  .sort-arena{display:grid;grid-template-columns:1fr 200px 1fr;gap:16px;margin-bottom:20px;align-items:start;}
+  .sort-col{background:var(--panel);border-radius:18px;padding:18px 16px;box-shadow:var(--shadow);border:2px dashed var(--border);min-height:200px;transition:border-color 0.2s,background 0.2s;}
+  .sort-col.drag-over{border-color:var(--green);background:var(--green-lt);}
+  .sort-col h3{font-size:0.75rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid;}
+  .col-syn h3{color:var(--green);border-color:var(--green-lt);}
+  .col-ant h3{color:var(--red);border-color:var(--red-lt);}
+
+  .sort-center{display:flex;flex-direction:column;gap:10px;align-items:center;justify-content:flex-start;padding-top:8px;}
+  .sort-center .sc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;text-align:center;}
+  .divider{width:2px;background:var(--border);flex:1;min-height:40px;border-radius:1px;}
+
+  .word-card{
+    background:var(--blue-lt);border:2px solid rgba(37,99,235,0.25);
+    border-radius:12px;padding:10px 14px;
+    font-size:0.95rem;font-weight:700;color:var(--blue);
+    cursor:grab;user-select:none;
+    transition:transform 0.15s,box-shadow 0.15s,opacity 0.2s;
+    display:flex;flex-direction:column;gap:1px;
+    margin-bottom:8px;
+  }
+  .word-card:hover{transform:scale(1.04);box-shadow:0 4px 14px rgba(37,99,235,0.15);}
+  .word-card.dragging{opacity:0.3;}
+  .word-card.placed{cursor:pointer;}
+  .word-card.placed:hover::after{content:'✕ remove';font-size:0.7rem;opacity:0.6;display:block;}
+  .wc-hint{font-size:0.72rem;color:#64748b;font-weight:500;}
+
+  /* Placed in column */
+  .placed-syn{background:var(--green-lt)!important;border-color:rgba(22,163,74,0.4)!important;color:var(--green-dk)!important;}
+  .placed-ant{background:var(--red-lt)!important;border-color:rgba(220,38,38,0.3)!important;color:var(--red)!important;}
+
+  /* Btn row */
+  .btn-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:14px;}
+  button{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:0.88rem;padding:10px 20px;border-radius:12px;border:none;cursor:pointer;transition:transform 0.15s,box-shadow 0.15s;}
+  button:hover{transform:translateY(-2px);box-shadow:0 4px 14px rgba(0,0,0,0.12);}
+  .btn-check{background:var(--green);color:#fff;}
+  .btn-reset{background:#f1f5f9;color:var(--slate);}
+  .btn-hint{background:var(--gold-lt);color:var(--gold);}
+  .btn-next{background:var(--blue);color:#fff;}
+
+  /* Feedback */
+  #feedback{text-align:center;font-weight:700;font-size:0.95rem;min-height:28px;margin-bottom:8px;}
+  .fb-ok{color:var(--green);}
+  .fb-err{color:var(--red);}
+
+  /* Hint box */
+  .hint-box{background:var(--gold-lt);border:1.5px solid rgba(217,119,6,0.3);border-radius:14px;padding:14px 18px;margin-bottom:16px;display:none;}
+  .hint-box.visible{display:block;}
+  .hint-box p{font-size:0.88rem;color:var(--gold);font-weight:600;line-height:1.5;}
+
+  /* Progress */
+  .progress-row{display:flex;gap:10px;align-items:center;justify-content:center;margin-bottom:20px;flex-wrap:wrap;}
+  .prog-dot{width:14px;height:14px;border-radius:50%;background:var(--border);transition:background 0.3s;}
+  .prog-dot.done{background:var(--green);}
+  .prog-dot.current{background:var(--blue);transform:scale(1.3);}
+
+  @media(max-width:640px){.sort-arena{grid-template-columns:1fr;}.sort-center{flex-direction:row;}.focus-card{flex-direction:column;}}
+
+</style>
+<style>
+
+  :root {
+    --bg: #f0f4ff;
+    --card: #ffffff;
+    --blue: #3b6cf7;
+    --blue-light: #dce8ff;
+    --green: #22c55e;
+    --green-light: #dcfce7;
+    --yellow: #f59e0b;
+    --yellow-light: #fef3c7;
+    --purple: #8b5cf6;
+    --purple-light: #ede9fe;
+    --red: #ef4444;
+    --red-light: #fee2e2;
+    --teal: #14b8a6;
+    --teal-light: #ccfbf1;
+    --gray: #64748b;
+    --border: #cbd5e1;
+    --shadow: 0 4px 20px rgba(59,108,247,0.10);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    padding: 24px 16px;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 28px;
+  }
+  header h1 {
+    font-family: 'Fredoka One', cursive;
+    font-size: 2.6rem;
+    color: var(--blue);
+    letter-spacing: 1px;
+  }
+  header p {
+    color: var(--gray);
+    font-size: 1.05rem;
+    margin-top: 4px;
+    font-weight: 600;
+  }
+
+  .workspace {
+    display: grid;
+    grid-template-columns: 200px 1fr 200px;
+    gap: 20px;
+    max-width: 1100px;
+    margin: 0 auto;
+    align-items: start;
+  }
+
+  /* ── Side Panels ── */
+  .panel {
+    background: var(--card);
+    border-radius: 20px;
+    padding: 18px 14px;
+    box-shadow: var(--shadow);
+  }
+  .panel h2 {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.1rem;
+    margin-bottom: 14px;
+    text-align: center;
+    padding-bottom: 8px;
+    border-bottom: 2px dashed var(--border);
+  }
+
+  /* ── Tiles ── */
+  .tile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 8px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    font-weight: 800;
+    font-size: 1rem;
+    cursor: grab;
+    user-select: none;
+    transition: transform 0.15s, box-shadow 0.15s, opacity 0.2s;
+    border: 2.5px solid transparent;
+    text-align: center;
+    min-height: 46px;
+  }
+  .tile:active { cursor: grabbing; }
+  .tile:hover { transform: scale(1.06); box-shadow: 0 6px 18px rgba(0,0,0,0.13); }
+  .tile.dragging { opacity: 0.45; transform: scale(0.97); }
+  .tile.used { opacity: 0.3; pointer-events: none; }
+
+  /* prefix colors */
+  .tile-geo   { background:#dce8ff; color:#1e40af; border-color:#93c5fd; }
+  .tile-demo  { background:#ede9fe; color:#5b21b6; border-color:#c4b5fd; }
+  .tile-carto { background:#ccfbf1; color:#0f766e; border-color:#5eead4; }
+  .tile-auto  { background:#fef3c7; color:#92400e; border-color:#fcd34d; }
+  .tile-bio   { background:#fee2e2; color:#991b1b; border-color:#fca5a5; }
+
+  /* meaning colors */
+  .tile-earth  { background:#d1fae5; color:#065f46; border-color:#6ee7b7; }
+  .tile-people { background:#e0e7ff; color:#3730a3; border-color:#a5b4fc; }
+  .tile-map    { background:#fce7f3; color:#9d174d; border-color:#f9a8d4; }
+  .tile-self   { background:#fff7ed; color:#9a3412; border-color:#fdba74; }
+  .tile-life   { background:#f0fdf4; color:#14532d; border-color:#86efac; }
+
+  /* ── Matrix ── */
+  .matrix-wrap {
+    background: var(--card);
+    border-radius: 24px;
+    padding: 24px 20px;
+    box-shadow: var(--shadow);
+  }
+  .matrix-wrap h2 {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.4rem;
+    color: var(--blue);
+    text-align: center;
+    margin-bottom: 16px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 6px;
+  }
+  thead th {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    padding: 10px 6px;
+    border-radius: 10px;
+    color: #fff;
+  }
+  thead th.col-prefix { background: var(--blue); }
+  thead th.col-root   { background: var(--gray); }
+  thead th.col-suffix { background: var(--purple); }
+  thead th.col-word   { background: var(--teal); }
+  thead th.col-meaning{ background: var(--green); }
+
+  tbody td {
+    padding: 6px;
+    vertical-align: middle;
+  }
+
+  /* Root cell */
+  .root-cell {
+    text-align: center;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.5rem;
+    color: #fff;
+    background: linear-gradient(135deg, #64748b, #475569);
+    border-radius: 12px;
+    padding: 12px 6px;
+    letter-spacing: 2px;
+  }
+
+  /* Drop zones */
+  .drop-zone {
+    min-height: 52px;
+    border-radius: 12px;
+    border: 2.5px dashed var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, border-color 0.2s;
+    color: #94a3b8;
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: default;
+    position: relative;
+  }
+  .drop-zone.drag-over {
+    background: #dce8ff;
+    border-color: var(--blue);
+    color: var(--blue);
+  }
+  .drop-zone.filled {
+    border-style: solid;
+    color: inherit;
+  }
+  .drop-zone .placed-tile {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    font-weight: 800;
+    font-size: 1rem;
+    padding: 8px 6px;
+    cursor: pointer;
+    min-height: 50px;
+  }
+  .drop-zone .placed-tile:hover::after {
+    content: '✕';
+    position: absolute;
+    top: 4px; right: 6px;
+    font-size: 0.75rem;
+    opacity: 0.6;
+  }
+
+  /* Word display cell */
+  .word-cell {
+    text-align: center;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.1rem;
+    color: #334155;
+    background: var(--teal-light);
+    border-radius: 12px;
+    padding: 10px 6px;
+    min-height: 52px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.3s;
+  }
+  .word-cell.lit {
+    color: #0f766e;
+    font-size: 1.2rem;
+  }
+
+  /* Suffix static */
+  .suffix-cell {
+    text-align: center;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.1rem;
+    color: #5b21b6;
+    background: var(--purple-light);
+    border-radius: 12px;
+    padding: 10px 6px;
+  }
+
+  /* ── Buttons ── */
+  .btn-row {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 22px;
+    flex-wrap: wrap;
+  }
+  button {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 0.95rem;
+    padding: 11px 22px;
+    border-radius: 14px;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  button:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.15); }
+  .btn-reset   { background: #f1f5f9; color: #334155; }
+  .btn-check   { background: var(--green); color: #fff; }
+  .btn-game    { background: var(--yellow); color: #78350f; }
+  .btn-reveal  { background: var(--blue); color: #fff; }
+
+  /* ── Feedback ── */
+  #feedback {
+    margin: 16px auto 0;
+    max-width: 700px;
+    text-align: center;
+    font-weight: 800;
+    font-size: 1.05rem;
+    min-height: 28px;
+    transition: all 0.3s;
+  }
+  .feedback-ok  { color: var(--green); }
+  .feedback-err { color: var(--red); }
+
+  /* ── Game mode overlay ── */
+  #game-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(15,23,42,0.7);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+  }
+  #game-overlay.active { display: flex; }
+  .game-box {
+    background: #fff;
+    border-radius: 28px;
+    padding: 36px 32px;
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  }
+  .game-box h2 {
+    font-family: 'Fredoka One', cursive;
+    font-size: 2rem;
+    color: var(--blue);
+    margin-bottom: 8px;
+  }
+  .game-box p { color: var(--gray); font-weight: 700; margin-bottom: 20px; }
+  #timer-bar-wrap {
+    height: 14px;
+    background: #e2e8f0;
+    border-radius: 99px;
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+  #timer-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--green), var(--blue));
+    border-radius: 99px;
+    transition: width 1s linear;
+    width: 100%;
+  }
+  .game-q { font-family: 'Fredoka One', cursive; font-size: 1.5rem; color: #1e293b; margin-bottom: 20px; }
+  .game-choices { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-bottom: 20px; }
+  .game-choice {
+    background: var(--blue-light);
+    color: var(--blue);
+    border: 2.5px solid #93c5fd;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 1rem;
+    padding: 12px 20px;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .game-choice:hover { background: var(--blue); color: #fff; transform: scale(1.05); }
+  .game-choice.correct { background: var(--green); color: #fff; border-color: var(--green); }
+  .game-choice.wrong   { background: var(--red); color: #fff; border-color: var(--red); }
+  #game-score { font-family: 'Fredoka One', cursive; font-size: 1.3rem; color: var(--yellow); }
+  .btn-close-game { background: #e2e8f0; color: #334155; margin-top: 14px; }
+
+  /* ── Celebration ── */
+  #confetti-wrap {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 200;
+    overflow: hidden;
+  }
+  .confetti-piece {
+    position: absolute;
+    width: 10px; height: 10px;
+    border-radius: 2px;
+    animation: fall 2.2s ease-in forwards;
+    top: -20px;
+  }
+  @keyframes fall {
+    to { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+  }
+
+  @media (max-width: 800px) {
+    .workspace { grid-template-columns: 1fr; }
+    .panel { display: flex; flex-wrap: wrap; gap: 8px; }
+    .panel h2 { width: 100%; }
+    .tile { flex: 1 1 80px; }
+  }
+
+</style>
+<style>
+
+  :root {
+    --bg: #0f172a;
+    --panel: #1e293b;
+    --panel2: #263347;
+    --border: rgba(255,255,255,0.08);
+    --white: #f8fafc;
+    --muted: #64748b;
+    --shadow: 0 8px 32px rgba(0,0,0,0.4);
+
+    /* Category colors */
+    --geo:   #06b6d4; --geo-dk:   #0e7490; --geo-lt:   #cffafe;
+    --civ:   #f59e0b; --civ-dk:   #b45309; --civ-lt:   #fef3c7;
+    --eco:   #10b981; --eco-dk:   #065f46; --eco-lt:   #d1fae5;
+    --hist:  #a78bfa; --hist-dk:  #5b21b6; --hist-lt:  #ede9fe;
+    --expl:  #fb7185; --expl-dk:  #9f1239; --expl-lt:  #ffe4e6;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    color: var(--white);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── SCREENS ── */
+  .screen { display: none; min-height: 100vh; }
+  .screen.active { display: flex; flex-direction: column; }
+
+  /* ══════════════════════════════
+     HOME SCREEN
+  ══════════════════════════════ */
+  #home {
+    background: linear-gradient(160deg, #0f172a 0%, #1e293b 60%, #0f172a 100%);
+    align-items: center; justify-content: center;
+    padding: 40px 24px; text-align: center;
+    position: relative; overflow: hidden;
+  }
+  #home::before {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 60% 40% at 20% 20%, rgba(6,182,212,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 50% at 80% 80%, rgba(167,139,250,0.10) 0%, transparent 60%);
+  }
+  .home-inner { position: relative; z-index: 1; max-width: 700px; width: 100%; }
+  .home-title {
+    font-family: 'Bangers', cursive;
+    font-size: clamp(3rem, 8vw, 5.5rem);
+    letter-spacing: 0.04em;
+    line-height: 1;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, #06b6d4, #a78bfa, #f59e0b);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .home-sub {
+    color: #94a3b8; font-size: 1.05rem; font-weight: 700;
+    margin-bottom: 48px; letter-spacing: 0.04em; text-transform: uppercase;
+  }
+
+  .category-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px; margin-bottom: 40px;
+  }
+  .cat-btn {
+    background: var(--panel);
+    border: 2px solid var(--border);
+    border-radius: 20px;
+    padding: 22px 16px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    text-align: center;
+    position: relative; overflow: hidden;
+  }
+  .cat-btn::before {
+    content: '';
+    position: absolute; inset: 0;
+    opacity: 0; transition: opacity 0.2s;
+  }
+  .cat-btn:hover { transform: translateY(-4px); }
+  .cat-btn[data-cat="geo"]  { border-color: rgba(6,182,212,0.4); }
+  .cat-btn[data-cat="geo"]:hover  { box-shadow: 0 8px 32px rgba(6,182,212,0.25); border-color: var(--geo); }
+  .cat-btn[data-cat="civ"]  { border-color: rgba(245,158,11,0.4); }
+  .cat-btn[data-cat="civ"]:hover  { box-shadow: 0 8px 32px rgba(245,158,11,0.25); border-color: var(--civ); }
+  .cat-btn[data-cat="eco"]  { border-color: rgba(16,185,129,0.4); }
+  .cat-btn[data-cat="eco"]:hover  { box-shadow: 0 8px 32px rgba(16,185,129,0.25); border-color: var(--eco); }
+  .cat-btn[data-cat="hist"] { border-color: rgba(167,139,250,0.4); }
+  .cat-btn[data-cat="hist"]:hover { box-shadow: 0 8px 32px rgba(167,139,250,0.25); border-color: var(--hist); }
+  .cat-btn[data-cat="expl"] { border-color: rgba(251,113,133,0.4); }
+  .cat-btn[data-cat="expl"]:hover { box-shadow: 0 8px 32px rgba(251,113,133,0.25); border-color: var(--expl); }
+
+  .cat-emoji { font-size: 2.2rem; margin-bottom: 8px; display: block; }
+  .cat-name  { font-family: 'Bangers', cursive; font-size: 1.4rem; letter-spacing: 0.05em; margin-bottom: 4px; }
+  .cat-btn[data-cat="geo"]  .cat-name { color: var(--geo); }
+  .cat-btn[data-cat="civ"]  .cat-name { color: var(--civ); }
+  .cat-btn[data-cat="eco"]  .cat-name { color: var(--eco); }
+  .cat-btn[data-cat="hist"] .cat-name { color: var(--hist); }
+  .cat-btn[data-cat="expl"] .cat-name { color: var(--expl); }
+  .cat-count { font-size: 0.78rem; font-weight: 700; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; }
+
+  .best-scores {
+    display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;
+    background: var(--panel); border-radius: 16px; padding: 16px 24px;
+    border: 1px solid var(--border);
+  }
+  .best-item { text-align: center; }
+  .best-num  { font-family: 'Bangers', cursive; font-size: 1.8rem; }
+  .best-lbl  { font-size: 0.7rem; font-weight: 700; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
+
+  /* ══════════════════════════════
+     REFERENCE CARD OVERLAY
+  ══════════════════════════════ */
+  #ref-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.75); z-index: 200;
+    align-items: center; justify-content: center; padding: 20px;
+  }
+  #ref-overlay.open { display: flex; }
+  .ref-box {
+    background: var(--panel); border-radius: 24px;
+    max-width: 560px; width: 100%; max-height: 80vh; overflow-y: auto;
+    padding: 28px 24px; border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    animation: popIn 0.25s ease;
+  }
+  .ref-box h2 { font-family: 'Bangers', cursive; font-size: 1.8rem; color: var(--white); margin-bottom: 16px; letter-spacing: 0.05em; }
+  .ref-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  .ref-table th { text-align: left; padding: 8px 10px; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--border); }
+  .ref-table td { padding: 8px 10px; border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: top; }
+  .ref-table tr:last-child td { border-bottom: none; }
+  .ref-root { font-family: 'Bangers', cursive; font-size: 1.1rem; letter-spacing: 0.05em; }
+  .ref-close { margin-top: 18px; width: 100%; padding: 12px; border-radius: 12px; background: rgba(255,255,255,0.08); border: none; color: var(--white); font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.95rem; cursor: pointer; transition: background 0.2s; }
+  .ref-close:hover { background: rgba(255,255,255,0.14); }
+
+  /* ══════════════════════════════
+     QUIZ SCREEN
+  ══════════════════════════════ */
+  #quiz {
+    background: var(--bg);
+    padding: 0;
+  }
+
+  .quiz-header {
+    padding: 20px 24px 16px;
+    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+    border-bottom: 1px solid var(--border);
+    background: var(--panel);
+  }
+  .quiz-cat-badge {
+    font-family: 'Bangers', cursive; font-size: 1.2rem; letter-spacing: 0.05em;
+    padding: 6px 16px; border-radius: 99px; flex-shrink: 0;
+  }
+  .quiz-progress-wrap {
+    flex: 1; min-width: 120px;
+    background: rgba(255,255,255,0.08); border-radius: 99px; height: 8px; overflow: hidden;
+  }
+  .quiz-progress-bar { height: 100%; border-radius: 99px; transition: width 0.4s ease; }
+  .quiz-q-num { font-size: 0.8rem; font-weight: 800; color: var(--muted); white-space: nowrap; }
+  .quiz-score-display { font-family: 'Bangers', cursive; font-size: 1.4rem; flex-shrink: 0; }
+  .btn-ref {
+    background: rgba(255,255,255,0.08); border: 1px solid var(--border);
+    border-radius: 10px; padding: 8px 14px; color: var(--white);
+    font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.82rem;
+    cursor: pointer; transition: background 0.2s; white-space: nowrap; flex-shrink: 0;
+  }
+  .btn-ref:hover { background: rgba(255,255,255,0.14); }
+  .btn-home-sm {
+    background: transparent; border: 1px solid var(--border);
+    border-radius: 10px; padding: 8px 14px; color: var(--muted);
+    font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.82rem;
+    cursor: pointer; transition: all 0.2s; white-space: nowrap; flex-shrink: 0;
+  }
+  .btn-home-sm:hover { color: var(--white); border-color: rgba(255,255,255,0.3); }
+
+  /* Timer */
+  .timer-ring-wrap {
+    display: flex; align-items: center; justify-content: center;
+    padding: 32px 24px 16px;
+  }
+  .timer-ring {
+    position: relative; width: 90px; height: 90px;
+  }
+  .timer-ring svg { transform: rotate(-90deg); }
+  .timer-ring circle {
+    fill: none; stroke-width: 6;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 1s linear, stroke 0.5s;
+  }
+  .timer-track { stroke: rgba(255,255,255,0.08); }
+  .timer-fill  { stroke-dasharray: 251.2; stroke-dashoffset: 0; }
+  .timer-num {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Bangers', cursive; font-size: 2rem; letter-spacing: 0.05em;
+  }
+
+  /* Question */
+  .quiz-body { padding: 0 24px 24px; max-width: 700px; margin: 0 auto; width: 100%; }
+  .q-label { font-size: 0.72rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; text-align: center; }
+  .q-text {
+    font-family: 'Bangers', cursive; font-size: clamp(1.6rem, 4vw, 2.4rem);
+    text-align: center; line-height: 1.2; margin-bottom: 28px;
+    letter-spacing: 0.03em; color: var(--white);
+  }
+  .q-text .highlight { display: inline-block; padding: 2px 12px; border-radius: 8px; }
+
+  /* Choices */
+  .choices { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+  .choice-btn {
+    background: var(--panel2); border: 2px solid var(--border);
+    border-radius: 16px; padding: 16px 14px;
+    font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.95rem;
+    color: var(--white); cursor: pointer; text-align: left;
+    transition: all 0.15s; line-height: 1.4; position: relative;
+  }
+  .choice-btn:hover:not(:disabled) { border-color: rgba(255,255,255,0.3); transform: scale(1.02); }
+  .choice-btn .choice-letter {
+    display: inline-block; width: 26px; height: 26px;
+    border-radius: 8px; background: rgba(255,255,255,0.08);
+    text-align: center; line-height: 26px; font-size: 0.8rem;
+    margin-right: 8px; flex-shrink: 0;
+  }
+  .choice-btn.correct { background: rgba(16,185,129,0.2) !important; border-color: #10b981 !important; color: #6ee7b7 !important; }
+  .choice-btn.wrong   { background: rgba(251,113,133,0.2) !important; border-color: #fb7185 !important; color: #fda4af !important; }
+
+  /* Hint */
+  .hint-row { text-align: center; margin-bottom: 16px; }
+  .btn-hint {
+    background: transparent; border: 1.5px dashed var(--muted);
+    border-radius: 10px; padding: 8px 20px;
+    color: var(--muted); font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.85rem;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .btn-hint:hover { border-color: var(--white); color: var(--white); }
+  .hint-text {
+    display: none; margin-top: 10px;
+    background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3);
+    border-radius: 12px; padding: 10px 16px;
+    font-size: 0.88rem; font-weight: 700; color: #fbbf24; line-height: 1.5;
+    animation: fadeUp 0.2s ease;
+  }
+  .hint-text.visible { display: block; }
+
+  /* Feedback bar */
+  #feedback-bar {
+    text-align: center; min-height: 32px; font-weight: 800; font-size: 1rem;
+    margin-bottom: 8px; transition: all 0.2s;
+  }
+  .fb-correct { color: #6ee7b7; }
+  .fb-wrong   { color: #fda4af; }
+
+  /* ══════════════════════════════
+     RESULTS SCREEN
+  ══════════════════════════════ */
+  #results {
+    align-items: center; justify-content: center;
+    padding: 40px 24px; text-align: center;
+    background: linear-gradient(160deg, #0f172a, #1e293b);
+    position: relative; overflow: hidden;
+  }
+  .results-inner { max-width: 540px; width: 100%; position: relative; z-index: 1; }
+  .results-emoji { font-size: 4rem; margin-bottom: 16px; animation: bounce 0.6s ease; }
+  .results-title { font-family: 'Bangers', cursive; font-size: 3rem; letter-spacing: 0.05em; margin-bottom: 8px; }
+  .results-cat   { font-size: 0.8rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 28px; }
+  .score-ring-wrap { display: flex; justify-content: center; margin-bottom: 28px; }
+  .score-ring { position: relative; width: 140px; height: 140px; }
+  .score-ring svg { transform: rotate(-90deg); }
+  .score-ring circle { fill: none; stroke-width: 10; }
+  .score-track { stroke: rgba(255,255,255,0.08); }
+  .score-fill  { stroke-dasharray: 408; stroke-dashoffset: 408; transition: stroke-dashoffset 1.2s ease; }
+  .score-inner {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+  }
+  .score-big  { font-family: 'Bangers', cursive; font-size: 3rem; line-height: 1; }
+  .score-outof { font-size: 0.8rem; font-weight: 800; color: var(--muted); }
+
+  .results-breakdown {
+    background: var(--panel); border-radius: 18px; padding: 18px 20px;
+    margin-bottom: 24px; border: 1px solid var(--border); text-align: left;
+  }
+  .breakdown-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 0.9rem; font-weight: 700; }
+  .breakdown-row:last-child { border-bottom: none; }
+  .breakdown-q { color: #94a3b8; flex: 1; padding-right: 8px; }
+  .breakdown-icon { font-size: 1rem; }
+
+  .results-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .btn-retry { padding: 13px 28px; border-radius: 14px; border: none; cursor: pointer; font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.95rem; transition: all 0.2s; }
+  .btn-retry:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.3); }
+  .btn-home-lg { padding: 13px 28px; border-radius: 14px; border: 2px solid var(--border); background: transparent; color: #94a3b8; cursor: pointer; font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.95rem; transition: all 0.2s; }
+  .btn-home-lg:hover { border-color: rgba(255,255,255,0.3); color: var(--white); }
+
+  /* ── Confetti ── */
+  #confetti-wrap { position: fixed; inset: 0; pointer-events: none; z-index: 300; overflow: hidden; }
+  .cp { position: absolute; width: 9px; height: 9px; border-radius: 2px; animation: fall 2.4s ease-in forwards; top: -20px; }
+  @keyframes fall { to { transform: translateY(110vh) rotate(720deg); opacity: 0; } }
+
+  /* ── Animations ── */
+  @keyframes popIn   { from { transform: scale(0.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  @keyframes fadeUp  { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes bounce  { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-16px); } }
+  @keyframes shake   { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)} 60%{transform:translateX(8px)} 80%{transform:translateX(-4px)} }
+  .shake { animation: shake 0.4s ease; }
+
+  @media (max-width: 520px) {
+    .choices { grid-template-columns: 1fr; }
+    .category-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+</style>
+<style>
+.section { display: none !important; }
+#section-home { display: block !important; }
+</style>
+</head><body>
+<div id="confetti-wrap" style="position:fixed;inset:0;pointer-events:none;z-index:9999;overflow:hidden;"></div>
+<script>
+function showActivity(id) {
+  document.querySelectorAll('.section').forEach(function(s){
+    s.style.setProperty('display','none','important');
+  });
+  var el = document.getElementById('section-'+id);
+  if(el) el.style.setProperty('display','block','important');
+  window.scrollTo(0,0);
+  if(id==='lesson2' && window.L2_init) window.L2_init();
+  if(id==='lesson3' && window.L3_init) window.L3_init();
+  if(id==='lesson4' && window.L4_init) window.L4_init();
+  if(id==='quiz'    && window.quizGoHome) window.quizGoHome();
+}
+function goHome(){ showActivity('home'); }
+</script>
+<div class="section" id="section-home">
+<header class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">Middle School · Grades 6–8</div>
+    <h1>Reading Endorsement<br><span>Web Activities</span></h1>
+    <p class="hero-sub">Interactive learning tools by MAH — click any activity to launch</p>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">4</div><div class="stat-label">Activities</div></div>
+      <div class="stat"><div class="stat-num">6–8</div><div class="stat-label">Grade Range</div></div>
+      <div class="stat"><div class="stat-num">✦</div><div class="stat-label">Always Growing</div></div>
+    </div>
+  </div>
+</header>
+
+<nav class="filter-bar">
+  <button class="filter-btn active" onclick="filterCards('all',this)">All Activities</button>
+  <button class="filter-btn" onclick="filterCards('morphology',this)">Morphology</button>
+  <button class="filter-btn" onclick="filterCards('syllabication',this)">Syllabication</button>
+  <button class="filter-btn" onclick="filterCards('context',this)">Context Clues</button>
+  <button class="filter-btn" onclick="filterCards('vocabulary',this)">Vocabulary</button>
+</nav>
+
+<main>
+  <div class="section-label">Student Activities</div>
+  <h2 class="section-title">Interactive Learning Tools</h2>
+  <p class="section-desc">Each activity is designed for one-on-one virtual tutoring. Click "Launch" to open in a new tab and share your screen with your student.</p>
+
+  <div class="activity-grid" id="activity-grid">
+
+    <!-- L1 -->
+    <div class="activity-card theme-navy" data-category="morphology">
+      <div class="card-banner"></div>
+      <div class="card-body">
+        <div class="card-meta">
+          <div class="card-icon">🏛️</div>
+          <div class="card-tags"><span class="card-lesson">Lesson 1</span><span class="tag tag-main">Morphology</span></div>
+        </div>
+        <div class="card-title">Root Discovery — Demo &amp; Cracy</div>
+        <div class="card-desc">Drag Greek root tiles to build Democracy, Autocracy, and Theocracy, then match each government to its meaning. Covers DEMO, AUTO, THEO, and -CRACY roots.</div>
+        <div class="card-features">
+          <span class="feature-pill">🧩 Drag &amp; Drop</span>
+          <span class="feature-pill">⚡ 10-Q Quiz</span>
+          <span class="feature-pill">✅ Answer Check</span>
+          <span class="feature-pill">🎉 Confetti</span>
+        </div>
+        <div class="card-footer">
+          <div class="card-time">⏱ 55 min lesson</div>
+          <a class="btn-launch btn-navy" href="#" onclick="showActivity('lesson1'); return false;" target="_blank">Launch ↗</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- L2 -->
+    <div class="activity-card theme-orange" data-category="syllabication">
+      <div class="card-banner"></div>
+      <div class="card-body">
+        <div class="card-meta">
+          <div class="card-icon">✂️</div>
+          <div class="card-tags"><span class="card-lesson">Lesson 2</span><span class="tag tag-main">Syllabication</span></div>
+        </div>
+        <div class="card-title">Syllable Snip</div>
+        <div class="card-desc">Click the scissors between letters to cut multisyllabic words like monotheism, industrialization, and deforestation into syllables, then name the syllable type.</div>
+        <div class="card-features">
+          <span class="feature-pill">✂️ Click to Cut</span>
+          <span class="feature-pill">📦 Syllable Types</span>
+          <span class="feature-pill">🔥 Streak Tracker</span>
+          <span class="feature-pill">📋 Answer History</span>
+        </div>
+        <div class="card-footer">
+          <div class="card-time">⏱ 55 min lesson</div>
+          <a class="btn-launch btn-orange" href="#" onclick="showActivity('lesson2'); return false;" target="_blank">Launch ↗</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- L3 -->
+    <div class="activity-card theme-green" data-category="context vocabulary">
+      <div class="card-banner"></div>
+      <div class="card-body">
+        <div class="card-meta">
+          <div class="card-icon">🔀</div>
+          <div class="card-tags"><span class="card-lesson">Lesson 3</span><span class="tag tag-main">Context Clues</span></div>
+        </div>
+        <div class="card-title">Word Connections — Synonym &amp; Antonym Sort</div>
+        <div class="card-desc">Drag Tier-3 words into the Synonym or Antonym column. Covers Assimilate, Deforestation, Industrialization, Democracy, and Migration — with memory hooks and context sentences.</div>
+        <div class="card-features">
+          <span class="feature-pill">🧩 Drag &amp; Sort</span>
+          <span class="feature-pill">💡 Hint System</span>
+          <span class="feature-pill">📖 5 Tier-3 Words</span>
+          <span class="feature-pill">✅ Instant Check</span>
+        </div>
+        <div class="card-footer">
+          <div class="card-time">⏱ 55 min lesson</div>
+          <a class="btn-launch btn-green" href="#" onclick="showActivity('lesson3'); return false;" target="_blank">Launch ↗</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- L4 -->
+    <div class="activity-card theme-teal" data-category="morphology vocabulary">
+      <div class="card-banner"></div>
+      <div class="card-body">
+        <div class="card-meta">
+          <div class="card-icon">⚙️</div>
+          <div class="card-tags"><span class="card-lesson">Lesson 4</span><span class="tag tag-main">Morphology</span></div>
+        </div>
+        <div class="card-title">-GRAPH- Morphology Matrix</div>
+        <div class="card-desc">Build Geography, Demography, Cartography, Autobiography, and Biography by dragging prefix and meaning tiles onto the matrix. Includes a timed 10-question Challenge Mode quiz.</div>
+        <div class="card-features">
+          <span class="feature-pill">🧩 Drag &amp; Drop</span>
+          <span class="feature-pill">🎮 Challenge Mode</span>
+          <span class="feature-pill">💡 Reveal All</span>
+          <span class="feature-pill">🎉 Confetti</span>
+        </div>
+        <div class="card-footer">
+          <div class="card-time">⏱ 55 min lesson</div>
+          <a class="btn-launch btn-teal" href="#" onclick="showActivity('lesson4'); return false;" target="_blank">Launch ↗</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  <p>Built for virtual tutoring · <strong>Reading Endorsement Web Activities — MAH</strong> · Grades 6–8</p>
+</footer>
+</div>
+<script>
+
+function filterCards(cat,btn){
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.activity-card').forEach(card=>{
+    const cats=card.dataset.category||'';
+    card.style.display=(cat==='all'||cats.includes(cat))?'':'none';
+  });
+}
+
+</script>
+
+<div class="section" id="section-lesson1">
+<div style="position:sticky;top:0;z-index:100;padding:10px 20px;background:#1e293b;border-bottom:1px solid rgba(255,255,255,0.1);">
+<button onclick="goHome()" style="background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);color:#fff;padding:8px 20px;border-radius:8px;cursor:pointer;font-size:0.9rem;font-family:inherit;font-weight:600;">← Back to Activities</button>
+</div>
+<header class="hero">
+  <div class="lesson-tag">Lesson 1 · Roots &amp; Government</div>
+  <h1>Root <em>Discovery</em><br>Demo + Cracy</h1>
+  <p>Build the words for three types of government by dragging root parts and meanings into the right slots.</p>
+  <div class="progress-bar-wrap"><div class="progress-bar" id="prog-bar"></div></div>
+</header>
+
+<!-- Root Key -->
+<div class="root-key">
+  <div class="root-card">
+    <div class="root-lang">Greek Root</div>
+    <div class="root-word">DEMO</div>
+    <div class="root-meaning">= People</div>
+    <div class="root-hint">as in "demographics"</div>
+  </div>
+  <div class="root-card">
+    <div class="root-lang">Greek Root</div>
+    <div class="root-word">AUTO</div>
+    <div class="root-meaning">= Self / Alone</div>
+    <div class="root-hint">as in "automatic"</div>
+  </div>
+  <div class="root-card">
+    <div class="root-lang">Greek Root</div>
+    <div class="root-word">THEO</div>
+    <div class="root-meaning">= God / Divine</div>
+    <div class="root-hint">as in "theology"</div>
+  </div>
+  <div class="root-card">
+    <div class="root-lang">Greek Root (shared)</div>
+    <div class="root-word">-CRACY</div>
+    <div class="root-meaning">= Rule / Power</div>
+    <div class="root-hint">who holds control</div>
+  </div>
+</div>
+
+<div class="workspace" id="workspace">
+
+  <!-- Word Bank -->
+  <div class="word-bank">
+    <div class="section-head">🧩 Word Parts — drag to build</div>
+    <div class="word-tiles" id="word-tiles">
+      <div class="word-tile" draggable="true" id="wt-demo"  data-type="prefix" data-val="DEMO"  data-gov="democracy">
+        <span class="wt-name">DEMO–</span>
+        <span class="wt-parts">Greek · "people"</span>
+      </div>
+      <div class="word-tile" draggable="true" id="wt-auto"  data-type="prefix" data-val="AUTO"  data-gov="autocracy">
+        <span class="wt-name">AUTO–</span>
+        <span class="wt-parts">Greek · "self / alone"</span>
+      </div>
+      <div class="word-tile" draggable="true" id="wt-theo"  data-type="prefix" data-val="THEO"  data-gov="theocracy">
+        <span class="wt-name">THEO–</span>
+        <span class="wt-parts">Greek · "god / divine"</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Government Cards -->
+  <div class="gov-cards" id="gov-cards">
+
+    <div class="gov-card" id="card-democracy" data-gov="democracy">
+      <div class="gov-card-header">
+        <span class="gov-icon">🗳️</span>
+        <div>
+          <div class="gov-name dem" id="word-democracy">? + CRACY</div>
+          <div style="font-size:0.78rem;color:#475569;font-weight:600">Type of Government</div>
+        </div>
+      </div>
+      <div class="gov-card-body">
+        <div class="drop-slot slot-prefix" id="dz-democracy-prefix"
+          data-gov="democracy" data-slot="prefix"
+          ondragover="L1_ov(event)" ondragleave="L1_ol(event)" ondrop="L1_od(event)">
+          <span class="slot-label">Prefix</span>
+          Drop prefix
+        </div>
+        <div class="drop-slot slot-root" style="display:flex;align-items:center;justify-content:center;">
+          <span style="font-size:1rem;font-weight:800;color:#475569;">–CRACY–</span>
+        </div>
+        <div class="drop-slot slot-meaning" id="dz-democracy-meaning"
+          data-gov="democracy" data-slot="meaning"
+          ondragover="L1_ov(event)" ondragleave="L1_ol(event)" ondrop="L1_od(event)">
+          <span class="slot-label">Meaning</span>
+          Drop meaning
+        </div>
+      </div>
+    </div>
+
+    <div class="gov-card" id="card-autocracy" data-gov="autocracy">
+      <div class="gov-card-header">
+        <span class="gov-icon">👑</span>
+        <div>
+          <div class="gov-name auto" id="word-autocracy">? + CRACY</div>
+          <div style="font-size:0.78rem;color:#475569;font-weight:600">Type of Government</div>
+        </div>
+      </div>
+      <div class="gov-card-body">
+        <div class="drop-slot slot-prefix" id="dz-autocracy-prefix"
+          data-gov="autocracy" data-slot="prefix"
+          ondragover="L1_ov(event)" ondragleave="L1_ol(event)" ondrop="L1_od(event)">
+          <span class="slot-label">Prefix</span>
+          Drop prefix
+        </div>
+        <div class="drop-slot slot-root" style="display:flex;align-items:center;justify-content:center;">
+          <span style="font-size:1rem;font-weight:800;color:#475569;">–CRACY–</span>
+        </div>
+        <div class="drop-slot slot-meaning" id="dz-autocracy-meaning"
+          data-gov="autocracy" data-slot="meaning"
+          ondragover="L1_ov(event)" ondragleave="L1_ol(event)" ondrop="L1_od(event)">
+          <span class="slot-label">Meaning</span>
+          Drop meaning
+        </div>
+      </div>
+    </div>
+
+    <div class="gov-card" id="card-theocracy" data-gov="theocracy">
+      <div class="gov-card-header">
+        <span class="gov-icon">⛪</span>
+        <div>
+          <div class="gov-name theo" id="word-theocracy">? + CRACY</div>
+          <div style="font-size:0.78rem;color:#475569;font-weight:600">Type of Government</div>
+        </div>
+      </div>
+      <div class="gov-card-body">
+        <div class="drop-slot slot-prefix" id="dz-theocracy-prefix"
+          data-gov="theocracy" data-slot="prefix"
+          ondragover="L1_ov(event)" ondragleave="L1_ol(event)" ondrop="L1_od(event)">
+          <span class="slot-label">Prefix</span>
+          Drop prefix
+        </div>
+        <div class="drop-slot slot-root" style="display:flex;align-items:center;justify-content:center;">
+          <span style="font-size:1rem;font-weight:800;color:#475569;">–CRACY–</span>
+        </div>
+        <div class="drop-slot slot-meaning" id="dz-theocracy-meaning"
+          data-gov="theocracy" data-slot="meaning"
+          ondragover="L1_ov(event)" ondragleave="L1_ol(event)" ondrop="L1_od(event)">
+          <span class="slot-label">Meaning</span>
+          Drop meaning
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Meaning Bank -->
+  <div class="meaning-bank">
+    <div class="section-head">📖 Meaning Bank — drag the right meaning to each word</div>
+    <div class="meaning-tiles">
+      <div class="meaning-tile" draggable="true" id="mt-people"    data-type="meaning" data-val="Rule by the People">🗳️ Rule by the People</div>
+      <div class="meaning-tile" draggable="true" id="mt-one"       data-type="meaning" data-val="Rule by One Person">👑 Rule by One Person</div>
+      <div class="meaning-tile" draggable="true" id="mt-god"       data-type="meaning" data-val="Rule by Religious Law">⛪ Rule by Religious Law</div>
+      <div class="meaning-tile" draggable="true" id="mt-citizens"  data-type="meaning" data-val="Citizens vote for leaders">🏛️ Citizens vote for leaders</div>
+      <div class="meaning-tile" draggable="true" id="mt-dictator"  data-type="meaning" data-val="Single ruler holds all power">⚔️ Single ruler holds all power</div>
+      <div class="meaning-tile" draggable="true" id="mt-religion"  data-type="meaning" data-val="Government based on religion">📜 Government based on religion</div>
+    </div>
+  </div>
+
+  <!-- Buttons -->
+  <div class="btn-row">
+    <button class="btn-reset"  onclick="L1_resetAll()">🔄 Reset</button>
+    <button class="btn-check"  onclick="L1_checkAnswers()">✅ Check Answers</button>
+    <button class="btn-quiz"   onclick="L1_startQuiz()">⚡ Challenge Quiz</button>
+    <button class="btn-reveal" onclick="L1_revealAll()">💡 Reveal All</button>
+  </div>
+
+  <div id="feedback"></div>
+
+</div><!-- /workspace -->
+
+<!-- Quiz Overlay -->
+<div id="quiz-overlay">
+  <div class="quiz-box">
+    <h2>⚡ Challenge Quiz</h2>
+    <p class="qsub">Test your government roots knowledge!</p>
+    <div id="q-timer-wrap"><div id="q-timer-bar"></div></div>
+    <div class="q-text" id="q-text"></div>
+    <div class="q-choices" id="q-choices"></div>
+    <div id="q-score"></div>
+    <button class="btn-close-quiz" onclick="L1_closeQuiz()">✕ Close</button>
+  </div>
+</div>
+
+<div id="confetti-wrap"></div>
+</div>
+<script>
+
+// ── Answer Key ──
+const ANSWERS = {
+  democracy: { prefix: 'DEMO',  meanings: ['Rule by the People', 'Citizens vote for leaders'] },
+  autocracy: { prefix: 'AUTO',  meanings: ['Rule by One Person', 'Single ruler holds all power'] },
+  theocracy: { prefix: 'THEO',  meanings: ['Rule by Religious Law', 'Government based on religion'] },
+};
+const WORD_DISPLAY = {
+  democracy: 'DEMOCRACY',
+  autocracy: 'AUTOCRACY',
+  theocracy: 'THEOCRACY',
+};
+
+// ── Drag ──
+let dragEl = null;
+document.addEventListener('dragstart', e => {
+  const t = e.target.closest('[draggable="true"]');
+  if (!t) return;
+  dragEl = t;
+  setTimeout(() => t.classList.add('dragging'), 0);
+});
+document.addEventListener('dragend', () => {
+  if (dragEl) dragEl.classList.remove('dragging');
+  dragEl = null;
+});
+
+function L1_ov(e) { e.preventDefault(); e.currentTarget.classList.add('drag-over'); }
+function L1_ol(e) { e.currentTarget.classList.remove('drag-over'); }
+function L1_od(e) {
+  e.preventDefault();
+  const dz = e.currentTarget;
+  dz.classList.remove('drag-over');
+  if (!dragEl) return;
+
+  const slot = dz.dataset.slot;
+  const tileType = dragEl.dataset.type;
+  if ((slot === 'prefix' && tileType !== 'prefix') || (slot === 'meaning' && tileType !== 'meaning')) {
+    L1_showFB('❌ Wrong slot! Prefixes go left, meanings go right.', false); return;
+  }
+
+  if (dz.classList.contains('filled')) {
+    const old = dz.querySelector('.placed');
+    if (old) L1_returnTile(old.dataset.tileId);
+  }
+
+  L1_place(dz, dragEl);
+  L1_updateWord(dz.dataset.gov);
+  L1_updateProgress();
+  L1_clearFB();
+}
+
+function L1_place(dz, tile) {
+  const id  = tile.id;
+  const val = tile.dataset.val;
+  const isPrefix = tile.dataset.type === 'prefix';
+
+  const el = document.createElement('div');
+  el.className = 'placed';
+  el.dataset.tileId = id;
+  el.dataset.val = val;
+  el.textContent = isPrefix ? val + '–' : val;
+  el.title = 'Click to remove';
+  el.onclick = () => { L1_returnTile(id); L1_updateWord(dz.dataset.gov); L1_updateProgress(); };
+  dz.innerHTML = ''; dz.appendChild(el); dz.classList.add('filled');
+  tile.classList.add('used');
+}
+
+function L1_returnTile(id) {
+  const orig = document.getElementById(id);
+  if (orig) orig.classList.remove('used');
+  document.querySelectorAll('.drop-slot.filled').forEach(dz => {
+    const p = dz.querySelector('.placed');
+    if (p && p.dataset.tileId === id) {
+      const isPrefix = dz.classList.contains('slot-prefix');
+      dz.innerHTML = `<span class="slot-label">${isPrefix ? 'Prefix' : 'Meaning'}</span>${isPrefix ? 'Drop prefix' : 'Drop meaning'}`;
+      dz.classList.remove('filled');
+    }
+  });
+}
+
+function L1_updateWord(gov) {
+  const pfxDz = document.getElementById(`dz-${gov}-prefix`);
+  const pfxPlaced = pfxDz.querySelector('.placed');
+  const el = document.getElementById(`word-${gov}`);
+  el.textContent = pfxPlaced ? WORD_DISPLAY[gov] : '? + CRACY';
+  document.getElementById(`card-${gov}`).classList.remove('correct-card','wrong-card');
+}
+
+function L1_updateProgress() {
+  const total = 6; // 3 prefix + 3 meaning
+  let filled = document.querySelectorAll('.drop-slot.filled').length;
+  document.getElementById('prog-bar').style.width = (filled / total * 100) + '%';
+}
+
+// ── Check ──
+function L1_checkAnswers() {
+  let correct = 0, total = 0;
+  ['democracy','autocracy','theocracy'].forEach(gov => {
+    const pfxDz = document.getElementById(`dz-${gov}-prefix`);
+    const mnDz  = document.getElementById(`dz-${gov}-meaning`);
+    const pfxP  = pfxDz.querySelector('.placed');
+    const mnP   = mnDz.querySelector('.placed');
+    const card  = document.getElementById(`card-${gov}`);
+    let govOk = true;
+    if (pfxP) {
+      total++;
+      if (pfxP.dataset.val === ANSWERS[gov].prefix) correct++;
+      else govOk = false;
+    }
+    if (mnP) {
+      total++;
+      if (ANSWERS[gov].meanings.includes(mnP.dataset.val)) correct++;
+      else govOk = false;
+    }
+    if (pfxP && mnP) card.classList.toggle('correct-card', pfxP.dataset.val === ANSWERS[gov].prefix && ANSWERS[gov].meanings.includes(mnP.dataset.val));
+    if (pfxP && mnP && (!govOk)) card.classList.add('wrong-card');
+  });
+  if (total === 0) { L1_showFB('Start by dragging some tiles!', false); return; }
+  if (correct === 6) { L1_showFB('🎉 Perfect! All 3 governments built correctly! Amazing work!', true); L1_celebrate(); }
+  else L1_showFB(`✅ ${correct} of ${total} correct. Keep going!`, correct >= total / 2);
+}
+
+function L1_revealAll() {
+  L1_resetAll();
+  setTimeout(() => {
+    const pairs = [
+      ['wt-demo','dz-democracy-prefix'], ['wt-auto','dz-autocracy-prefix'], ['wt-theo','dz-theocracy-prefix'],
+      ['mt-people','dz-democracy-meaning'], ['mt-one','dz-autocracy-meaning'], ['mt-god','dz-theocracy-meaning'],
+    ];
+    pairs.forEach(([tid, dzid]) => {
+      const tile = document.getElementById(tid);
+      const dz   = document.getElementById(dzid);
+      if (tile && dz && !tile.classList.contains('used')) { L1_place(dz, tile); L1_updateWord(dz.dataset.gov); }
+    });
+    L1_updateProgress();
+  }, 50);
+}
+
+function L1_resetAll() {
+  document.querySelectorAll('[draggable="true"]').forEach(t => t.classList.remove('used'));
+  document.querySelectorAll('.drop-slot').forEach(dz => {
+    const isPrefix = dz.classList.contains('slot-prefix');
+    dz.innerHTML = `<span class="slot-label">${isPrefix ? 'Prefix' : 'Meaning'}</span>${isPrefix ? 'Drop prefix' : 'Drop meaning'}`;
+    dz.classList.remove('filled');
+  });
+  ['democracy','autocracy','theocracy'].forEach(g => {
+    document.getElementById(`word-${g}`).textContent = '? + CRACY';
+    document.getElementById(`card-${g}`).classList.remove('correct-card','wrong-card');
+  });
+  document.getElementById('prog-bar').style.width = '0%';
+  L1_clearFB();
+}
+
+function L1_showFB(msg, ok) { const el = document.getElementById('feedback'); el.textContent = msg; el.className = ok ? 'fb-ok' : 'fb-err'; }
+function L1_clearFB() { const el = document.getElementById('feedback'); el.textContent=''; el.className=''; }
+
+// ── Quiz ──
+const QUIZ = [
+  { q:'What does the root DEMO mean?', choices:['People','God','Self','Rule'], ans:'People' },
+  { q:'What does the root CRACY mean?', choices:['War','Rule / Power','Write','People'], ans:'Rule / Power' },
+  { q:'What does the root AUTO mean?', choices:['People','God','Self / Alone','Map'], ans:'Self / Alone' },
+  { q:'What does the root THEO mean?', choices:['Earth','Self','God / Divine','Rule'], ans:'God / Divine' },
+  { q:'DEMOCRACY means rule by…', choices:['One person','The people','Religious law','The military'], ans:'The people' },
+  { q:'AUTOCRACY means rule by…', choices:['The people','God','One powerful person','Parliament'], ans:'One powerful person' },
+  { q:'THEOCRACY means rule by…', choices:['Elected officials','Religious law','The military','Scientists'], ans:'Religious law' },
+  { q:'Which word contains the root for "people"?', choices:['Autocracy','Theocracy','Democracy','Aristocracy'], ans:'Democracy' },
+  { q:'Which government gives citizens the most voting power?', choices:['Autocracy','Theocracy','Democracy','Monarchy'], ans:'Democracy' },
+  { q:'"Auto" in automobile means the car moves by…', choices:['People pushing','Itself / its own power','God\'s will','The government'], ans:'Itself / its own power' },
+];
+
+let qIdx=0, qScore=0, qTimer=null, qTime=0;
+function L1_startQuiz() { qIdx=0; qScore=0; document.getElementById('quiz-overlay').classList.add('active'); L1_showQ(); }
+function L1_closeQuiz() { clearInterval(qTimer); document.getElementById('quiz-overlay').classList.remove('active'); }
+function L1_showQ() {
+  if (qIdx >= QUIZ.length) { L1_endQuiz(); return; }
+  const q = QUIZ[qIdx];
+  document.getElementById('q-text').textContent = q.q;
+  document.getElementById('q-score').textContent = `Score: ${qScore} / ${QUIZ.length}`;
+  const ch = document.getElementById('q-choices');
+  ch.innerHTML = '';
+  q.choices.forEach(c => {
+    const b = document.createElement('button');
+    b.className = 'q-choice'; b.textContent = c;
+    b.onclick = () => L1_pickQ(b, c, q.ans);
+    ch.appendChild(b);
+  });
+  qTime = 12;
+  document.getElementById('q-timer-bar').style.width = '100%';
+  clearInterval(qTimer);
+  qTimer = setInterval(() => {
+    qTime--;
+    document.getElementById('q-timer-bar').style.width = (qTime / 12 * 100) + '%';
+    if (qTime <= 0) { clearInterval(qTimer); qIdx++; L1_showQ(); }
+  }, 1000);
+}
+function L1_pickQ(btn, chosen, ans) {
+  clearInterval(qTimer);
+  document.querySelectorAll('.q-choice').forEach(b => b.onclick = null);
+  if (chosen === ans) { btn.classList.add('correct'); qScore++; }
+  else { btn.classList.add('wrong'); document.querySelectorAll('.q-choice').forEach(b => { if (b.textContent === ans) b.classList.add('correct'); }); }
+  qIdx++;
+  setTimeout(showQ, 1300);
+}
+function L1_endQuiz() {
+  clearInterval(qTimer);
+  document.getElementById('q-timer-wrap').style.display='none';
+  document.getElementById('q-text').textContent = '🏆 Quiz Complete!';
+  document.getElementById('q-choices').innerHTML = '';
+  const pct = Math.round(qScore/QUIZ.length*100);
+  const msg = pct===100?'🌟 Perfect! You are a Government Root Expert!':pct>=70?'🎉 Great job! You really know your roots!':'💪 Good try! Review the root key and try again!';
+  document.getElementById('q-score').innerHTML = `<strong>${qScore} / ${QUIZ.length}</strong> (${pct}%)<br><br>${msg}`;
+  if (pct===100) L1_celebrate();
+}
+
+// ── Confetti ──
+function L1_celebrate() {
+  const w = document.getElementById('confetti-wrap'); w.innerHTML='';
+  const cols=['#f0b429','#06b6d4','#34d399','#fb7185','#a78bfa'];
+  for (let i=0;i<80;i++){
+    const el=document.createElement('div'); el.className='cp';
+    el.style.cssText=`left:${Math.random()*100}vw;animation-delay:${Math.random()*1.5}s;animation-duration:${1.5+Math.random()}s;background:${cols[Math.floor(Math.random()*cols.length)]};width:${8+Math.random()*10}px;height:${8+Math.random()*10}px;border-radius:${Math.random()>.5?'50%':'2px'}`;
+    w.appendChild(el); setTimeout(()=>el.remove(),3500);
+  }
+}
+
+</script>
+
+<div class="section" id="section-lesson2">
+<div style="position:sticky;top:0;z-index:100;padding:10px 20px;background:#1e293b;border-bottom:1px solid rgba(255,255,255,0.1);">
+<button onclick="goHome()" style="background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);color:#fff;padding:8px 20px;border-radius:8px;cursor:pointer;font-size:0.9rem;font-family:inherit;font-weight:600;">← Back to Activities</button>
+</div>
+<header class="hero">
+  <div class="lesson-tag">Lesson 2 · Syllable Snip</div>
+  <h1>✂️ Syllable Snip</h1>
+  <p>Click the ✂️ between letters to "cut" each word into syllables. Then name the syllable type!</p>
+  <div class="score-strip">
+    <div class="score-item"><div class="score-num" id="score-correct">0</div><div class="score-lbl">Correct</div></div>
+    <div class="score-item"><div class="score-num" id="score-total">0</div><div class="score-lbl">Attempted</div></div>
+    <div class="score-item"><div class="score-num" id="score-streak">0🔥</div><div class="score-lbl">Streak</div></div>
+  </div>
+</header>
+
+<!-- Instructions -->
+<div class="instructions">
+  <div class="instr-box">
+    <div class="instr-icon">✂️</div>
+    <div class="instr-text">
+      <h3>How to play</h3>
+      <p>1. Look at the word below. <strong>Click the scissors (✂️) between letters</strong> to mark where you think each syllable break goes. Your syllables will appear as chips above the word. 2. Select the syllable type that matches. 3. Click <strong>Check</strong> to see if you're right, then move to the next word!</p>
+    </div>
+  </div>
+</div>
+
+<!-- Syllable Type Rules -->
+<div class="rules">
+  <div class="rule-card closed">
+    <h4>📦 Closed Syllable</h4>
+    <p>Ends in a consonant. The vowel is <strong>short</strong>.</p>
+    <span class="example">mon · o · the · ism</span>
+  </div>
+  <div class="rule-card silente">
+    <h4>✨ Silent-E Syllable</h4>
+    <p>Ends in a silent E. The vowel before is <strong>long</strong>.</p>
+    <span class="example">in · dus · tri · al · ize</span>
+  </div>
+</div>
+
+<!-- Word Stage -->
+<div class="stage">
+  <div class="stage-panel">
+    <div class="word-counter" id="word-counter">Word 1 of 8</div>
+    <div class="syllable-preview" id="syl-preview"></div>
+    <div class="word-display" id="word-display"></div>
+
+    <div style="margin-bottom:14px;font-size:0.8rem;font-weight:700;color:var(--muted);">SELECT THE SYLLABLE TYPE:</div>
+    <div class="type-row" id="type-row">
+      <button class="type-btn" data-type="Closed" onclick="L2_selectType(this)">
+        <span class="tb-label">Type 1</span>📦 Closed Syllable
+      </button>
+      <button class="type-btn" data-type="Silent-E" onclick="L2_selectType(this)">
+        <span class="tb-label">Type 2</span>✨ Silent-E Syllable
+      </button>
+      <button class="type-btn" data-type="Mixed" onclick="L2_selectType(this)">
+        <span class="tb-label">Type 3</span>🔀 Mixed Types
+      </button>
+      <button class="type-btn" data-type="Open" onclick="L2_selectType(this)">
+        <span class="tb-label">Type 4</span>🔓 Open Syllable
+      </button>
+    </div>
+
+    <div class="nav-row">
+      <button class="word-nav-btn" onclick="L2_prevWord()">← Previous</button>
+      <button class="word-nav-btn btn-check-word" onclick="L2_checkWord()">✅ Check Answer</button>
+      <button class="word-nav-btn" onclick="L2_nextWord()">Next →</button>
+    </div>
+    <div class="result-row" id="result-row"></div>
+  </div>
+</div>
+
+<!-- Answer History -->
+<div class="history">
+  <div class="history-panel">
+    <h3>📋 Your Answers</h3>
+    <div class="history-list" id="history-list">
+      <div style="color:var(--muted);font-size:0.88rem;">Your checked answers will appear here...</div>
+    </div>
+  </div>
+</div>
+</div>
+<script>
+
+const WORDS = [
+  { word:'MONOTHEISM',  syllables:['MON','O','THE','ISM'],  correct:'mon-o-the-ism',  type:'Closed',  hint:'All syllables end in consonants — classic Closed pattern.' },
+  { word:'POLYTHEISM',  syllables:['POL','Y','THE','ISM'],  correct:'pol-y-the-ism',  type:'Mixed',   hint:'Mixed: "pol" and "ism" are closed; "the" is open.' },
+  { word:'GEOGRAPHY',   syllables:['GE','OG','RA','PHY'],   correct:'ge-og-ra-phy',   type:'Open',    hint:'GE and RA end in vowels — Open syllables!' },
+  { word:'DEMOCRACY',   syllables:['DE','MOC','RA','CY'],   correct:'de-moc-ra-cy',   type:'Mixed',   hint:'MOC is closed; DE and RA are open.' },
+  { word:'AUTOCRACY',   syllables:['AU','TOC','RA','CY'],   correct:'au-toc-ra-cy',   type:'Mixed',   hint:'TOC is closed; AU and RA are open.' },
+  { word:'INDUSTRIALIZATION', syllables:['IN','DUS','TRI','AL','I','ZA','TION'], correct:'in-dus-tri-al-i-za-tion', type:'Mixed', hint:'Complex word! Many closed syllables.' },
+  { word:'DEFORESTATION', syllables:['DE','FOR','ES','TA','TION'], correct:'de-for-es-ta-tion', type:'Mixed', hint:'Mixed pattern — DE is open, FOR is closed.' },
+  { word:'ASSIMILATE',  syllables:['AS','SIM','I','LATE'],  correct:'as-sim-i-late',  type:'Mixed',   hint:'LATE ends in silent-E — that makes it a Silent-E syllable!' },
+];
+
+let current = 0;
+let cuts = [];
+let selectedType = null;
+let scores = { correct: 0, total: 0, streak: 0 };
+let history = [];
+
+function L2_buildWord() {
+  const w = WORDS[current];
+  cuts = new Array(w.word.length - 1).fill(false);
+  selectedType = null;
+  document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('selected'));
+  document.getElementById('result-row').textContent = '';
+  document.getElementById('word-counter').textContent = `Word ${current+1} of ${WORDS.length}`;
+  L2_renderWord();
+  L2_renderPreview();
+}
+
+function L2_renderWord() {
+  const w = WORDS[current].word;
+  const display = document.getElementById('word-display');
+  display.innerHTML = '';
+  for (let i = 0; i < w.length; i++) {
+    const grp = document.createElement('div');
+    grp.className = 'letter-group' + (i < w.length-1 && cuts[i] ? ' cut' : '');
+    const ltr = document.createElement('div');
+    ltr.className = 'letter';
+    ltr.textContent = w[i];
+    grp.appendChild(ltr);
+    if (i < w.length - 1) {
+      const btn = document.createElement('button');
+      btn.className = 'cut-btn' + (cuts[i] ? ' active' : '');
+      btn.textContent = cuts[i] ? '✓' : '✂';
+      btn.title = 'Click to cut here';
+      btn.dataset.idx = i;
+      btn.onclick = () => L2_toggleCut(i);
+      grp.appendChild(btn);
+    }
+    display.appendChild(grp);
+  }
+}
+
+function L2_toggleCut(idx) {
+  cuts[idx] = !cuts[idx];
+  L2_renderWord();
+  L2_renderPreview();
+}
+
+function L2_renderPreview() {
+  const w = WORDS[current].word;
+  const preview = document.getElementById('syl-preview');
+  if (cuts.every(c => !c)) { preview.innerHTML = '<span style="color:#94a3b8;font-size:0.88rem;font-weight:600;">Cut the word — syllables will appear here</span>'; return; }
+  let parts = [], cur = '';
+  for (let i = 0; i < w.length; i++) {
+    cur += w[i];
+    if (i < w.length-1 && cuts[i]) { parts.push(cur); cur = ''; }
+  }
+  parts.push(cur);
+  preview.innerHTML = parts.map((p,i) =>
+    `<span class="syl-chip">${p}</span>${i < parts.length-1 ? '<span class="syl-dash">–</span>' : ''}`
+  ).join('');
+}
+
+function L2_selectType(btn) {
+  document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selectedType = btn.dataset.type;
+}
+
+function L2_getSyllableString() {
+  const w = WORDS[current].word;
+  let parts = [], cur = '';
+  for (let i = 0; i < w.length; i++) {
+    cur += w[i];
+    if (i < w.length-1 && cuts[i]) { parts.push(cur); cur = ''; }
+  }
+  parts.push(cur);
+  return parts.join('-').toLowerCase();
+}
+
+function L2_checkWord() {
+  const w = WORDS[current];
+  if (cuts.every(c => !c)) { document.getElementById('result-row').innerHTML = '<span class="res-err">✂️ Try cutting the word first!</span>'; return; }
+  if (!selectedType) { document.getElementById('result-row').innerHTML = '<span class="res-err">👆 Select a syllable type above!</span>'; return; }
+  const userSyl = L2_getSyllableString();
+  const sylOk = userSyl === w.correct;
+  const typeOk = selectedType === w.type;
+  const bothOk = sylOk && typeOk;
+  scores.total++;
+  if (bothOk) { scores.correct++; scores.streak++; document.getElementById('result-row').innerHTML = `<span class="res-ok">🎉 Perfect! ${w.hint}</span>`; }
+  else {
+    scores.streak = 0;
+    let msg = '';
+    if (!sylOk) msg += `✂️ Expected: <strong>${w.correct}</strong>. `;
+    if (!typeOk) msg += `📦 Syllable type: <strong>${w.type}</strong>. `;
+    msg += w.hint;
+    document.getElementById('result-row').innerHTML = `<span class="res-err">${msg}</span>`;
+  }
+  // Add to history
+  history.push({ word: w.word, userSyl, correct: w.correct, type: w.type, ok: bothOk });
+  L2_updateScores();
+  L2_renderHistory();
+}
+
+function L2_updateScores() {
+  document.getElementById('score-correct').textContent = scores.correct;
+  document.getElementById('score-total').textContent = scores.total;
+  document.getElementById('score-streak').textContent = scores.streak + '🔥';
+}
+
+function L2_renderHistory() {
+  const list = document.getElementById('history-list');
+  if (history.length === 0) { list.innerHTML = '<div style="color:var(--muted);font-size:0.88rem;">Your checked answers will appear here...</div>'; return; }
+  list.innerHTML = history.slice().reverse().map(h => `
+    <div class="hist-item">
+      <div class="hist-word">${h.word}</div>
+      <div class="hist-syl">${h.ok ? h.userSyl : `<span style="text-decoration:line-through;opacity:0.5">${h.userSyl}</span> → ${h.correct}`}</div>
+      <div class="hist-badge ${h.ok?'ok':'wrong'}">${h.ok?'✅ Correct':'❌ Try again'}</div>
+    </div>
+  `).join('');
+}
+
+function L2_nextWord() { if (current < WORDS.length-1) { current++; L2_buildWord(); } }
+function L2_prevWord() { if (current > 0) { current--; L2_buildWord(); } }
+
+
+
+window.L2_init = L2_buildWord;
+</script>
+
+<div class="section" id="section-lesson3">
+<div style="position:sticky;top:0;z-index:100;padding:10px 20px;background:#1e293b;border-bottom:1px solid rgba(255,255,255,0.1);">
+<button onclick="goHome()" style="background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);color:#fff;padding:8px 20px;border-radius:8px;cursor:pointer;font-size:0.9rem;font-family:inherit;font-weight:600;">← Back to Activities</button>
+</div>
+<header class="hero">
+  <div class="lesson-tag">Lesson 3 · Context Clues</div>
+  <h1>Word <em>Connections</em></h1>
+  <p>Drag each word into the Synonym or Antonym column. Use context clues and what you know!</p>
+</header>
+
+<nav class="tabs" id="tabs"></nav>
+
+<main>
+  <div class="progress-row" id="progress-row"></div>
+
+  <!-- Focus Word -->
+  <div class="focus-card" id="focus-card"></div>
+
+  <!-- Hint Box -->
+  <div class="hint-box" id="hint-box"></div>
+
+  <!-- Sort Arena -->
+  <div class="sort-arena">
+    <div class="sort-col col-syn" id="col-syn"
+      ondragover="L3_ov(event,'syn')" ondragleave="L3_ol('syn')" ondrop="L3_od(event,'syn')">
+      <h3>✅ Synonyms<br><span style="font-size:0.65rem;font-weight:500;opacity:0.7">(same / similar meaning)</span></h3>
+      <div id="placed-syn"></div>
+    </div>
+
+    <div class="sort-center">
+      <div class="sc-label">Target Word</div>
+      <div id="center-word" style="font-family:'Fraunces',serif;font-size:1.4rem;font-weight:900;color:var(--green);text-align:center;"></div>
+      <div class="divider"></div>
+      <div class="sc-label" style="margin-top:8px;">Word Cards</div>
+      <div id="word-bank"></div>
+    </div>
+
+    <div class="sort-col col-ant" id="col-ant"
+      ondragover="L3_ov(event,'ant')" ondragleave="L3_ol('ant')" ondrop="L3_od(event,'ant')">
+      <h3>❌ Antonyms<br><span style="font-size:0.65rem;font-weight:500;opacity:0.7">(opposite meaning)</span></h3>
+      <div id="placed-ant"></div>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn-reset" onclick="L3_resetRound()">🔄 Reset</button>
+    <button class="btn-hint"  onclick="L3_toggleHint()">💡 Hint</button>
+    <button class="btn-check" onclick="L3_checkRound()">✅ Check</button>
+    <button class="btn-next"  onclick="L3_nextWord()">Next Word →</button>
+  </div>
+  <div id="feedback"></div>
+</main>
+</div>
+<script>
+
+const WORDS = [
+  {
+    word:'ASSIMILATE', phonetic:'uh-SIM-uh-layt', pos:'verb',
+    def:'To absorb and become part of a new culture or group.',
+    sentence:'When settlers arrived in the region, many native groups were forced to assimilate into the new culture.',
+    synonyms:[{w:'Absorb',hint:'Take in and make part of a whole'},{w:'Integrate',hint:'Combine into a unified whole'},{w:'Adopt',hint:'Take up and use as your own'}],
+    antonyms:[{w:'Reject',hint:'Refuse to accept'},{w:'Separate',hint:'Keep apart or divided'},{w:'Isolate',hint:'Keep away from others'}],
+    hint:'Think: when you blend a smoothie, the ingredients ASSIMILATE — they get absorbed into the whole.',
+  },
+  {
+    word:'DEFORESTATION', phonetic:'dee-for-est-AY-shun', pos:'noun',
+    def:'The clearing or removal of forests, usually by human activity.',
+    sentence:'Deforestation in the Amazon has accelerated due to farming and cattle ranching.',
+    synonyms:[{w:'Clearing',hint:'Removing trees from land'},{w:'Logging',hint:'Cutting down trees for timber'},{w:'Stripping',hint:'Removing all vegetation'}],
+    antonyms:[{w:'Reforestation',hint:'Planting trees to restore forests'},{w:'Conservation',hint:'Protecting natural resources'},{w:'Preservation',hint:'Keeping something from being destroyed'}],
+    hint:'DE- means "remove" — DEFORESTATION removes forests. The opposite would be ADDING trees back.',
+  },
+  {
+    word:'INDUSTRIALIZATION', phonetic:'in-dus-tree-ul-ih-ZAY-shun', pos:'noun',
+    def:'The process of developing industries in a country or region on a large scale.',
+    sentence:'The industrialization of Southern Asia brought both economic growth and serious pollution problems.',
+    synonyms:[{w:'Modernization',hint:'Updating to more advanced methods'},{w:'Development',hint:'Growth and advancement of an area'},{w:'Manufacturing growth',hint:'Expansion of factory production'}],
+    antonyms:[{w:'Deindustrialization',hint:'Loss or decline of industrial activity'},{w:'Agrarianism',hint:'Focus on farming rather than industry'},{w:'Decline',hint:'A decrease or falling away'}],
+    hint:'The root "industry" means organized production. The suffix "-ization" means "the process of becoming." So: the process of becoming industrial.',
+  },
+  {
+    word:'DEMOCRACY', phonetic:'deh-MOK-ruh-see', pos:'noun',
+    def:'A system of government in which citizens vote to elect their leaders.',
+    sentence:'In a democracy, the people hold the power to choose their government through free elections.',
+    synonyms:[{w:'Republic',hint:'Government where people elect representatives'},{w:'Self-governance',hint:'People governing themselves'},{w:'Popular rule',hint:'Rule by the people'}],
+    antonyms:[{w:'Autocracy',hint:'Rule by a single person with total power'},{w:'Dictatorship',hint:'Absolute control by one ruler'},{w:'Tyranny',hint:'Cruel, oppressive government'}],
+    hint:'DEMO = people, CRACY = rule. The opposite is when ONE person rules, not the people.',
+  },
+  {
+    word:'MIGRATION', phonetic:'my-GRAY-shun', pos:'noun',
+    def:'The movement of people from one place to another, especially to a new country or region.',
+    sentence:'The migration of people from rural to urban areas increased as factory jobs became available.',
+    synonyms:[{w:'Movement',hint:'Going from one place to another'},{w:'Relocation',hint:'Moving to a new place to live'},{w:'Emigration',hint:'Leaving one country to live in another'}],
+    antonyms:[{w:'Settlement',hint:'Staying in one place permanently'},{w:'Stagnation',hint:'Not moving or changing'},{w:'Immigration',hint:'Moving INTO a new country'}],
+    hint:'Think of birds migrating for winter — they MOVE from one place to another. The opposite is STAYING PUT.',
+  },
+];
+
+let current = 0;
+let placed = { syn: [], ant: [] };
+let hintVisible = false;
+let dragEl = null;
+
+function L3_init() {
+  L3_buildTabs();
+  L3_buildProgress();
+  L3_loadWord();
+}
+
+function L3_buildTabs() {
+  const tabs = document.getElementById('tabs');
+  tabs.innerHTML = WORDS.map((w,i) =>
+    `<button class="tab ${i===0?'active':''}" onclick="L3_jumpTo(${i})">${w.word}</button>`
+  ).join('');
+}
+
+function L3_buildProgress() {
+  const row = document.getElementById('progress-row');
+  row.innerHTML = WORDS.map((_,i) =>
+    `<div class="prog-dot ${i===current?'current':''}" id="pd-${i}"></div>`
+  ).join('');
+}
+
+function L3_updateProgress() {
+  WORDS.forEach((_,i) => {
+    const el = document.getElementById(`pd-${i}`);
+    el.className = 'prog-dot' + (i===current?' current':'') + (i<current?' done':'');
+  });
+}
+
+function L3_jumpTo(i) {
+  current = i;
+  placed = {syn:[],ant:[]};
+  hintVisible = false;
+  document.getElementById('hint-box').classList.remove('visible');
+  L3_loadWord();
+  document.querySelectorAll('.tab').forEach((t,ti) => t.classList.toggle('active', ti===i));
+  L3_updateProgress();
+}
+
+function L3_loadWord() {
+  const w = WORDS[current];
+  // Focus card
+  document.getElementById('focus-card').innerHTML = `
+    <div class="focus-left">
+      <div class="focus-word">${w.word}</div>
+      <div class="focus-phonetic">${w.phonetic}</div>
+      <span class="focus-pos">${w.pos}</span>
+    </div>
+    <div class="focus-right">
+      <div class="focus-def">${w.def}</div>
+      <div class="focus-sentence">"${w.sentence}"</div>
+    </div>
+  `;
+  document.getElementById('center-word').textContent = w.word;
+  document.getElementById('hint-box').innerHTML = `<p>💡 <strong>Memory Hook:</strong> ${w.hint}</p>`;
+  L3_renderBank();
+  L3_renderPlaced();
+  document.getElementById('feedback').textContent = '';
+}
+
+function L3_renderBank() {
+  const w = WORDS[current];
+  const bank = document.getElementById('word-bank');
+  const allCards = [...w.synonyms,...w.antonyms];
+  const placedIds = [...placed.syn,...placed.ant];
+  bank.innerHTML = allCards
+    .filter(c => !placedIds.find(p => p.w === c.w))
+    .map(c => `
+      <div class="word-card" draggable="true" id="wc-${c.w.replace(/\s/g,'-')}" data-word="${c.w}" data-hint="${c.hint}">
+        ${c.w}
+        <span class="wc-hint">${c.hint}</span>
+      </div>
+    `).join('');
+  bank.querySelectorAll('.word-card').forEach(el => {
+    el.addEventListener('dragstart', e => { dragEl = el; setTimeout(()=>el.classList.add('dragging'),0); });
+    el.addEventListener('dragend', () => el.classList.remove('dragging'));
+  });
+}
+
+function L3_renderPlaced() {
+  ['syn','ant'].forEach(side => {
+    document.getElementById(`placed-${side}`).innerHTML = placed[side].map(c => `
+      <div class="word-card placed placed-${side}" onclick="L3_removeCard('${c.w}','${side}')">
+        ${c.w}
+        <span class="wc-hint">${c.hint}</span>
+      </div>
+    `).join('');
+  });
+}
+
+function L3_removeCard(word, side) {
+  placed[side] = placed[side].filter(c => c.w !== word);
+  L3_renderBank();
+  L3_renderPlaced();
+}
+
+function L3_ov(e, side) {
+  e.preventDefault();
+  document.getElementById(`col-${side}`).classList.add('drag-over');
+}
+function L3_ol(side) {
+  document.getElementById(`col-${side}`).classList.remove('drag-over');
+}
+function L3_od(e, side) {
+  e.preventDefault();
+  document.getElementById(`col-${side}`).classList.remove('drag-over');
+  if (!dragEl) return;
+  const word = dragEl.dataset.word;
+  const hint = dragEl.dataset.hint;
+  if (placed[side].find(c=>c.w===word)) return;
+  // remove from other side if there
+  const other = side==='syn'?'ant':'syn';
+  placed[other] = placed[other].filter(c=>c.w!==word);
+  placed[side].push({w:word,hint});
+  L3_renderBank();
+  L3_renderPlaced();
+  dragEl = null;
+}
+
+function L3_checkRound() {
+  const w = WORDS[current];
+  const synWords = placed.syn.map(c=>c.w);
+  const antWords = placed.ant.map(c=>c.w);
+  const correctSyn = w.synonyms.map(c=>c.w);
+  const correctAnt = w.antonyms.map(c=>c.w);
+  let correct = 0, total = synWords.length + antWords.length;
+  if (total === 0) { document.getElementById('feedback').innerHTML = '<span class="fb-err">Drag some words to sort them first!</span>'; return; }
+  synWords.forEach(cw => { if (correctSyn.includes(cw)) correct++; });
+  antWords.forEach(cw => { if (correctAnt.includes(cw)) correct++; });
+  const wrongSyn = synWords.filter(cw => !correctSyn.includes(cw));
+  const wrongAnt = antWords.filter(cw => !correctAnt.includes(cw));
+  if (correct === total && total === 6) {
+    document.getElementById('feedback').innerHTML = '<span class="fb-ok">🎉 Perfect! All 6 words sorted correctly!</span>';
+  } else {
+    let msg = `✅ ${correct}/${total} correct. `;
+    if (wrongSyn.length) msg += `<strong>${wrongSyn.join(', ')}</strong> are not synonyms. `;
+    if (wrongAnt.length) msg += `<strong>${wrongAnt.join(', ')}</strong> are not antonyms.`;
+    document.getElementById('feedback').innerHTML = `<span class="fb-err">${msg}</span>`;
+  }
+}
+
+function L3_toggleHint() {
+  hintVisible = !hintVisible;
+  document.getElementById('hint-box').classList.toggle('visible', hintVisible);
+}
+
+function L3_resetRound() {
+  placed = {syn:[],ant:[]};
+  L3_renderBank();
+  L3_renderPlaced();
+  document.getElementById('feedback').textContent = '';
+}
+
+function L3_nextWord() {
+  if (current < WORDS.length-1) L3_jumpTo(current+1);
+  else document.getElementById('feedback').innerHTML = '<span class="fb-ok">🏆 You\'ve completed all 5 words! Great work!</span>';
+}
+
+
+
+window.L3_init = L3_init;
+</script>
+
+<div class="section" id="section-lesson4">
+<div style="position:sticky;top:0;z-index:100;padding:10px 20px;background:#1e293b;border-bottom:1px solid rgba(255,255,255,0.1);">
+<button onclick="goHome()" style="background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);color:#fff;padding:8px 20px;border-radius:8px;cursor:pointer;font-size:0.9rem;font-family:inherit;font-weight:600;">← Back to Activities</button>
+</div>
+<header>
+  <h1>⚙️ Word Engineers</h1>
+  <p>Build words using the root <strong>-GRAPH-</strong> (to write / to describe)</p>
+</header>
+
+<div class="workspace">
+
+  <!-- LEFT: Prefix Tiles -->
+  <div class="panel">
+    <h2 style="color:var(--blue)">🧩 Prefixes</h2>
+    <div class="tile tile-geo"   draggable="true" id="tile-geo"   data-type="prefix" data-val="GEO">GEO<br><span style="font-size:0.72rem;font-weight:700;opacity:0.75">(Earth)</span></div>
+    <div class="tile tile-demo"  draggable="true" id="tile-demo"  data-type="prefix" data-val="DEMO">DEMO<br><span style="font-size:0.72rem;font-weight:700;opacity:0.75">(People)</span></div>
+    <div class="tile tile-carto" draggable="true" id="tile-carto" data-type="prefix" data-val="CARTO">CARTO<br><span style="font-size:0.72rem;font-weight:700;opacity:0.75">(Map)</span></div>
+    <div class="tile tile-auto"  draggable="true" id="tile-auto"  data-type="prefix" data-val="AUTO">AUTO<br><span style="font-size:0.72rem;font-weight:700;opacity:0.75">(Self)</span></div>
+    <div class="tile tile-bio"   draggable="true" id="tile-bio"   data-type="prefix" data-val="BIO">BIO<br><span style="font-size:0.72rem;font-weight:700;opacity:0.75">(Life)</span></div>
+  </div>
+
+  <!-- CENTER: Matrix -->
+  <div class="matrix-wrap">
+    <h2>🗺️ Morphology Matrix</h2>
+    <table>
+      <thead>
+        <tr>
+          <th class="col-prefix">Prefix</th>
+          <th class="col-root">Root</th>
+          <th class="col-suffix">Suffix</th>
+          <th class="col-word">Word</th>
+          <th class="col-meaning">Meaning</th>
+        </tr>
+      </thead>
+      <tbody id="matrix-body">
+        <!-- Rows injected by JS -->
+      </tbody>
+    </table>
+
+    <div class="btn-row">
+      <button class="btn-reset"  onclick="L4_resetAll()">🔄 Reset</button>
+      <button class="btn-check"  onclick="L4_checkAnswers()">✅ Check Answers</button>
+      <button class="btn-game"   onclick="L4_startGame()">🎮 Challenge Mode!</button>
+      <button class="btn-reveal" onclick="L4_revealAll()">💡 Reveal All</button>
+    </div>
+    <div id="feedback"></div>
+  </div>
+
+  <!-- RIGHT: Meaning Tiles -->
+  <div class="panel">
+    <h2 style="color:var(--green)">📖 Meanings</h2>
+    <div class="tile tile-earth"  draggable="true" id="tile-earth"  data-type="meaning" data-val="Earth">🌍 Earth</div>
+    <div class="tile tile-people" draggable="true" id="tile-people" data-type="meaning" data-val="People">👥 People</div>
+    <div class="tile tile-map"    draggable="true" id="tile-map"    data-type="meaning" data-val="Map">🗺️ Map</div>
+    <div class="tile tile-self"   draggable="true" id="tile-self"   data-type="meaning" data-val="Self">🪞 Self</div>
+    <div class="tile tile-life"   draggable="true" id="tile-life"   data-type="meaning" data-val="Life">🌿 Life</div>
+  </div>
+</div>
+
+<!-- Game overlay -->
+<div id="game-overlay">
+  <div class="game-box">
+    <h2>⚡ Challenge Mode</h2>
+    <p>Match the word part to its meaning — fast!</p>
+    <div id="timer-bar-wrap"><div id="timer-bar"></div></div>
+    <div class="game-q" id="game-q"></div>
+    <div class="game-choices" id="game-choices"></div>
+    <div id="game-score"></div>
+    <button class="btn-close-game" onclick="L4_closeGame()">✕ Close</button>
+  </div>
+</div>
+
+<!-- Confetti layer -->
+<div id="confetti-wrap"></div>
+</div>
+<script>
+
+// ── Data ──
+const ROWS = [
+  { id:'geo',   prefix:'GEO',   suffix:'GRAPHY', word:'Geography',  meaning:'Earth',  prefixClass:'tile-geo',   meaningClass:'tile-earth'  },
+  { id:'demo',  prefix:'DEMO',  suffix:'GRAPHY', word:'Demography', meaning:'People', prefixClass:'tile-demo',  meaningClass:'tile-people' },
+  { id:'carto', prefix:'CARTO', suffix:'GRAPHY', word:'Cartography',meaning:'Map',    prefixClass:'tile-carto', meaningClass:'tile-map'    },
+  { id:'auto',  prefix:'AUTO',  suffix:'BIOGRAPHY', word:'Autobiography', meaning:'Self', prefixClass:'tile-auto', meaningClass:'tile-self' },
+  { id:'bio',   prefix:'BIO',   suffix:'GRAPHY', word:'Biography',  meaning:'Life',   prefixClass:'tile-bio',   meaningClass:'tile-life'   },
+];
+
+// ── Build Table ──
+function L4_buildTable() {
+  const tbody = document.getElementById('matrix-body');
+  tbody.innerHTML = '';
+  ROWS.forEach(row => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>
+        <div class="drop-zone" id="dz-prefix-${row.id}"
+          data-row="${row.id}" data-accepts="prefix"
+          ondragover="L4_onDragOver(event)" ondragleave="L4_onDragLeave(event)" ondrop="L4_onDrop(event)">
+          Drop prefix here
+        </div>
+      </td>
+      <td><div class="root-cell">-GRAPH-</div></td>
+      <td><div class="suffix-cell">-${row.suffix}</div></td>
+      <td><div class="word-cell" id="word-${row.id}">?</div></td>
+      <td>
+        <div class="drop-zone" id="dz-meaning-${row.id}"
+          data-row="${row.id}" data-accepts="meaning"
+          ondragover="L4_onDragOver(event)" ondragleave="L4_onDragLeave(event)" ondrop="L4_onDrop(event)">
+          Drop meaning here
+        </div>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+// ── Drag State ──
+let dragTile = null;
+document.addEventListener('dragstart', e => {
+  const t = e.target.closest('.tile');
+  if (!t) return;
+  dragTile = t;
+  setTimeout(() => t.classList.add('dragging'), 0);
+});
+document.addEventListener('dragend', e => {
+  if (dragTile) dragTile.classList.remove('dragging');
+  dragTile = null;
+});
+
+function L4_onDragOver(e) {
+  e.preventDefault();
+  e.currentTarget.classList.add('drag-over');
+}
+function L4_onDragLeave(e) {
+  e.currentTarget.classList.remove('drag-over');
+}
+function L4_onDrop(e) {
+  e.preventDefault();
+  const dz = e.currentTarget;
+  dz.classList.remove('drag-over');
+  if (!dragTile) return;
+
+  const accepts = dz.dataset.accepts;
+  const tileType = dragTile.dataset.type;
+  if (accepts !== tileType) {
+    L4_showFeedback('❌ Wrong spot! Prefixes go on the left, meanings go on the right.', false);
+    return;
+  }
+
+  // If already filled, return old tile
+  if (dz.classList.contains('filled')) {
+    const old = dz.querySelector('.placed-tile');
+    if (old) L4_returnTile(old.dataset.tileId);
+  }
+
+  L4_placeTile(dz, dragTile);
+  L4_updateWordCell(dz.dataset.row);
+}
+
+function L4_placeTile(dz, tile) {
+  const tileId = tile.id;
+  const val = tile.dataset.val;
+  const cls = Array.from(tile.classList).find(c => c.startsWith('tile-') && c !== 'tile');
+
+  // Create placed copy
+  const placed = document.createElement('div');
+  placed.className = `placed-tile ${cls}`;
+  placed.dataset.tileId = tileId;
+  placed.dataset.val = val;
+  placed.textContent = tile.textContent.split('\n')[0]; // just the label
+  placed.title = 'Click to remove';
+  placed.onclick = () => { L4_returnTile(tileId); L4_updateWordCell(dz.dataset.row); };
+
+  dz.innerHTML = '';
+  dz.appendChild(placed);
+  dz.classList.add('filled');
+
+  // Hide original
+  tile.classList.add('used');
+  L4_clearFeedback();
+}
+
+function L4_returnTile(tileId) {
+  const orig = document.getElementById(tileId);
+  if (orig) orig.classList.remove('used');
+  // Find and clear drop zone containing this tile
+  document.querySelectorAll('.drop-zone.filled').forEach(dz => {
+    const pt = dz.querySelector('.placed-tile');
+    if (pt && pt.dataset.tileId === tileId) {
+      dz.innerHTML = dz.dataset.accepts === 'prefix' ? 'Drop prefix here' : 'Drop meaning here';
+      dz.classList.remove('filled');
+    }
+  });
+}
+
+function L4_updateWordCell(rowId) {
+  const row = ROWS.find(r => r.id === rowId);
+  const prefixDz  = document.getElementById(`dz-prefix-${rowId}`);
+  const wordCell  = document.getElementById(`word-${rowId}`);
+  const pfx = prefixDz.querySelector('.placed-tile');
+  if (pfx) {
+    const w = row.word;
+    wordCell.textContent = w;
+    wordCell.classList.add('lit');
+  } else {
+    wordCell.textContent = '?';
+    wordCell.classList.remove('lit');
+  }
+}
+
+// ── Check ──
+function L4_checkAnswers() {
+  let correct = 0, total = 0;
+  ROWS.forEach(row => {
+    const pfxDz = document.getElementById(`dz-prefix-${row.id}`);
+    const mnDz  = document.getElementById(`dz-meaning-${row.id}`);
+    const pfxTile = pfxDz.querySelector('.placed-tile');
+    const mnTile  = mnDz.querySelector('.placed-tile');
+    if (pfxTile) {
+      total++;
+      if (pfxTile.dataset.val === row.prefix) correct++;
+    }
+    if (mnTile) {
+      total++;
+      if (mnTile.dataset.val === row.meaning) correct++;
+    }
+  });
+  if (total === 0) { L4_showFeedback('Start by dragging some tiles!', false); return; }
+  if (correct === total && total === ROWS.length * 2) {
+    L4_showFeedback(`🎉 Perfect! All ${correct} answers correct! Amazing work, Word Engineer!`, true);
+    L4_celebrate();
+  } else {
+    L4_showFeedback(`✅ ${correct} out of ${total} correct. Keep going!`, correct > total/2);
+  }
+}
+
+function L4_revealAll() {
+  L4_resetAll();
+  setTimeout(() => {
+    ROWS.forEach(row => {
+      const pfxDz = document.getElementById(`dz-prefix-${row.id}`);
+      const mnDz  = document.getElementById(`dz-meaning-${row.id}`);
+      const pfxTile = document.getElementById(`tile-${row.id}`);
+      const mnTile  = document.getElementById(`tile-${row.meaning.toLowerCase()}`);
+      if (pfxTile && !pfxTile.classList.contains('used')) L4_placeTile(pfxDz, pfxTile);
+      if (mnTile  && !mnTile.classList.contains('used'))  L4_placeTile(mnDz,  mnTile);
+      L4_updateWordCell(row.id);
+    });
+  }, 50);
+}
+
+function L4_resetAll() {
+  document.querySelectorAll('.tile').forEach(t => t.classList.remove('used'));
+  L4_buildTable();
+  L4_clearFeedback();
+}
+
+// ── Feedback ──
+function L4_showFeedback(msg, ok) {
+  const el = document.getElementById('feedback');
+  el.textContent = msg;
+  el.className = ok ? 'feedback-ok' : 'feedback-err';
+}
+function L4_clearFeedback() {
+  const el = document.getElementById('feedback');
+  el.textContent = '';
+  el.className = '';
+}
+
+// ── Celebrate ──
+function L4_celebrate() {
+  const wrap = document.getElementById('confetti-wrap');
+  wrap.innerHTML = '';
+  const colors = ['#3b6cf7','#22c55e','#f59e0b','#ef4444','#8b5cf6','#14b8a6'];
+  for (let i = 0; i < 80; i++) {
+    const el = document.createElement('div');
+    el.className = 'confetti-piece';
+    el.style.left = Math.random() * 100 + 'vw';
+    el.style.animationDelay = Math.random() * 1.5 + 's';
+    el.style.animationDuration = (1.5 + Math.random()) + 's';
+    el.style.background = colors[Math.floor(Math.random() * colors.length)];
+    el.style.width = el.style.height = (8 + Math.random() * 10) + 'px';
+    el.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+    wrap.appendChild(el);
+    setTimeout(() => el.remove(), 3500);
+  }
+}
+
+// ── Game Mode ──
+const GAME_Q = [
+  { q:'What does GEO mean?',   choices:['Earth','People','Map','Self'],   ans:'Earth'  },
+  { q:'What does DEMO mean?',  choices:['Map','People','Life','Earth'],   ans:'People' },
+  { q:'What does CARTO mean?', choices:['Self','Life','Map','People'],    ans:'Map'    },
+  { q:'What does AUTO mean?',  choices:['Life','Earth','People','Self'],  ans:'Self'   },
+  { q:'What does BIO mean?',   choices:['Map','Self','Earth','Life'],     ans:'Life'   },
+  { q:'GRAPH means…',          choices:['Draw','Run','Write/Describe','Read'], ans:'Write/Describe' },
+  { q:'Geography describes…',  choices:['People','The Earth','Life','Maps'], ans:'The Earth' },
+  { q:'Demography describes…', choices:['Maps','The Earth','People','Self'], ans:'People' },
+  { q:'Cartography describes…',choices:['Maps','Life','People','The Earth'], ans:'Maps' },
+  { q:'Autobiography describes…',choices:['Maps','The Earth','Yourself','Life'], ans:'Yourself' },
+];
+
+let gameIdx = 0, gameScore = 0, gameTimer = null, timeLeft = 0;
+
+function L4_startGame() {
+  gameIdx = 0; gameScore = 0;
+  document.getElementById('game-overlay').classList.add('active');
+  L4_showGameQ();
+}
+function L4_closeGame() {
+  clearInterval(gameTimer);
+  document.getElementById('game-overlay').classList.remove('active');
+}
+function L4_showGameQ() {
+  if (gameIdx >= GAME_Q.length) {
+    L4_endGame(); return;
+  }
+  const q = GAME_Q[gameIdx];
+  document.getElementById('game-q').textContent = q.q;
+  document.getElementById('game-score').textContent = `Score: ${gameScore} / ${GAME_Q.length}`;
+  const choicesEl = document.getElementById('game-choices');
+  choicesEl.innerHTML = '';
+  q.choices.forEach(c => {
+    const btn = document.createElement('button');
+    btn.className = 'game-choice';
+    btn.textContent = c;
+    btn.onclick = () => L4_pickAnswer(btn, c, q.ans);
+    choicesEl.appendChild(btn);
+  });
+  // Timer
+  timeLeft = 10;
+  document.getElementById('timer-bar').style.width = '100%';
+  clearInterval(gameTimer);
+  gameTimer = setInterval(() => {
+    timeLeft--;
+    document.getElementById('timer-bar').style.width = (timeLeft * 10) + '%';
+    if (timeLeft <= 0) { clearInterval(gameTimer); L4_autoNext(); }
+  }, 1000);
+}
+function L4_pickAnswer(btn, chosen, correct) {
+  clearInterval(gameTimer);
+  document.querySelectorAll('.game-choice').forEach(b => b.onclick = null);
+  if (chosen === correct) {
+    btn.classList.add('correct');
+    gameScore++;
+  } else {
+    btn.classList.add('wrong');
+    document.querySelectorAll('.game-choice').forEach(b => {
+      if (b.textContent === correct) b.classList.add('correct');
+    });
+  }
+  gameIdx++;
+  setTimeout(showGameQ, 1200);
+}
+function L4_autoNext() {
+  document.querySelectorAll('.game-choice').forEach(b => b.onclick = null);
+  gameIdx++;
+  L4_showGameQ();
+}
+function L4_endGame() {
+  clearInterval(gameTimer);
+  document.getElementById('timer-bar-wrap').style.display = 'none';
+  document.getElementById('game-q').textContent = '🏆 Finished!';
+  document.getElementById('game-choices').innerHTML = '';
+  const pct = Math.round(gameScore / GAME_Q.length * 100);
+  let msg = pct === 100 ? '🌟 Perfect Score! You are a TRUE Word Engineer!' : pct >= 70 ? '🎉 Great job! Keep building!' : '💪 Good effort! Try again to beat your score!';
+  document.getElementById('game-score').innerHTML = `<strong>${gameScore} / ${GAME_Q.length}</strong> (${pct}%)<br><br>${msg}`;
+  if (pct === 100) L4_celebrate();
+}
+
+// ── Init ──
+
+
+window.L4_init = L4_buildTable;
+</script>
+
+<div class="section" id="section-quiz">
+<div style="position:sticky;top:0;z-index:100;padding:10px 20px;background:#1e293b;border-bottom:1px solid rgba(255,255,255,0.1);">
+<button onclick="goHome()" style="background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);color:#fff;padding:8px 20px;border-radius:8px;cursor:pointer;font-size:0.9rem;font-family:inherit;font-weight:600;">← Back to Activities</button>
+</div>
+<!-- ══ HOME ══ -->
+<div class="screen active" id="home">
+  <div class="home-inner">
+    <div class="home-title">World Studies<br>Roots Quiz</div>
+    <div class="home-sub">🧠 Match the roots · Beat the clock · Master the words</div>
+
+    <div class="category-grid">
+      <button class="cat-btn" data-cat="geo"  onclick="QUIZ_startQuiz('geo')">
+        <span class="cat-emoji">🌍</span>
+        <div class="cat-name">Geography</div>
+        <div class="cat-count">10 questions</div>
+      </button>
+      <button class="cat-btn" data-cat="civ"  onclick="QUIZ_startQuiz('civ')">
+        <span class="cat-emoji">🏛️</span>
+        <div class="cat-name">Civics</div>
+        <div class="cat-count">10 questions</div>
+      </button>
+      <button class="cat-btn" data-cat="eco"  onclick="QUIZ_startQuiz('eco')">
+        <span class="cat-emoji">💰</span>
+        <div class="cat-name">Economics</div>
+        <div class="cat-count">10 questions</div>
+      </button>
+      <button class="cat-btn" data-cat="hist" onclick="QUIZ_startQuiz('hist')">
+        <span class="cat-emoji">🏺</span>
+        <div class="cat-name">World History</div>
+        <div class="cat-count">10 questions</div>
+      </button>
+      <button class="cat-btn" data-cat="expl" onclick="QUIZ_startQuiz('expl')" style="grid-column: 1/-1; max-width: 300px; margin: 0 auto; width: 100%;">
+        <span class="cat-emoji">🧭</span>
+        <div class="cat-name">Exploration</div>
+        <div class="cat-count">10 questions</div>
+      </button>
+    </div>
+
+    <div class="best-scores" id="best-scores">
+      <div class="best-item"><div class="best-num" id="bs-geo"  style="color:var(--geo)" >–</div><div class="best-lbl">Geography</div></div>
+      <div class="best-item"><div class="best-num" id="bs-civ"  style="color:var(--civ)" >–</div><div class="best-lbl">Civics</div></div>
+      <div class="best-item"><div class="best-num" id="bs-eco"  style="color:var(--eco)" >–</div><div class="best-lbl">Economics</div></div>
+      <div class="best-item"><div class="best-num" id="bs-hist" style="color:var(--hist)">–</div><div class="best-lbl">History</div></div>
+      <div class="best-item"><div class="best-num" id="bs-expl" style="color:var(--expl)">–</div><div class="best-lbl">Exploration</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ QUIZ ══ -->
+<div class="screen" id="quiz">
+  <div class="quiz-header">
+    <button class="btn-home-sm" onclick="goHome()">← Home</button>
+    <div class="quiz-cat-badge" id="quiz-badge"></div>
+    <div class="quiz-progress-wrap">
+      <div class="quiz-progress-bar" id="quiz-progress"></div>
+    </div>
+    <div class="quiz-q-num" id="quiz-q-num">Q 1/10</div>
+    <div class="quiz-score-display" id="quiz-score-display">0</div>
+    <button class="btn-ref" onclick="QUIZ_openRef()">📖 Roots Card</button>
+  </div>
+
+  <div class="timer-ring-wrap">
+    <div class="timer-ring">
+      <svg width="90" height="90" viewBox="0 0 90 90">
+        <circle class="timer-track" cx="45" cy="45" r="40"/>
+        <circle class="timer-fill" id="timer-circle" cx="45" cy="45" r="40"/>
+      </svg>
+      <div class="timer-num" id="timer-num">15</div>
+    </div>
+  </div>
+
+  <div class="quiz-body">
+    <div class="q-label" id="q-label"></div>
+    <div class="q-text"  id="q-text"></div>
+    <div class="choices" id="choices"></div>
+    <div class="hint-row">
+      <button class="btn-hint" onclick="QUIZ_showHint()">💡 Need a hint?</button>
+      <div class="hint-text" id="hint-text"></div>
+    </div>
+    <div id="feedback-bar"></div>
+  </div>
+</div>
+
+<!-- ══ RESULTS ══ -->
+<div class="screen" id="results">
+  <div class="results-inner">
+    <div class="results-emoji" id="results-emoji">🎉</div>
+    <div class="results-title" id="results-title">Great Job!</div>
+    <div class="results-cat" id="results-cat"></div>
+    <div class="score-ring-wrap">
+      <div class="score-ring">
+        <svg width="140" height="140" viewBox="0 0 140 140">
+          <circle class="score-track" cx="70" cy="70" r="65"/>
+          <circle class="score-fill"  id="score-fill" cx="70" cy="70" r="65"/>
+        </svg>
+        <div class="score-inner">
+          <div class="score-big"   id="score-big">0</div>
+          <div class="score-outof" id="score-outof">/ 10</div>
+        </div>
+      </div>
+    </div>
+    <div class="results-breakdown" id="results-breakdown"></div>
+    <div class="results-btns">
+      <button class="btn-retry" id="btn-retry" onclick="QUIZ_retryQuiz()">🔄 Try Again</button>
+      <button class="btn-home-lg" onclick="goHome()">🏠 Pick a Category</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ REFERENCE CARD OVERLAY ══ -->
+<div id="ref-overlay">
+  <div class="ref-box">
+    <h2>📖 Roots Reference Card</h2>
+    <table class="ref-table">
+      <thead><tr><th>Root</th><th>Meaning</th><th>Example</th></tr></thead>
+      <tbody>
+        <tr><td><span class="ref-root" style="color:var(--geo)">Geo</span></td><td>Earth</td><td>Geography</td></tr>
+        <tr><td><span class="ref-root" style="color:var(--geo)">Graph</span></td><td>Write/Record</td><td>Cartography</td></tr>
+        <tr><td><span class="ref-root" style="color:var(--geo)">Topo</span></td><td>Place</td><td>Topography</td></tr>
+        <tr><td><span class="ref-root" style="color:var(--geo)">Demo</span></td><td>People</td><td>Democracy</td></tr>
+        <tr><td><span class="ref-root" style="color:var(--geo)">Hydro</span></td><td>Water</td><td>Hydrology</td></tr>
+        <tr><td><span class="ref-root" style="color:var(--civ)">Cracy</span></td><td>Rule</td><td>Democracy</td></tr>
+        <tr><td><span class="ref-root" style="color:var(--civ)">Auto</span></td><td>Self</td><td>Autocracy</td></tr>
+        <tr><td><span class="ref-root" style="color:var(--civ)">Theo</span></td><td>God</td><td>Theocracy</td></tr>
+        <tr><td><span class="ref-root" style="color:var(--civ)">Mono</span></td><td>One</td><td>Monarchy</td></tr>
+        <tr><td><span class="ref-root" style="color:var(--civ)">Archy</span></td><td>Rule</td><td>Monarchy</td></tr>
+        <tr><td><span class="ref-root" style="color:var(--civ)">Oligo</span></td><td>Few</td><td>Oligarchy</td></tr>
+        <tr><td><span class="ref-root" style="color:var(--eco)">Eco</span></td><td>House/Resources</td><td>Economics</td></tr>
+        <tr><td><span class="ref-root" style="color:var(--eco)">Agri</span></td><td>Field/Farm</td><td>Agriculture</td></tr>
+        <tr><td><span class="ref-root" style="color:var(--eco)">Infra</span></td><td>Below/Base</td><td>Infrastructure</td></tr>
+        <tr><td><span class="ref-root" style="color:var(--hist)">Archae</span></td><td>Ancient</td><td>Archaeology</td></tr>
+        <tr><td><span class="ref-root" style="color:var(--hist)">Logy</span></td><td>Study of</td><td>Anthropology</td></tr>
+        <tr><td><span class="ref-root" style="color:var(--hist)">Chrono</span></td><td>Time</td><td>Chronology</td></tr>
+        <tr><td><span class="ref-root" style="color:var(--hist)">Anthrop</span></td><td>Human</td><td>Anthropology</td></tr>
+        <tr><td><span class="ref-root" style="color:var(--expl)">Migr</span></td><td>Move</td><td>Migration</td></tr>
+        <tr><td><span class="ref-root" style="color:var(--expl)">Trans</span></td><td>Across</td><td>Transportation</td></tr>
+        <tr><td><span class="ref-root" style="color:var(--expl)">Port</span></td><td>Carry</td><td>Transportation</td></tr>
+        <tr><td><span class="ref-root" style="color:var(--expl)">Nomad</span></td><td>Wander</td><td>Nomadic</td></tr>
+      </tbody>
+    </table>
+    <button class="ref-close" onclick="QUIZ_closeRef()">✕ Close Reference Card</button>
+  </div>
+</div>
+
+<div id="confetti-wrap"></div>
+</div>
+<script>
+
+// ══════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════
+const CATEGORIES = {
+  geo: {
+    name: 'Geography & Mapping',
+    emoji: '🌍',
+    color: 'var(--geo)',
+    progressColor: '#06b6d4',
+    questions: [
+      { q: 'What does the root <span class="highlight" style="background:rgba(6,182,212,0.2);color:#06b6d4">GEO</span> mean?', choices: ['Earth','Water','People','Time'], ans: 'Earth', hint: 'Think of "geology" — the study of Earth\'s rocks.' },
+      { q: 'What does the root <span class="highlight" style="background:rgba(6,182,212,0.2);color:#06b6d4">GRAPH</span> mean?', choices: ['Draw','Write/Record','Study of','Rule'], ans: 'Write/Record', hint: 'A "graph" records data. "Autograph" = self-write.' },
+      { q: 'What does the root <span class="highlight" style="background:rgba(6,182,212,0.2);color:#06b6d4">TOPO</span> mean?', choices: ['Water','Place/Land','Map','People'], ans: 'Place/Land', hint: 'Topography = the study of a specific PLACE\'s features.' },
+      { q: 'What does the root <span class="highlight" style="background:rgba(6,182,212,0.2);color:#06b6d4">HYDRO</span> mean?', choices: ['Fire','Earth','Air','Water'], ans: 'Water', hint: 'A "hydrant" is a water pipe. "Dehydrated" means lacking water.' },
+      { q: 'What does <span class="highlight" style="background:rgba(6,182,212,0.2);color:#06b6d4">LOGY</span> mean?', choices: ['Rule','Write','Study of','Movement'], ans: 'Study of', hint: 'Bio-LOGY, geo-LOGY, psycho-LOGY — all are fields of study.' },
+      { q: '<span class="highlight" style="background:rgba(6,182,212,0.2);color:#06b6d4">GEOGRAPHY</span> is the study of…', choices: ['People','Earth\'s features','Water systems','Ancient history'], ans: 'Earth\'s features', hint: 'GEO = Earth + GRAPH = describe/write → describes Earth.' },
+      { q: '<span class="highlight" style="background:rgba(6,182,212,0.2);color:#06b6d4">CARTOGRAPHY</span> means…', choices: ['Study of water','Mapping','Study of time','Writing history'], ans: 'Mapping', hint: 'CARTO = map + GRAPHY = write/record → writing maps.' },
+      { q: '<span class="highlight" style="background:rgba(6,182,212,0.2);color:#06b6d4">DEMOGRAPHY</span> is the study of…', choices: ['Ancient ruins','Land features','Populations','Water systems'], ans: 'Populations', hint: 'DEMO = people + GRAPHY = describe → describing people/populations.' },
+      { q: '<span class="highlight" style="background:rgba(6,182,212,0.2);color:#06b6d4">HYDROLOGY</span> is the study of…', choices: ['Maps','Earth\'s crust','Water systems','Human movement'], ans: 'Water systems', hint: 'HYDRO = water + LOGY = study of → study of water.' },
+      { q: 'Which word means "the study of land features and elevations"?', choices: ['Geography','Hydrology','Topography','Demography'], ans: 'Topography', hint: 'TOPO = place/land features. Think: a topographic map shows hills and valleys.' },
+    ]
+  },
+  civ: {
+    name: 'Government & Civics',
+    emoji: '🏛️',
+    color: 'var(--civ)',
+    progressColor: '#f59e0b',
+    questions: [
+      { q: 'What does the root <span class="highlight" style="background:rgba(245,158,11,0.2);color:#f59e0b">DEMO</span> mean?', choices: ['God','Self','People','Few'], ans: 'People', hint: '"Demographics" describes the characteristics of PEOPLE in an area.' },
+      { q: 'What does the root <span class="highlight" style="background:rgba(245,158,11,0.2);color:#f59e0b">CRACY</span> mean?', choices: ['War','Rule/Power','People','God'], ans: 'Rule/Power', hint: 'Demo-CRACY, auto-CRACY, theo-CRACY — all end in a form of rule.' },
+      { q: 'What does the root <span class="highlight" style="background:rgba(245,158,11,0.2);color:#f59e0b">AUTO</span> mean?', choices: ['Many','Few','God','Self/Alone'], ans: 'Self/Alone', hint: 'AUTOmatic = moves by ITSELF. AUTObiography = writes about YOURSELF.' },
+      { q: 'What does the root <span class="highlight" style="background:rgba(245,158,11,0.2);color:#f59e0b">THEO</span> mean?', choices: ['Earth','God/Divine','People','Time'], ans: 'God/Divine', hint: '"Theology" = the study of GOD and religion.' },
+      { q: 'What does the root <span class="highlight" style="background:rgba(245,158,11,0.2);color:#f59e0b">MONO</span> mean?', choices: ['Many','Few','One','All'], ans: 'One', hint: 'MONOrail = ONE rail. MONOlogue = ONE person speaking.' },
+      { q: '<span class="highlight" style="background:rgba(245,158,11,0.2);color:#f59e0b">DEMOCRACY</span> means rule by…', choices: ['One person','The people','Religious leaders','A small group'], ans: 'The people', hint: 'DEMO = people + CRACY = rule → the PEOPLE rule.' },
+      { q: '<span class="highlight" style="background:rgba(245,158,11,0.2);color:#f59e0b">AUTOCRACY</span> means rule by…', choices: ['The people','God','One person alone','A small group'], ans: 'One person alone', hint: 'AUTO = self/alone + CRACY = rule → ONE person rules alone.' },
+      { q: '<span class="highlight" style="background:rgba(245,158,11,0.2);color:#f59e0b">THEOCRACY</span> means rule by…', choices: ['The military','One monarch','The people','Religious law'], ans: 'Religious law', hint: 'THEO = god + CRACY = rule → governed by GOD\'s law or religious leaders.' },
+      { q: '<span class="highlight" style="background:rgba(245,158,11,0.2);color:#f59e0b">OLIGARCHY</span> means rule by…', choices: ['One person','Everyone','A small group','Religious law'], ans: 'A small group', hint: 'OLIGO = few + ARCHY = rule → a FEW people hold power.' },
+      { q: '<span class="highlight" style="background:rgba(245,158,11,0.2);color:#f59e0b">MONARCHY</span> means rule by…', choices: ['The people','One king or queen','Religious leaders','Many groups'], ans: 'One king or queen', hint: 'MONO = one + ARCHY = rule → ONE ruler, like a king or queen.' },
+    ]
+  },
+  eco: {
+    name: 'Economics & Trade',
+    emoji: '💰',
+    color: 'var(--eco)',
+    progressColor: '#10b981',
+    questions: [
+      { q: 'What does the root <span class="highlight" style="background:rgba(16,185,129,0.2);color:#10b981">ECO</span> mean?', choices: ['Money','House/Resources','Trade','Work'], ans: 'House/Resources', hint: '"Ecosystem" = a house/system of living things. ECO relates to managing a household or resources.' },
+      { q: 'What does the root <span class="highlight" style="background:rgba(16,185,129,0.2);color:#10b981">AGRI</span> mean?', choices: ['Water','City','Field/Farm','Market'], ans: 'Field/Farm', hint: '"Agriculture" = growing crops in a FIELD. "Agri" comes from the Latin word for field.' },
+      { q: 'What does the root <span class="highlight" style="background:rgba(16,185,129,0.2);color:#10b981">INFRA</span> mean?', choices: ['Above','Across','Below/Beneath','Around'], ans: 'Below/Beneath', hint: '"Infrared" is BELOW red on the light spectrum. Infrastructure = the systems BENEATH a society.' },
+      { q: 'What does the root <span class="highlight" style="background:rgba(16,185,129,0.2);color:#10b981">COM</span> mean?', choices: ['Alone','Together','Against','Over'], ans: 'Together', hint: '"Communicate" = share TOGETHER. "Community" = people living TOGETHER.' },
+      { q: 'What does the root <span class="highlight" style="background:rgba(16,185,129,0.2);color:#10b981">MERCE</span> mean?', choices: ['Build','Farm','Trade','Manage'], ans: 'Trade', hint: '"Merchant" = a person who TRADES goods. COM + MERCE = trading TOGETHER.' },
+      { q: '<span class="highlight" style="background:rgba(16,185,129,0.2);color:#10b981">ECONOMICS</span> is the management of…', choices: ['Water systems','Resources','Armies','Populations'], ans: 'Resources', hint: 'ECO = house/resources + NOMICS = management → managing resources.' },
+      { q: '<span class="highlight" style="background:rgba(16,185,129,0.2);color:#10b981">AGRICULTURE</span> refers to…', choices: ['City planning','Farming','Sea trade','Manufacturing'], ans: 'Farming', hint: 'AGRI = field + CULTURE = grow → growing things in fields = FARMING.' },
+      { q: '<span class="highlight" style="background:rgba(16,185,129,0.2);color:#10b981">COMMERCE</span> means…', choices: ['Government','Building roads','Trade of goods','Farming'], ans: 'Trade of goods', hint: 'COM = together + MERCE = trade → trading goods TOGETHER.' },
+      { q: '<span class="highlight" style="background:rgba(16,185,129,0.2);color:#10b981">INFRASTRUCTURE</span> refers to…', choices: ['Ancient ruins','Basic systems of society','The study of trade','Farming methods'], ans: 'Basic systems of society', hint: 'INFRA = below/base + STRUCTURE = build → the built foundation BENEATH a society (roads, power, water).' },
+      { q: '<span class="highlight" style="background:rgba(16,185,129,0.2);color:#10b981">INDUSTRY</span> refers to…', choices: ['Farming','Map-making','Organized production','Water management'], ans: 'Organized production', hint: 'INDUS = work + TRY = process → the organized process of WORK and production.' },
+    ]
+  },
+  hist: {
+    name: 'World History & Culture',
+    emoji: '🏺',
+    color: 'var(--hist)',
+    progressColor: '#a78bfa',
+    questions: [
+      { q: 'What does the root <span class="highlight" style="background:rgba(167,139,250,0.2);color:#a78bfa">ARCHAE</span> mean?', choices: ['New','Ancient','Human','Time'], ans: 'Ancient', hint: '"Archaic" means very old or ANCIENT. Archaeology digs up ANCIENT things.' },
+      { q: 'What does the root <span class="highlight" style="background:rgba(167,139,250,0.2);color:#a78bfa">LOGY</span> mean?', choices: ['Rule','Study of','Movement','Write'], ans: 'Study of', hint: 'Bio-LOGY, geo-LOGY, psycho-LOGY — all end in the STUDY OF something.' },
+      { q: 'What does the root <span class="highlight" style="background:rgba(167,139,250,0.2);color:#a78bfa">ANTHROP</span> mean?', choices: ['Earth','God','Human','Ancient'], ans: 'Human', hint: '"Philanthropist" = one who loves HUMANS. ANTHROP always relates to people/humans.' },
+      { q: 'What does the root <span class="highlight" style="background:rgba(167,139,250,0.2);color:#a78bfa">CHRONO</span> mean?', choices: ['Space','Time','Culture','Place'], ans: 'Time', hint: 'A "chronometer" measures TIME. "Synchronize" = happening at the same TIME.' },
+      { q: 'What does the root <span class="highlight" style="background:rgba(167,139,250,0.2);color:#a78bfa">CIVIL</span> mean?', choices: ['Soldier','Citizen','Ancient','Culture'], ans: 'Citizen', hint: '"Civil rights" = rights of CITIZENS. "Civilian" = a non-military CITIZEN.' },
+      { q: '<span class="highlight" style="background:rgba(167,139,250,0.2);color:#a78bfa">ARCHAEOLOGY</span> is the study of…', choices: ['Water systems','Ancient people & artifacts','Time & calendars','Human behavior today'], ans: 'Ancient people & artifacts', hint: 'ARCHAE = ancient + OLOGY = study of → studying ANCIENT civilizations.' },
+      { q: '<span class="highlight" style="background:rgba(167,139,250,0.2);color:#a78bfa">ANTHROPOLOGY</span> is the study of…', choices: ['Ancient maps','Government systems','Humans & cultures','Economic systems'], ans: 'Humans & cultures', hint: 'ANTHROP = human + OLOGY = study of → the study of HUMANS and their cultures.' },
+      { q: '<span class="highlight" style="background:rgba(167,139,250,0.2);color:#a78bfa">CHRONOLOGY</span> means…', choices: ['The study of clocks','Arrangement of events by time','The history of maps','Study of ancient cultures'], ans: 'Arrangement of events by time', hint: 'CHRONO = time + LOGY = study → arranging events in TIME order.' },
+      { q: '<span class="highlight" style="background:rgba(167,139,250,0.2);color:#a78bfa">CIVILIZATION</span> refers to…', choices: ['A military force','An organized society','A type of government','A trade route'], ans: 'An organized society', hint: 'CIVIL = citizen + IZATION = process → the process of citizens forming an ORGANIZED SOCIETY.' },
+      { q: '<span class="highlight" style="background:rgba(167,139,250,0.2);color:#a78bfa">CULTURAL DIFFUSION</span> means…', choices: ['The decline of a culture','The spread of ideas between cultures','The study of ancient art','Building new civilizations'], ans: 'The spread of ideas between cultures', hint: 'DIFF = spread + CULTURE = beliefs/practices → ideas SPREADING from one culture to another.' },
+    ]
+  },
+  expl: {
+    name: 'Exploration & Movement',
+    emoji: '🧭',
+    color: 'var(--expl)',
+    progressColor: '#fb7185',
+    questions: [
+      { q: 'What does the root <span class="highlight" style="background:rgba(251,113,133,0.2);color:#fb7185">MIGR</span> mean?', choices: ['Settle','Move','Build','Explore'], ans: 'Move', hint: 'Birds MIGRATE — they MOVE from one place to another each season.' },
+      { q: 'What does the root <span class="highlight" style="background:rgba(251,113,133,0.2);color:#fb7185">TRANS</span> mean?', choices: ['Over','Under','Across','Around'], ans: 'Across', hint: 'TRANS-atlantic = ACROSS the Atlantic. TRANS-port = carry ACROSS.' },
+      { q: 'What does the root <span class="highlight" style="background:rgba(251,113,133,0.2);color:#fb7185">PORT</span> mean?', choices: ['Build','Carry','Rule','Settle'], ans: 'Carry', hint: 'PORT-able = able to be CARRIED. Im-PORT = CARRY goods in.' },
+      { q: 'What does the root <span class="highlight" style="background:rgba(251,113,133,0.2);color:#fb7185">NOMAD</span> mean?', choices: ['Build','Settle','Wander','Trade'], ans: 'Wander', hint: 'A NOMAD wanders without a permanent home, moving place to place.' },
+      { q: 'What does the root <span class="highlight" style="background:rgba(251,113,133,0.2);color:#fb7185">ATION</span> mean?', choices: ['Against','The process of','Without','Related to'], ans: 'The process of', hint: 'Migr-ATION = the process of moving. Civiliz-ATION = the process of becoming civilized.' },
+      { q: '<span class="highlight" style="background:rgba(251,113,133,0.2);color:#fb7185">MIGRATION</span> means…', choices: ['Building settlements','The movement of people','Exploring by sea','Trading across borders'], ans: 'The movement of people', hint: 'MIGR = move + ATION = process → the process of MOVING (people or animals).' },
+      { q: '<span class="highlight" style="background:rgba(251,113,133,0.2);color:#fb7185">NOMADIC</span> describes people who…', choices: ['Farm in one place','Rule over others','Move from place to place','Build large cities'], ans: 'Move from place to place', hint: 'NOMAD = wander → nomadic people WANDER and move without a permanent home.' },
+      { q: '<span class="highlight" style="background:rgba(251,113,133,0.2);color:#fb7185">COLONIZATION</span> means…', choices: ['Studying ancient ruins','Establishing settlements in new lands','Trading goods by sea','Moving people across continents'], ans: 'Establishing settlements in new lands', hint: 'COLONY = settlement + IZATION = process → the process of ESTABLISHING settlements.' },
+      { q: '<span class="highlight" style="background:rgba(251,113,133,0.2);color:#fb7185">TRANSPORTATION</span> means…', choices: ['Building bridges','The movement of goods and people','Exploring new lands','Settling in one place'], ans: 'The movement of goods and people', hint: 'TRANS = across + PORT = carry → CARRYING people/goods ACROSS distances.' },
+      { q: '<span class="highlight" style="background:rgba(251,113,133,0.2);color:#fb7185">TRANSCONTINENTAL</span> means…', choices: ['Under the ocean','Between two cities','Across a continent','Within one country'], ans: 'Across a continent', hint: 'TRANS = across + CONTINENT → going ACROSS an entire continent.' },
+    ]
+  }
+};
+
+// ══════════════════════════════════════════
+// GAME STATE
+// ══════════════════════════════════════════
+let state = {
+  cat: null, questions: [], idx: 0, score: 0,
+  timer: null, timeLeft: 15,
+  hintUsed: false, answered: false,
+  log: [],
+  bestScores: { geo: null, civ: null, eco: null, hist: null, expl: null }
+};
+
+// ── Helpers ──
+function QUIZ_showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function QUIZ_getCatCSS(cat) {
+  const map = { geo:'--geo', civ:'--civ', eco:'--eco', hist:'--hist', expl:'--expl' };
+  return `var(${map[cat]})`;
+}
+
+// ══════════════════════════════════════════
+// QUIZ
+// ══════════════════════════════════════════
+function QUIZ_startQuiz(cat) {
+  state.cat = cat;
+  const data = CATEGORIES[cat];
+  state.questions = QUIZ_shuffle([...data.questions]);
+  state.idx = 0; state.score = 0; state.log = [];
+  QUIZ_showScreen('quiz');
+  QUIZ_renderQuestion();
+}
+
+function QUIZ_renderQuestion() {
+  const q = state.questions[state.idx];
+  const cat = CATEGORIES[state.cat];
+  state.answered = false; state.hintUsed = false;
+
+  // Header
+  const badge = document.getElementById('quiz-badge');
+  badge.textContent = cat.emoji + ' ' + cat.name;
+  badge.style.background = `rgba(${QUIZ_hexToRgb(cat.progressColor)}, 0.15)`;
+  badge.style.color = cat.color;
+  badge.style.border = `1.5px solid rgba(${QUIZ_hexToRgb(cat.progressColor)}, 0.4)`;
+
+  document.getElementById('quiz-q-num').textContent = `Q ${state.idx + 1}/10`;
+  document.getElementById('quiz-score-display').textContent = '⭐ ' + state.score;
+  document.getElementById('quiz-score-display').style.color = cat.color;
+
+  // Progress bar
+  const pct = (state.idx / 10) * 100;
+  const pb = document.getElementById('quiz-progress');
+  pb.style.width = pct + '%';
+  pb.style.background = cat.progressColor;
+
+  // Question
+  document.getElementById('q-label').textContent = `Question ${state.idx + 1} of 10`;
+  document.getElementById('q-text').innerHTML = q.q;
+
+  // Hint
+  document.getElementById('hint-text').textContent = q.hint;
+  document.getElementById('hint-text').classList.remove('visible');
+  document.querySelector('.btn-hint').disabled = false;
+  document.querySelector('.btn-hint').style.opacity = '1';
+
+  // Feedback
+  document.getElementById('feedback-bar').textContent = '';
+  document.getElementById('feedback-bar').className = '';
+
+  // Choices
+  const letters = ['A','B','C','D'];
+  const shuffled = QUIZ_shuffle([...q.choices]);
+  const ch = document.getElementById('choices');
+  ch.innerHTML = '';
+  shuffled.forEach((c, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'choice-btn';
+    btn.innerHTML = `<span class="choice-letter">${letters[i]}</span>${c}`;
+    btn.onclick = () => QUIZ_pickAnswer(c, q.ans);
+    ch.appendChild(btn);
+  });
+
+  // Timer
+  QUIZ_startTimer();
+}
+
+function QUIZ_startTimer() {
+  clearInterval(state.timer);
+  state.timeLeft = 15;
+  QUIZ_updateTimer();
+  state.timer = setInterval(() => {
+    state.timeLeft--;
+    QUIZ_updateTimer();
+    if (state.timeLeft <= 0) {
+      clearInterval(state.timer);
+      if (!state.answered) QUIZ_timeUp();
+    }
+  }, 1000);
+}
+
+function QUIZ_updateTimer() {
+  const t = state.timeLeft;
+  const pct = t / 15;
+  const circumference = 251.2;
+  const offset = circumference * (1 - pct);
+  const circle = document.getElementById('timer-circle');
+  circle.style.strokeDashoffset = offset;
+  const color = t > 8 ? '#06b6d4' : t > 4 ? '#f59e0b' : '#fb7185';
+  circle.style.stroke = color;
+  document.getElementById('timer-num').textContent = t;
+  document.getElementById('timer-num').style.color = color;
+}
+
+function QUIZ_timeUp() {
+  state.answered = true;
+  const q = state.questions[state.idx];
+  document.getElementById('feedback-bar').innerHTML = `⏰ Time's up! The answer was <strong>${q.ans}</strong>`;
+  document.getElementById('feedback-bar').className = 'fb-wrong';
+  document.querySelectorAll('.choice-btn').forEach(btn => {
+    btn.disabled = true;
+    if (btn.textContent.includes(q.ans)) btn.classList.add('correct');
+  });
+  state.log.push({ q: q.q.replace(/<[^>]+>/g,''), correct: false, ans: q.ans, userAns: '(timed out)' });
+  setTimeout(nextQuestion, 1800);
+}
+
+function QUIZ_pickAnswer(chosen, correct) {
+  if (state.answered) return;
+  state.answered = true;
+  clearInterval(state.timer);
+
+  const isRight = chosen === correct;
+  document.querySelectorAll('.choice-btn').forEach(btn => {
+    btn.disabled = true;
+    const text = btn.textContent.replace(/^[A-D]\s*/,'').trim();
+    if (text === correct) btn.classList.add('correct');
+    else if (text === chosen && !isRight) btn.classList.add('wrong');
+  });
+
+  if (isRight) {
+    const bonus = state.hintUsed ? 0 : (state.timeLeft >= 10 ? 2 : 1);
+    state.score += bonus;
+    document.getElementById('feedback-bar').textContent = bonus === 2 ? '🎉 +2 Fast Answer!' : bonus === 1 ? '✅ Correct! +1' : '✅ Correct! (hint used)';
+    document.getElementById('feedback-bar').className = 'fb-correct';
+    document.getElementById('quiz-score-display').textContent = '⭐ ' + state.score;
+    if (!state.hintUsed && state.timeLeft >= 10) QUIZ_smallConfetti();
+  } else {
+    document.getElementById('feedback-bar').innerHTML = `❌ Not quite — it's <strong>${correct}</strong>`;
+    document.getElementById('feedback-bar').className = 'fb-wrong';
+    document.getElementById('choices').classList.add('shake');
+    setTimeout(() => document.getElementById('choices').classList.remove('shake'), 400);
+  }
+
+  state.log.push({ q: state.questions[state.idx].q.replace(/<[^>]+>/g,''), correct: isRight, ans: correct, userAns: chosen });
+  setTimeout(nextQuestion, 1600);
+}
+
+function QUIZ_nextQuestion() {
+  state.idx++;
+  if (state.idx >= 10) QUIZ_showResults();
+  else QUIZ_renderQuestion();
+}
+
+function QUIZ_showHint() {
+  state.hintUsed = true;
+  document.getElementById('hint-text').classList.add('visible');
+  document.querySelector('.btn-hint').disabled = true;
+  document.querySelector('.btn-hint').style.opacity = '0.4';
+}
+
+// ══════════════════════════════════════════
+// RESULTS
+// ══════════════════════════════════════════
+function QUIZ_showResults() {
+  clearInterval(state.timer);
+  const cat = CATEGORIES[state.cat];
+  const score = state.score;
+  const maxScore = 20; // 2pts fast, 1pt normal, 10 questions
+
+  // Update best score
+  if (!state.bestScores[state.cat] || score > state.bestScores[state.cat]) {
+    state.bestScores[state.cat] = score;
+    document.getElementById('bs-' + state.cat).textContent = score;
+  }
+
+  const correct = state.log.filter(l => l.correct).length;
+  const pct = correct / 10;
+
+  QUIZ_showScreen('results');
+
+  // Emoji & title
+  const emojis  = ['😅','🙂','👍','🌟','🏆'];
+  const titles  = ['Keep Practicing!','Good Effort!','Nice Work!','Great Job!','ROOT MASTER!'];
+  const tier = pct === 1 ? 4 : pct >= 0.8 ? 3 : pct >= 0.6 ? 2 : pct >= 0.4 ? 1 : 0;
+  document.getElementById('results-emoji').textContent = emojis[tier];
+  document.getElementById('results-title').textContent = titles[tier];
+  document.getElementById('results-title').style.color = cat.progressColor;
+  document.getElementById('results-cat').textContent = cat.emoji + '  ' + cat.name + '  ·  ' + correct + '/10 correct';
+
+  // Score ring
+  document.getElementById('score-big').textContent = score;
+  document.getElementById('score-big').style.color = cat.progressColor;
+  const circumference = 408;
+  const offset = circumference * (1 - Math.min(score / maxScore, 1));
+  const fill = document.getElementById('score-fill');
+  fill.style.stroke = cat.progressColor;
+  setTimeout(() => { fill.style.strokeDashoffset = offset; }, 100);
+
+  // Retry button color
+  const retryBtn = document.getElementById('btn-retry');
+  retryBtn.style.background = cat.progressColor;
+  retryBtn.style.color = '#fff';
+
+  // Breakdown
+  const bd = document.getElementById('results-breakdown');
+  bd.innerHTML = '<div style="font-size:0.72rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;">Question Breakdown</div>' +
+    state.log.map((l, i) => `
+      <div class="breakdown-row">
+        <div class="breakdown-q">Q${i+1}: ${l.q.length > 50 ? l.q.substring(0,50)+'…' : l.q}</div>
+        <div class="breakdown-icon">${l.correct ? '✅' : '❌'}</div>
+      </div>
+    `).join('');
+
+  if (pct === 1) QUIZ_celebrate();
+}
+
+function QUIZ_retryQuiz() { QUIZ_startQuiz(state.cat); }
+// goHome handled globally
+
+// ══════════════════════════════════════════
+// REFERENCE CARD
+// ══════════════════════════════════════════
+function QUIZ_openRef()  { document.getElementById('ref-overlay').classList.add('open'); }
+function QUIZ_closeRef() { document.getElementById('ref-overlay').classList.remove('open'); }
+
+// ══════════════════════════════════════════
+// UTILS
+// ══════════════════════════════════════════
+function QUIZ_shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function QUIZ_hexToRgb(hex) {
+  const r = parseInt(hex.slice(1,3),16);
+  const g = parseInt(hex.slice(3,5),16);
+  const b = parseInt(hex.slice(5,7),16);
+  return `${r},${g},${b}`;
+}
+
+function QUIZ_celebrate() {
+  const w = document.getElementById('confetti-wrap');
+  w.innerHTML = '';
+  const cols = ['#f0b429','#06b6d4','#34d399','#fb7185','#a78bfa','#fbbf24'];
+  for (let i = 0; i < 100; i++) {
+    const el = document.createElement('div');
+    el.className = 'cp';
+    el.style.cssText = `left:${Math.random()*100}vw;animation-delay:${Math.random()*1.8}s;animation-duration:${1.5+Math.random()*1}s;background:${cols[Math.floor(Math.random()*cols.length)]};width:${7+Math.random()*10}px;height:${7+Math.random()*10}px;border-radius:${Math.random()>.5?'50%':'2px'}`;
+    w.appendChild(el);
+    setTimeout(() => el.remove(), 3800);
+  }
+}
+
+function QUIZ_smallConfetti() {
+  const w = document.getElementById('confetti-wrap');
+  const cols = ['#f0b429','#06b6d4','#34d399','#fb7185'];
+  for (let i = 0; i < 20; i++) {
+    const el = document.createElement('div');
+    el.className = 'cp';
+    el.style.cssText = `left:${30+Math.random()*40}vw;animation-delay:${Math.random()*0.3}s;animation-duration:${1+Math.random()*0.5}s;background:${cols[Math.floor(Math.random()*cols.length)]};width:6px;height:6px;border-radius:50%`;
+    w.appendChild(el);
+    setTimeout(() => el.remove(), 2000);
+  }
+}
+
+window.quizGoHome = function(){ QUIZ_showScreen("home"); };
+</script>
+</body></html>
