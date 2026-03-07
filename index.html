@@ -2138,7 +2138,7 @@ window.L2_init = function(){ L2_buildWord(); };
     <div class="sort-col col-syn" id="col-syn"
       ondragover="L3_ov(event,'syn')" ondragleave="L3_ol('syn')" ondrop="L3_od(event,'syn')">
       <h3>✅ Synonyms<br><span style="font-size:0.65rem;font-weight:500;opacity:0.7">(same / similar meaning)</span></h3>
-      <div id="placed-syn"></div>
+      <div id="L3_placed-syn"></div>
     </div>
 
     <div class="sort-center">
@@ -2152,7 +2152,7 @@ window.L2_init = function(){ L2_buildWord(); };
     <div class="sort-col col-ant" id="col-ant"
       ondragover="L3_ov(event,'ant')" ondragleave="L3_ol('ant')" ondrop="L3_od(event,'ant')">
       <h3>❌ Antonyms<br><span style="font-size:0.65rem;font-weight:500;opacity:0.7">(opposite meaning)</span></h3>
-      <div id="placed-ant"></div>
+      <div id="L3_placed-ant"></div>
     </div>
   </div>
 
@@ -2301,7 +2301,7 @@ function L3_renderBank() {
   const w = L3_WORDS[L3_current];
   const bank = document.getElementById('word-bank');
   const allCards = [...w.synonyms,...w.antonyms];
-  const placedIds = [...placed.syn,...placed.ant];
+  const placedIds = [...L3_placed.syn,...L3_placed.ant];
   bank.innerHTML = allCards
     .filter(c => !placedIds.find(p => p.w === c.w))
     .map(c => `
