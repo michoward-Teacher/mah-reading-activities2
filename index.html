@@ -2115,292 +2115,299 @@ function L2_prevWord() { if (L2_current > 0) { L2_current--; L2_buildWord(); } }
 window.L2_init = function(){ L2_buildWord(); };
 </script>
 
+<!-- LESSON 3 REPLACEMENT - completely self-contained, no shared CSS vars -->
 <div class="section" id="section-lesson3">
 <div style="position:sticky;top:0;z-index:100;padding:10px 20px;background:#1e293b;border-bottom:1px solid rgba(255,255,255,0.1);">
 <button onclick="goHome()" style="background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);color:#fff;padding:8px 20px;border-radius:8px;cursor:pointer;font-size:0.9rem;font-family:inherit;font-weight:600;">← Back to Activities</button>
 </div>
-<header class="hero">
-  <div class="lesson-tag">Lesson 3 · Context Clues</div>
+
+<style>
+/* ── Lesson 3 styles — ALL hardcoded colors, no CSS vars ── */
+#section-lesson3 { background: #f0fdf4; min-height: 100vh; font-family: 'Mulish', 'Inter', sans-serif; color: #334155; }
+#section-lesson3 .l3-hero { background: linear-gradient(135deg,#16a34a,#15803d); padding: 36px 24px; text-align: center; }
+#section-lesson3 .l3-tag { display:inline-block; background:rgba(255,255,255,0.2); border:1.5px solid rgba(255,255,255,0.4); color:#fff; font-size:0.75rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; padding:5px 14px; border-radius:99px; margin-bottom:12px; }
+#section-lesson3 .l3-hero h1 { font-size:2.2rem; color:#fff; margin:0 0 6px; }
+#section-lesson3 .l3-hero h1 em { font-style:italic; color:#86efac; }
+#section-lesson3 .l3-hero p { color:rgba(255,255,255,0.85); font-size:0.97rem; font-weight:600; max-width:500px; margin:0 auto; }
+
+#section-lesson3 .l3-tabs { display:flex; gap:8px; flex-wrap:wrap; padding:16px 20px; background:#fff; border-bottom:1.5px solid #e2e8f0; overflow-x:auto; }
+#section-lesson3 .l3-tab { background:#f0fdf4; border:1.5px solid #bbf7d0; color:#16a34a; border-radius:8px; padding:6px 14px; font-size:0.8rem; font-weight:700; cursor:pointer; transition:all 0.15s; white-space:nowrap; }
+#section-lesson3 .l3-tab:hover, #section-lesson3 .l3-tab.l3-active { background:#16a34a; color:#fff; border-color:#16a34a; }
+
+#section-lesson3 .l3-main { max-width:900px; margin:0 auto; padding:20px; }
+
+#section-lesson3 .l3-focus { background:#fff; border:1.5px solid #e2e8f0; border-radius:18px; padding:20px 24px; margin-bottom:18px; box-shadow:0 4px 16px rgba(22,163,74,0.08); }
+#section-lesson3 .l3-word-big { font-size:2rem; font-weight:900; color:#16a34a; margin-bottom:4px; }
+#section-lesson3 .l3-phonetic { color:#64748b; font-size:0.9rem; margin-bottom:6px; }
+#section-lesson3 .l3-def { color:#334155; font-size:0.95rem; line-height:1.6; margin-bottom:8px; }
+#section-lesson3 .l3-sentence { color:#475569; font-size:0.88rem; font-style:italic; border-left:3px solid #86efac; padding-left:12px; }
+
+#section-lesson3 .l3-hint-box { background:#fef3c7; border:1.5px solid #fbbf24; border-radius:12px; padding:12px 16px; margin-bottom:16px; font-size:0.88rem; color:#92400e; display:none; }
+#section-lesson3 .l3-hint-box.l3-visible { display:block; }
+
+#section-lesson3 .l3-arena { display:grid; grid-template-columns:1fr 180px 1fr; gap:14px; margin-bottom:18px; }
+#section-lesson3 .l3-col { background:#fff; border:2px dashed #e2e8f0; border-radius:16px; padding:14px; min-height:140px; transition:border-color 0.2s, background 0.2s; }
+#section-lesson3 .l3-col.l3-drag-over { border-color:#16a34a; background:#f0fdf4; }
+#section-lesson3 .l3-col-head { font-size:0.78rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:10px; }
+#section-lesson3 .l3-col-syn .l3-col-head { color:#16a34a; }
+#section-lesson3 .l3-col-ant .l3-col-head { color:#dc2626; }
+
+#section-lesson3 .l3-center { display:flex; flex-direction:column; align-items:center; gap:8px; padding-top:8px; }
+#section-lesson3 .l3-center-label { font-size:0.7rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#94a3b8; }
+#section-lesson3 .l3-center-word { font-size:1.3rem; font-weight:900; color:#16a34a; text-align:center; }
+#section-lesson3 .l3-divider { width:100%; height:1px; background:#e2e8f0; }
+#section-lesson3 .l3-bank { display:flex; flex-direction:column; gap:6px; width:100%; }
+
+#section-lesson3 .l3-card { background:#dbeafe; border:2px solid #93c5fd; border-radius:10px; padding:8px 12px; font-size:0.88rem; font-weight:700; color:#1d4ed8; cursor:grab; user-select:none; transition:transform 0.15s, box-shadow 0.15s, opacity 0.15s; }
+#section-lesson3 .l3-card:hover { transform:scale(1.03); box-shadow:0 4px 12px rgba(37,99,235,0.2); }
+#section-lesson3 .l3-card.l3-dragging { opacity:0.3; }
+#section-lesson3 .l3-card.l3-placed { background:#dcfce7; border-color:#86efac; color:#15803d; cursor:pointer; }
+#section-lesson3 .l3-card-hint { display:block; font-size:0.72rem; font-weight:500; opacity:0.7; margin-top:2px; }
+
+#section-lesson3 .l3-btn-row { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-bottom:14px; }
+#section-lesson3 .l3-btn { padding:10px 22px; border-radius:12px; border:none; font-weight:700; font-size:0.9rem; cursor:pointer; font-family:inherit; transition:all 0.15s; }
+#section-lesson3 .l3-btn-reset { background:#f1f5f9; color:#475569; }
+#section-lesson3 .l3-btn-hint { background:#fef3c7; color:#92400e; border:1.5px dashed #fbbf24; }
+#section-lesson3 .l3-btn-check { background:#16a34a; color:#fff; }
+#section-lesson3 .l3-btn-next { background:#2563eb; color:#fff; }
+#section-lesson3 .l3-btn:hover { filter:brightness(1.08); transform:translateY(-1px); }
+
+#section-lesson3 .l3-feedback { text-align:center; font-weight:700; font-size:0.95rem; min-height:24px; margin-bottom:10px; }
+#section-lesson3 .l3-fb-ok { color:#16a34a; }
+#section-lesson3 .l3-fb-err { color:#dc2626; }
+
+#section-lesson3 .l3-progress { display:flex; gap:6px; justify-content:center; margin-bottom:16px; }
+#section-lesson3 .l3-dot { width:10px; height:10px; border-radius:50%; background:#e2e8f0; transition:background 0.2s; }
+#section-lesson3 .l3-dot.l3-done { background:#16a34a; }
+#section-lesson3 .l3-dot.l3-current-dot { background:#2563eb; }
+
+@media(max-width:640px){
+  #section-lesson3 .l3-arena { grid-template-columns:1fr; }
+  #section-lesson3 .l3-center { flex-direction:row; justify-content:center; }
+}
+</style>
+
+<!-- Hero -->
+<div class="l3-hero">
+  <div class="l3-tag">Lesson 3 · Context Clues</div>
   <h1>Word <em>Connections</em></h1>
   <p>Drag each word into the Synonym or Antonym column. Use context clues and what you know!</p>
-</header>
-
-<nav class="tabs" id="tabs"></nav>
-
-<main>
-  <div class="progress-row" id="progress-row"></div>
-
-  <!-- Focus Word -->
-  <div class="focus-card" id="focus-card"></div>
-
-  <!-- Hint Box -->
-  <div class="hint-box" id="hint-box"></div>
-
-  <!-- Sort Arena -->
-  <div class="sort-arena">
-    <div class="sort-col col-syn" id="col-syn"
-      ondragover="L3_ov(event,'syn')" ondragleave="L3_ol('syn')" ondrop="L3_od(event,'syn')">
-      <h3>✅ Synonyms<br><span style="font-size:0.65rem;font-weight:500;opacity:0.7">(same / similar meaning)</span></h3>
-      <div id="L3_placed-syn"></div>
-    </div>
-
-    <div class="sort-center">
-      <div class="sc-label">Target Word</div>
-      <div id="center-word" style="font-family:'Fraunces',serif;font-size:1.4rem;font-weight:900;color:var(--green);text-align:center;"></div>
-      <div class="divider"></div>
-      <div class="sc-label" style="margin-top:8px;">Word Cards</div>
-      <div id="word-bank"></div>
-    </div>
-
-    <div class="sort-col col-ant" id="col-ant"
-      ondragover="L3_ov(event,'ant')" ondragleave="L3_ol('ant')" ondrop="L3_od(event,'ant')">
-      <h3>❌ Antonyms<br><span style="font-size:0.65rem;font-weight:500;opacity:0.7">(opposite meaning)</span></h3>
-      <div id="L3_placed-ant"></div>
-    </div>
-  </div>
-
-  <div class="btn-row">
-    <button class="btn-reset" onclick="L3_resetRound()">🔄 Reset</button>
-    <button class="btn-hint"  onclick="L3_toggleHint()">💡 Hint</button>
-    <button class="btn-check" onclick="L3_checkRound()">✅ Check</button>
-    <button class="btn-next"  onclick="L3_nextWord()">Next Word →</button>
-  </div>
-  <div id="feedback"></div>
-</main>
 </div>
-<script>
 
-const L3_WORDS = [
-  {
-    word:'ASSIMILATE', phonetic:'uh-SIM-uh-layt', pos:'verb',
+<!-- Tabs -->
+<div class="l3-tabs" id="l3-tabs"></div>
+
+<!-- Main -->
+<div class="l3-main">
+  <div class="l3-progress" id="l3-progress"></div>
+
+  <!-- Focus word card -->
+  <div class="l3-focus" id="l3-focus"></div>
+
+  <!-- Hint -->
+  <div class="l3-hint-box" id="l3-hint"></div>
+
+  <!-- Sort arena -->
+  <div class="l3-arena">
+    <div class="l3-col l3-col-syn" id="l3-col-syn"
+      ondragover="L3_ov(event,'syn')" ondragleave="L3_ol('syn')" ondrop="L3_od(event,'syn')">
+      <div class="l3-col-head">✅ Synonyms<br><span style="font-weight:500;opacity:0.7;font-size:0.7rem;">(same / similar meaning)</span></div>
+      <div id="l3-placed-syn"></div>
+    </div>
+
+    <div class="l3-center">
+      <div class="l3-center-label">Target Word</div>
+      <div class="l3-center-word" id="l3-center-word"></div>
+      <div class="l3-divider"></div>
+      <div class="l3-center-label" style="margin-top:4px;">Word Cards</div>
+      <div class="l3-bank" id="l3-bank"></div>
+    </div>
+
+    <div class="l3-col l3-col-ant" id="l3-col-ant"
+      ondragover="L3_ov(event,'ant')" ondragleave="L3_ol('ant')" ondrop="L3_od(event,'ant')">
+      <div class="l3-col-head">❌ Antonyms<br><span style="font-weight:500;opacity:0.7;font-size:0.7rem;">(opposite meaning)</span></div>
+      <div id="l3-placed-ant"></div>
+    </div>
+  </div>
+
+  <div class="l3-btn-row">
+    <button class="l3-btn l3-btn-reset" onclick="L3_reset()">🔄 Reset</button>
+    <button class="l3-btn l3-btn-hint"  onclick="L3_hint()">💡 Hint</button>
+    <button class="l3-btn l3-btn-check" onclick="L3_check()">✅ Check</button>
+    <button class="l3-btn l3-btn-next"  onclick="L3_next()">Next Word →</button>
+  </div>
+  <div class="l3-feedback" id="l3-feedback"></div>
+</div>
+
+<script>
+(function(){
+const WORDS = [
+  { word:'ASSIMILATE', phonetic:'uh-SIM-uh-layt', pos:'verb',
     def:'To absorb and become part of a new culture or group.',
     sentence:'When settlers arrived, many native groups were forced to assimilate into the new culture.',
-    synonyms:[{w:'Absorb',hint:'Take in and make part of a whole'},{w:'Integrate',hint:'Combine into a unified whole'},{w:'Adopt',hint:'Take up and use as your own'}],
-    antonyms:[{w:'Reject',hint:'Refuse to accept'},{w:'Separate',hint:'Keep apart or divided'},{w:'Isolate',hint:'Keep away from others'}],
-    hint:'When you blend a smoothie, the ingredients ASSIMILATE — absorbed into the whole.',
-  },
-  {
-    word:'DEFORESTATION', phonetic:'dee-for-est-AY-shun', pos:'noun',
+    synonyms:[{w:'Absorb',h:'Take in and make part of a whole'},{w:'Integrate',h:'Combine into a unified whole'},{w:'Adopt',h:'Take up and use as your own'}],
+    antonyms:[{w:'Reject',h:'Refuse to accept'},{w:'Separate',h:'Keep apart or divided'},{w:'Isolate',h:'Keep away from others'}],
+    hint:'When you blend a smoothie, the ingredients ASSIMILATE — absorbed into the whole.' },
+  { word:'DEFORESTATION', phonetic:'dee-for-est-AY-shun', pos:'noun',
     def:'The clearing or removal of forests, usually by human activity.',
     sentence:'Deforestation in the Amazon has accelerated due to farming and cattle ranching.',
-    synonyms:[{w:'Clearing',hint:'Removing trees from land'},{w:'Logging',hint:'Cutting down trees for timber'},{w:'Stripping',hint:'Removing all vegetation'}],
-    antonyms:[{w:'Reforestation',hint:'Planting trees to restore forests'},{w:'Conservation',hint:'Protecting natural resources'},{w:'Preservation',hint:'Keeping something from being destroyed'}],
-    hint:'DE- means remove — DEFORESTATION removes forests. The opposite is ADDING trees back.',
-  },
-  {
-    word:'INDUSTRIALIZATION', phonetic:'in-dus-tree-ul-ih-ZAY-shun', pos:'noun',
+    synonyms:[{w:'Clearing',h:'Removing trees from land'},{w:'Logging',h:'Cutting down trees for timber'},{w:'Stripping',h:'Removing all vegetation'}],
+    antonyms:[{w:'Reforestation',h:'Planting trees to restore forests'},{w:'Conservation',h:'Protecting natural resources'},{w:'Preservation',h:'Keeping something from being destroyed'}],
+    hint:'DE- means remove — DEFORESTATION removes forests. The opposite is ADDING trees back.' },
+  { word:'INDUSTRIALIZATION', phonetic:'in-dus-tree-ul-ih-ZAY-shun', pos:'noun',
     def:'The process of developing industries in a country or region on a large scale.',
     sentence:'The industrialization of Southern Asia brought both economic growth and serious pollution problems.',
-    synonyms:[{w:'Modernization',hint:'Updating to more advanced methods'},{w:'Development',hint:'Growth and advancement of an area'},{w:'Urbanization',hint:'Growth of cities due to industry'}],
-    antonyms:[{w:'Deindustrialization',hint:'Loss or decline of industrial activity'},{w:'Agrarianism',hint:'Focus on farming rather than industry'},{w:'Decline',hint:'A decrease or falling away'}],
-    hint:'INDUSTRY = organized production. -IZATION = the process of becoming. So: becoming industrial.',
-  },
-  {
-    word:'DEMOCRACY', phonetic:'deh-MOK-ruh-see', pos:'noun',
+    synonyms:[{w:'Modernization',h:'Updating to more advanced methods'},{w:'Development',h:'Growth and advancement'},{w:'Urbanization',h:'Growth of cities due to industry'}],
+    antonyms:[{w:'Deindustrialization',h:'Loss of industrial activity'},{w:'Agrarianism',h:'Focus on farming over industry'},{w:'Decline',h:'A decrease or falling away'}],
+    hint:'INDUSTRY = organized production. -IZATION = the process of becoming. So: becoming industrial.' },
+  { word:'DEMOCRACY', phonetic:'deh-MOK-ruh-see', pos:'noun',
     def:'A system of government in which citizens vote to elect their leaders.',
     sentence:'In a democracy, the people hold the power to choose their government through free elections.',
-    synonyms:[{w:'Republic',hint:'Government where people elect representatives'},{w:'Self-governance',hint:'People governing themselves'},{w:'Popular rule',hint:'Rule by the people'}],
-    antonyms:[{w:'Autocracy',hint:'Rule by a single person with total power'},{w:'Dictatorship',hint:'Absolute control by one ruler'},{w:'Tyranny',hint:'Cruel, oppressive government'}],
-    hint:'DEMO = people, CRACY = rule. The opposite is when ONE person rules, not the people.',
-  },
-  {
-    word:'MIGRATION', phonetic:'my-GRAY-shun', pos:'noun',
+    synonyms:[{w:'Republic',h:'Government where people elect representatives'},{w:'Self-governance',h:'People governing themselves'},{w:'Popular rule',h:'Rule by the people'}],
+    antonyms:[{w:'Autocracy',h:'Rule by a single person with total power'},{w:'Dictatorship',h:'Absolute control by one ruler'},{w:'Tyranny',h:'Cruel, oppressive government'}],
+    hint:'DEMO = people, CRACY = rule. The opposite is when ONE person rules, not the people.' },
+  { word:'MIGRATION', phonetic:'my-GRAY-shun', pos:'noun',
     def:'The movement of people from one place to another, especially to a new country or region.',
     sentence:'The migration of people from rural to urban areas increased as factory jobs became available.',
-    synonyms:[{w:'Movement',hint:'Going from one place to another'},{w:'Relocation',hint:'Moving to a new place to live'},{w:'Emigration',hint:'Leaving one country to live in another'}],
-    antonyms:[{w:'Settlement',hint:'Staying in one place permanently'},{w:'Stagnation',hint:'Not moving or changing'},{w:'Immigration',hint:'Moving INTO a new country'}],
-    hint:'Think of birds migrating for winter — they MOVE from one place to another.',
-  },
-  {
-    word:'COLONIZATION', phonetic:'kol-uh-nih-ZAY-shun', pos:'noun',
+    synonyms:[{w:'Movement',h:'Going from one place to another'},{w:'Relocation',h:'Moving to a new place to live'},{w:'Emigration',h:'Leaving one country to live in another'}],
+    antonyms:[{w:'Settlement',h:'Staying in one place permanently'},{w:'Stagnation',h:'Not moving or changing'},{w:'Stability',h:'Remaining in a fixed place'}],
+    hint:'Think of birds migrating for winter — they MOVE from one place to another.' },
+  { word:'COLONIZATION', phonetic:'kol-uh-nih-ZAY-shun', pos:'noun',
     def:'The process of establishing political and economic control over another territory or people.',
-    sentence:'European colonization of Africa in the 1800s dramatically changed the continent's political borders.',
-    synonyms:[{w:'Conquest',hint:'Taking control by force'},{w:'Occupation',hint:'Taking over and controlling a territory'},{w:'Settlement',hint:'Establishing a community in a new land'}],
-    antonyms:[{w:'Independence',hint:'Freedom from outside control'},{w:'Liberation',hint:'Being freed from control'},{w:'Sovereignty',hint:'Having full self-governing power'}],
-    hint:'A COLONY is a settlement controlled by another country. -IZATION means the process of creating colonies.',
-  },
-  {
-    word:'SOVEREIGNTY', phonetic:'SOV-rin-tee', pos:'noun',
+    sentence:'European colonization of Africa in the 1800s dramatically changed the continent\'s political borders.',
+    synonyms:[{w:'Conquest',h:'Taking control by force'},{w:'Occupation',h:'Taking over and controlling a territory'},{w:'Annexation',h:'Adding territory to an existing country'}],
+    antonyms:[{w:'Independence',h:'Freedom from outside control'},{w:'Liberation',h:'Being freed from control'},{w:'Sovereignty',h:'Having full self-governing power'}],
+    hint:'A COLONY is a settlement controlled by another country. -IZATION means the process of creating colonies.' },
+  { word:'SOVEREIGNTY', phonetic:'SOV-rin-tee', pos:'noun',
     def:'The full right and power of a governing body to govern itself without outside interference.',
     sentence:'After decades of colonization, the newly independent nation finally regained its sovereignty.',
-    synonyms:[{w:'Independence',hint:'Freedom from outside control'},{w:'Autonomy',hint:'Self-governing power'},{w:'Self-rule',hint:'Governing yourself without interference'}],
-    antonyms:[{w:'Colonization',hint:'Control by a foreign power'},{w:'Occupation',hint:'Being controlled by outside forces'},{w:'Dependence',hint:'Relying on another power for governance'}],
-    hint:'A SOVEREIGN rules alone. SOVEREIGNTY = the power of a nation to govern itself completely.',
-  },
-  {
-    word:'URBANIZATION', phonetic:'ur-ban-ih-ZAY-shun', pos:'noun',
+    synonyms:[{w:'Independence',h:'Freedom from outside control'},{w:'Autonomy',h:'Self-governing power'},{w:'Self-rule',h:'Governing yourself without interference'}],
+    antonyms:[{w:'Subjugation',h:'Bringing under control by force'},{w:'Dependence',h:'Relying on another power'},{w:'Occupation',h:'Being controlled by outside forces'}],
+    hint:'A SOVEREIGN rules alone. SOVEREIGNTY = the power of a nation to govern itself completely.' },
+  { word:'URBANIZATION', phonetic:'ur-ban-ih-ZAY-shun', pos:'noun',
     def:'The process by which towns and cities grow as people move from rural to urban areas.',
     sentence:'Rapid urbanization in China has transformed small villages into massive cities within a generation.',
-    synonyms:[{w:'City growth',hint:'Expansion of urban areas'},{w:'Metropolitan expansion',hint:'Cities spreading outward'},{w:'Rural-urban migration',hint:'People moving from farms to cities'}],
-    antonyms:[{w:'Ruralization',hint:'Movement back to rural areas'},{w:'Depopulation',hint:'Loss of people from an area'},{w:'Suburban sprawl',hint:'Growth away from city centers'}],
-    hint:'URBAN = city. -IZATION = process of becoming. So: the process of becoming more city-like.',
-  },
+    synonyms:[{w:'City growth',h:'Expansion of urban areas'},{w:'Metropolitan expansion',h:'Cities spreading outward'},{w:'Development',h:'Growth and advancement of an area'}],
+    antonyms:[{w:'Ruralization',h:'Movement back to rural areas'},{w:'Depopulation',h:'Loss of people from an area'},{w:'Suburbanization',h:'Growth away from city centers'}],
+    hint:'URBAN = city. -IZATION = process of becoming. So: the process of becoming more city-like.' },
 ];
 
-let L3_current = 0;
-let L3_placed = { syn: [], ant: [] };
-let L3_hintVisible = false;
-let L3_dragEl = null;
+let cur = 0, placed = {syn:[],ant:[]}, hintOn = false, dragCard = null;
 
-function L3_init() {
-  L3_buildTabs();
-  L3_buildProgress();
-  L3_loadWord();
+function init() {
+  buildTabs();
+  buildProgress();
+  loadWord();
 }
 
-function L3_buildTabs() {
-  const tabs = document.getElementById('tabs');
-  tabs.innerHTML = L3_WORDS.map((w,i) =>
-    `<button class="tab ${i===0?'active':''}" onclick="L3_jumpTo(${i})">${w.word}</button>`
+function buildTabs() {
+  document.getElementById('l3-tabs').innerHTML = WORDS.map((w,i)=>
+    `<button class="l3-tab${i===cur?' l3-active':''}" onclick="L3_jump(${i})">${w.word}</button>`
   ).join('');
 }
 
-function L3_buildProgress() {
-  const row = document.getElementById('progress-row');
-  row.innerHTML = L3_WORDS.map((_,i) =>
-    `<div class="prog-dot ${i===L3_current?'L3_current':''}" id="pd-${i}"></div>`
+function buildProgress() {
+  document.getElementById('l3-progress').innerHTML = WORDS.map((_,i)=>
+    `<div class="l3-dot${i===cur?' l3-current-dot':''}"></div>`
   ).join('');
 }
 
-function L3_updateProgress() {
-  L3_WORDS.forEach((_,i) => {
-    const el = document.getElementById(`pd-${i}`);
-    el.className = 'prog-dot' + (i===L3_current?' L3_current':'') + (i<L3_current?' done':'');
+function loadWord() {
+  const w = WORDS[cur];
+  document.getElementById('l3-focus').innerHTML = `
+    <div class="l3-word-big">${w.word}</div>
+    <div class="l3-phonetic">${w.phonetic} &nbsp;·&nbsp; <em>${w.pos}</em></div>
+    <div class="l3-def">${w.def}</div>
+    <div class="l3-sentence">"${w.sentence}"</div>`;
+  document.getElementById('l3-center-word').textContent = w.word;
+  document.getElementById('l3-hint').textContent = '💡 ' + w.hint;
+  document.getElementById('l3-hint').classList.remove('l3-visible');
+  document.getElementById('l3-feedback').textContent = '';
+  placed = {syn:[],ant:[]};
+  hintOn = false;
+  renderBank();
+  renderPlaced();
+  buildTabs();
+  buildProgress();
+}
+
+function renderBank() {
+  const w = WORDS[cur];
+  const all = [...w.synonyms,...w.antonyms];
+  const usedWords = [...placed.syn,...placed.ant].map(c=>c.w);
+  const remaining = all.filter(c=>!usedWords.includes(c.w));
+  const bank = document.getElementById('l3-bank');
+  bank.innerHTML = remaining.map(c=>`
+    <div class="l3-card" draggable="true" data-w="${c.w}" data-h="${c.h}">
+      ${c.w}<span class="l3-card-hint">${c.h}</span>
+    </div>`).join('');
+  bank.querySelectorAll('.l3-card').forEach(el=>{
+    el.addEventListener('dragstart', e=>{ dragCard=el; setTimeout(()=>el.classList.add('l3-dragging'),0); });
+    el.addEventListener('dragend', ()=>el.classList.remove('l3-dragging'));
   });
 }
 
-function L3_jumpTo(i) {
-  L3_current = i;
-  L3_placed = {syn:[],ant:[]};
-  L3_hintVisible = false;
-  document.getElementById('hint-box').classList.remove('visible');
-  L3_loadWord();
-  document.querySelectorAll('.tab').forEach((t,ti) => t.classList.toggle('active', ti===i));
-  L3_updateProgress();
-}
-
-function L3_loadWord() {
-  const w = L3_WORDS[L3_current];
-  // Focus card
-  document.getElementById('focus-card').innerHTML = `
-    <div class="focus-left">
-      <div class="focus-word">${w.word}</div>
-      <div class="focus-phonetic">${w.phonetic}</div>
-      <span class="focus-pos">${w.pos}</span>
-    </div>
-    <div class="focus-right">
-      <div class="focus-def">${w.def}</div>
-      <div class="focus-sentence">"${w.sentence}"</div>
-    </div>
-  `;
-  document.getElementById('center-word').textContent = w.word;
-  document.getElementById('hint-box').innerHTML = `<p>💡 <strong>Memory Hook:</strong> ${w.hint}</p>`;
-  L3_renderBank();
-  L3_renderPlaced();
-  document.getElementById('feedback').textContent = '';
-}
-
-function L3_renderBank() {
-  const w = L3_WORDS[L3_current];
-  const bank = document.getElementById('word-bank');
-  const allCards = [...w.synonyms,...w.antonyms];
-  const placedIds = [...L3_placed.syn,...L3_placed.ant];
-  bank.innerHTML = allCards
-    .filter(c => !placedIds.find(p => p.w === c.w))
-    .map(c => `
-      <div class="word-card" draggable="true" id="wc-${c.w.replace(/\s/g,'-')}" data-word="${c.w}" data-hint="${c.hint}">
-        ${c.w}
-        <span class="wc-hint">${c.hint}</span>
-      </div>
-    `).join('');
-  bank.querySelectorAll('.word-card').forEach(el => {
-    el.addEventListener('dragstart', e => { L3_dragEl = el; setTimeout(()=>el.classList.add('dragging'),0); });
-    el.addEventListener('dragend', () => el.classList.remove('dragging'));
+function renderPlaced() {
+  ['syn','ant'].forEach(side=>{
+    document.getElementById(`l3-placed-${side}`).innerHTML =
+      placed[side].map(c=>`
+        <div class="l3-card l3-placed" onclick="L3_remove('${c.w}','${side}')">
+          ${c.w}<span class="l3-card-hint">click to remove</span>
+        </div>`).join('');
   });
 }
 
-function L3_renderPlaced() {
-  ['syn','ant'].forEach(side => {
-    document.getElementById(`L3_placed-${side}`).innerHTML = L3_placed[side].map(c => `
-      <div class="word-card L3_placed L3_placed-${side}" onclick="L3_removeCard('${c.w}','${side}')">
-        ${c.w}
-        <span class="wc-hint">${c.hint}</span>
-      </div>
-    `).join('');
-  });
-}
-
-function L3_removeCard(word, side) {
-  L3_placed[side] = L3_placed[side].filter(c => c.w !== word);
-  L3_renderBank();
-  L3_renderPlaced();
-}
-
-function L3_ov(e, side) {
+window.L3_ov = function(e,side){ e.preventDefault(); document.getElementById(`l3-col-${side}`).classList.add('l3-drag-over'); };
+window.L3_ol = function(side){ document.getElementById(`l3-col-${side}`).classList.remove('l3-drag-over'); };
+window.L3_od = function(e,side){
   e.preventDefault();
-  document.getElementById(`col-${side}`).classList.add('drag-over');
-}
-function L3_ol(side) {
-  document.getElementById(`col-${side}`).classList.remove('drag-over');
-}
-function L3_od(e, side) {
-  e.preventDefault();
-  document.getElementById(`col-${side}`).classList.remove('drag-over');
-  if (!L3_dragEl) return;
-  const word = L3_dragEl.dataset.word;
-  const hint = L3_dragEl.dataset.hint;
-  if (L3_placed[side].find(c=>c.w===word)) return;
-  // remove from other side if there
+  document.getElementById(`l3-col-${side}`).classList.remove('l3-drag-over');
+  if(!dragCard) return;
+  const w = dragCard.dataset.w, h = dragCard.dataset.h;
+  // Remove from other side if already placed
   const other = side==='syn'?'ant':'syn';
-  L3_placed[other] = L3_placed[other].filter(c=>c.w!==word);
-  L3_placed[side].push({w:word,hint});
-  L3_renderBank();
-  L3_renderPlaced();
-  L3_dragEl = null;
-}
-
-function L3_checkRound() {
-  const w = L3_WORDS[L3_current];
-  const synWords = L3_placed.syn.map(c=>c.w);
-  const antWords = L3_placed.ant.map(c=>c.w);
-  const correctSyn = w.synonyms.map(c=>c.w);
-  const correctAnt = w.antonyms.map(c=>c.w);
-  let correct = 0, total = synWords.length + antWords.length;
-  if (total === 0) { document.getElementById('feedback').innerHTML = '<span class="fb-err">Drag some words to sort them first!</span>'; return; }
-  synWords.forEach(cw => { if (correctSyn.includes(cw)) correct++; });
-  antWords.forEach(cw => { if (correctAnt.includes(cw)) correct++; });
-  const wrongSyn = synWords.filter(cw => !correctSyn.includes(cw));
-  const wrongAnt = antWords.filter(cw => !correctAnt.includes(cw));
-  if (correct === total && total === 6) {
-    document.getElementById('feedback').innerHTML = '<span class="fb-ok">🎉 Perfect! All 6 words sorted correctly!</span>';
+  placed[other] = placed[other].filter(c=>c.w!==w);
+  if(!placed[side].find(c=>c.w===w)) placed[side].push({w,h});
+  dragCard=null;
+  renderBank(); renderPlaced();
+};
+window.L3_remove = function(word,side){
+  placed[side] = placed[side].filter(c=>c.w!==word);
+  renderBank(); renderPlaced();
+};
+window.L3_hint = function(){
+  hintOn=!hintOn;
+  document.getElementById('l3-hint').classList.toggle('l3-visible',hintOn);
+};
+window.L3_reset = function(){ placed={syn:[],ant:[]}; renderBank(); renderPlaced(); document.getElementById('l3-feedback').textContent=''; };
+window.L3_check = function(){
+  const w = WORDS[cur];
+  const synWords = w.synonyms.map(c=>c.w);
+  const antWords = w.antonyms.map(c=>c.w);
+  const placedSyn = placed.syn.map(c=>c.w);
+  const placedAnt = placed.ant.map(c=>c.w);
+  const correctSyn = placedSyn.filter(c=>synWords.includes(c)).length;
+  const correctAnt = placedAnt.filter(c=>antWords.includes(c)).length;
+  const wrongSyn = placedSyn.filter(c=>antWords.includes(c)).length;
+  const wrongAnt = placedAnt.filter(c=>synWords.includes(c)).length;
+  const fb = document.getElementById('l3-feedback');
+  if(wrongSyn===0&&wrongAnt===0&&correctSyn+correctAnt>0){
+    fb.innerHTML=`<span class="l3-fb-ok">🎉 ${correctSyn+correctAnt} correct! Keep going or click Next Word!</span>`;
+  } else if(wrongSyn+wrongAnt>0){
+    fb.innerHTML=`<span class="l3-fb-err">❌ ${wrongSyn+wrongAnt} word(s) in the wrong column. Try again!</span>`;
   } else {
-    let msg = `✅ ${correct}/${total} correct. `;
-    if (wrongSyn.length) msg += `<strong>${wrongSyn.join(', ')}</strong> are not synonyms. `;
-    if (wrongAnt.length) msg += `<strong>${wrongAnt.join(', ')}</strong> are not antonyms.`;
-    document.getElementById('feedback').innerHTML = `<span class="fb-err">${msg}</span>`;
+    fb.innerHTML=`<span style="color:#64748b">Drag some words into the columns first!</span>`;
   }
-}
+};
+window.L3_next = function(){ if(cur<WORDS.length-1){cur++;loadWord();} else { document.getElementById('l3-feedback').innerHTML='<span class="l3-fb-ok">🏆 All words complete! Great work!</span>'; }};
+window.L3_jump = function(i){ cur=i; loadWord(); };
 
-function L3_toggleHint() {
-  L3_hintVisible = !L3_hintVisible;
-  document.getElementById('hint-box').classList.toggle('visible', L3_hintVisible);
-}
-
-function L3_resetRound() {
-  L3_placed = {syn:[],ant:[]};
-  L3_renderBank();
-  L3_renderPlaced();
-  document.getElementById('feedback').textContent = '';
-}
-
-function L3_nextWord() {
-  if (L3_current < L3_L3_WORDS.length-1) L3_jumpTo(L3_current+1);
-  else document.getElementById('feedback').innerHTML = '<span class="fb-ok">🏆 You\'ve completed all 5 words! Great work!</span>';
-}
-
-
-window.L3_init = function(){ L3_init(); };
+window.L3_init = function(){ init(); };
+init();
+})();
 </script>
+</div>
+
 
 <div class="section" id="section-lesson4">
 <div style="position:sticky;top:0;z-index:100;padding:10px 20px;background:#1e293b;border-bottom:1px solid rgba(255,255,255,0.1);">
