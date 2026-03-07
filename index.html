@@ -1323,10 +1323,13 @@ function showActivity(id){
   var el=document.getElementById('section-'+id);
   if(el) el.style.setProperty('display','block','important');
   window.scrollTo(0,0);
-  if(id==='lesson2'&&window.L2_init) window.L2_init();
-  if(id==='lesson3'&&window.L3_init) window.L3_init();
-  if(id==='lesson4'&&window.L4_init) window.L4_init();
-  if(id==='quiz'&&window.QZ_goHome) window.QZ_goHome();
+  // Use setTimeout to ensure DOM is visible before init runs
+  setTimeout(function(){
+    if(id==='lesson2'&&window.L2_init) window.L2_init();
+    if(id==='lesson3'&&window.L3_init) window.L3_init();
+    if(id==='lesson4'&&window.L4_init) window.L4_init();
+    if(id==='quiz'&&window.QZ_goHome) window.QZ_goHome();
+  }, 50);
 }
 function goHome(){showActivity('home');}
 </script>
