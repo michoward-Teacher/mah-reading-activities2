@@ -2489,135 +2489,644 @@ init();
 <div style="position:sticky;top:0;z-index:100;padding:10px 20px;background:#1e293b;border-bottom:1px solid rgba(255,255,255,0.1);">
 <button onclick="goHome()" style="background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);color:#fff;padding:8px 20px;border-radius:8px;cursor:pointer;font-size:0.9rem;font-family:inherit;font-weight:600;">← Back to Activities</button>
 </div>
+
+<style>
+  #section-lesson4 {
+    --bg: #f0f4ff;
+    --card: #ffffff;
+    --blue: #3b6cf7;
+    --blue-light: #dce8ff;
+    --green: #22c55e;
+    --green-light: #dcfce7;
+    --yellow: #f59e0b;
+    --yellow-light: #fef3c7;
+    --purple: #8b5cf6;
+    --purple-light: #ede9fe;
+    --red: #ef4444;
+    --red-light: #fee2e2;
+    --teal: #14b8a6;
+    --teal-light: #ccfbf1;
+    --gray: #64748b;
+    --border: #cbd5e1;
+    --shadow: 0 4px 20px rgba(59,108,247,0.10);
+  }
+  #section-lesson4 * { box-sizing: border-box; margin: 0; padding: 0; }
+  #section-lesson4 {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    padding-bottom: 60px;
+  }
+  #section-lesson4 header {
+    text-align: center;
+    padding: 28px 20px 20px;
+  }
+  #section-lesson4 header h1 {
+    font-family: 'Fredoka One', cursive;
+    font-size: 2.4rem;
+    color: var(--blue);
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+  }
+  #section-lesson4 header p {
+    color: var(--gray);
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0;
+  }
+
+  /* ── Instructions Banner ── */
+  .l4-instructions {
+    max-width: 900px;
+    margin: 0 auto 20px;
+    padding: 0 16px;
+  }
+  .l4-instr-box {
+    background: #dce8ff;
+    border: 2px solid var(--blue);
+    border-radius: 16px;
+    padding: 16px 20px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .l4-instr-box .l4-instr-icon { font-size: 1.8rem; flex-shrink: 0; }
+  .l4-instr-box h3 {
+    font-family: 'Fredoka One', cursive;
+    color: var(--blue);
+    font-size: 1rem;
+    margin-bottom: 4px;
+  }
+  .l4-instr-box ol {
+    padding-left: 18px;
+    color: #1e3a8a;
+    font-size: 0.88rem;
+    font-weight: 700;
+    line-height: 1.8;
+  }
+
+  /* ── Root Key ── */
+  .l4-root-key {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    max-width: 900px;
+    margin: 0 auto 20px;
+    padding: 0 16px;
+  }
+  .l4-root-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    border-radius: 12px;
+    font-weight: 800;
+    font-size: 0.88rem;
+    border: 2.5px solid;
+  }
+  .l4-root-badge .l4-root-word {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.1rem;
+  }
+  .l4-root-badge .l4-root-def { font-size: 0.8rem; opacity: 0.85; }
+
+  /* ── Workspace ── */
+  .l4-workspace {
+    display: grid;
+    grid-template-columns: 180px 1fr 180px;
+    gap: 16px;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 16px;
+    align-items: start;
+  }
+
+  /* ── Side Panels ── */
+  .l4-panel {
+    background: var(--card);
+    border-radius: 18px;
+    padding: 16px 12px;
+    box-shadow: var(--shadow);
+    position: sticky;
+    top: 60px;
+  }
+  .l4-panel h2 {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    margin-bottom: 6px;
+    text-align: center;
+    padding-bottom: 8px;
+    border-bottom: 2px dashed var(--border);
+  }
+  .l4-panel .l4-panel-hint {
+    font-size: 0.72rem;
+    color: var(--gray);
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+  /* ── Root Dividers in tile panels ── */
+  .l4-root-divider-panel {
+    font-size: 0.65rem;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 6px;
+    border-radius: 6px;
+    margin: 10px 0 6px;
+    text-align: center;
+  }
+
+  /* ── Tiles ── */
+  .l4-tile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 6px;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    font-weight: 800;
+    font-size: 0.9rem;
+    cursor: grab;
+    user-select: none;
+    transition: transform 0.15s, box-shadow 0.15s, opacity 0.2s;
+    border: 2.5px solid transparent;
+    text-align: center;
+    min-height: 42px;
+    line-height: 1.2;
+  }
+  .l4-tile:active { cursor: grabbing; }
+  .l4-tile:hover { transform: scale(1.06); box-shadow: 0 6px 18px rgba(0,0,0,0.13); }
+  .l4-tile.dragging { opacity: 0.45; transform: scale(0.97); }
+  .l4-tile.used { opacity: 0.25; pointer-events: none; }
+
+  /* GRAPH prefix tiles */
+  .l4-tile-geo   { background:#dce8ff; color:#1e40af; border-color:#93c5fd; }
+  .l4-tile-demo  { background:#ede9fe; color:#5b21b6; border-color:#c4b5fd; }
+  .l4-tile-carto { background:#ccfbf1; color:#0f766e; border-color:#5eead4; }
+  .l4-tile-auto  { background:#fef3c7; color:#92400e; border-color:#fcd34d; }
+  .l4-tile-bio   { background:#fee2e2; color:#991b1b; border-color:#fca5a5; }
+  /* SCOPE prefix tiles */
+  .l4-tile-tele  { background:#f3e8ff; color:#6b21a8; border-color:#c084fc; }
+  .l4-tile-micro { background:#fdf4ff; color:#7e22ce; border-color:#d8b4fe; }
+  .l4-tile-kale  { background:#fce7f3; color:#9d174d; border-color:#f9a8d4; }
+  /* PORT prefix tiles */
+  .l4-tile-trans { background:#ecfdf5; color:#065f46; border-color:#6ee7b7; }
+  .l4-tile-ex    { background:#fff7ed; color:#9a3412; border-color:#fdba74; }
+  .l4-tile-im    { background:#eff6ff; color:#1e3a8a; border-color:#93c5fd; }
+
+  /* meaning tiles */
+  .l4-tile-earth  { background:#d1fae5; color:#065f46; border-color:#6ee7b7; }
+  .l4-tile-people { background:#e0e7ff; color:#3730a3; border-color:#a5b4fc; }
+  .l4-tile-map    { background:#fce7f3; color:#9d174d; border-color:#f9a8d4; }
+  .l4-tile-self   { background:#fff7ed; color:#9a3412; border-color:#fdba74; }
+  .l4-tile-life   { background:#f0fdf4; color:#14532d; border-color:#86efac; }
+  .l4-tile-far    { background:#f3e8ff; color:#6b21a8; border-color:#c084fc; }
+  .l4-tile-small  { background:#fdf4ff; color:#7e22ce; border-color:#d8b4fe; }
+  .l4-tile-beauty { background:#fce7f3; color:#9d174d; border-color:#f9a8d4; }
+  .l4-tile-across { background:#ecfdf5; color:#065f46; border-color:#6ee7b7; }
+  .l4-tile-out    { background:#fff7ed; color:#9a3412; border-color:#fdba74; }
+  .l4-tile-into   { background:#eff6ff; color:#1e3a8a; border-color:#93c5fd; }
+
+  /* ── Matrix Table ── */
+  .l4-matrix-wrap {
+    background: var(--card);
+    border-radius: 20px;
+    padding: 20px 16px 18px;
+    box-shadow: var(--shadow);
+  }
+  .l4-matrix-wrap h2 {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.2rem;
+    color: var(--blue);
+    text-align: center;
+    margin-bottom: 14px;
+  }
+  .l4-matrix-wrap table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Nunito', sans-serif;
+  }
+  .l4-matrix-wrap thead th {
+    background: var(--blue);
+    color: #fff;
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.85rem;
+    padding: 8px 10px;
+    text-align: center;
+    letter-spacing: 0.05em;
+  }
+  .l4-matrix-wrap thead th:first-child { border-radius: 10px 0 0 10px; }
+  .l4-matrix-wrap thead th:last-child  { border-radius: 0 10px 10px 0; }
+  .l4-matrix-wrap tbody tr { border-bottom: 1px solid #f1f5f9; }
+  .l4-matrix-wrap tbody tr:hover { background: #f8faff; }
+
+  /* Root divider rows */
+  .l4-root-row td {
+    padding: 10px 12px;
+    font-weight: 900;
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border-left: 4px solid;
+  }
+
+  /* Drop zones */
+  .l4-drop-zone {
+    min-height: 44px;
+    border: 2px dashed var(--border);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #94a3b8;
+    padding: 6px;
+    transition: all 0.15s;
+    cursor: pointer;
+  }
+  .l4-drop-zone.drag-over {
+    border-color: var(--blue);
+    background: var(--blue-light);
+    color: var(--blue);
+    transform: scale(1.03);
+  }
+  .l4-drop-zone.filled { border-style: solid; border-color: transparent; padding: 3px; }
+
+  /* Placed tile inside drop zone */
+  .l4-placed {
+    width: 100%;
+    padding: 7px 8px;
+    border-radius: 8px;
+    font-weight: 800;
+    font-size: 0.88rem;
+    text-align: center;
+    cursor: pointer;
+    transition: opacity 0.15s;
+    border: 2px solid transparent;
+  }
+  .l4-placed:hover { opacity: 0.7; }
+  .l4-placed::after { content: ' ×'; font-size: 0.7rem; opacity: 0.6; }
+
+  /* Root cell */
+  .l4-root-cell {
+    text-align: center;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    padding: 8px 6px;
+    border-radius: 8px;
+    font-weight: 900;
+  }
+
+  /* Suffix cell */
+  .l4-suffix-cell {
+    text-align: center;
+    font-weight: 800;
+    font-size: 0.88rem;
+    color: var(--gray);
+    padding: 8px 6px;
+  }
+
+  /* Word cell */
+  .l4-word-cell {
+    text-align: center;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.05rem;
+    color: #94a3b8;
+    padding: 8px 6px;
+    transition: color 0.3s, transform 0.3s;
+  }
+  .l4-word-cell.lit {
+    color: var(--blue);
+    transform: scale(1.08);
+    font-size: 1.1rem;
+  }
+
+  /* Button row */
+  .l4-btn-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 2px dashed var(--border);
+  }
+  .l4-btn {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 0.88rem;
+    padding: 10px 18px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .l4-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(0,0,0,0.15); }
+  .l4-btn-reset  { background: #f1f5f9; color: #475569; }
+  .l4-btn-check  { background: var(--green); color: #fff; }
+  .l4-btn-game   { background: var(--yellow); color: #fff; }
+  .l4-btn-reveal { background: var(--purple); color: #fff; }
+
+  /* Feedback */
+  .l4-feedback {
+    text-align: center;
+    min-height: 28px;
+    font-weight: 800;
+    font-size: 0.95rem;
+    margin-top: 10px;
+    padding: 8px;
+    border-radius: 10px;
+  }
+  .l4-feedback-ok  { background: var(--green-light);  color: #14532d; }
+  .l4-feedback-err { background: var(--red-light);    color: #7f1d1d; }
+
+  /* ── Game Overlay ── */
+  .l4-game-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(15,23,42,0.85);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+  }
+  .l4-game-overlay.active { display: flex; }
+  .l4-game-box {
+    background: #fff;
+    border-radius: 24px;
+    padding: 32px 28px;
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.4);
+  }
+  .l4-game-box h2 {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.6rem;
+    color: var(--blue);
+    margin-bottom: 4px;
+  }
+  .l4-game-box p { color: var(--gray); font-size: 0.88rem; margin-bottom: 16px; font-weight: 600; }
+  .l4-timer-wrap {
+    background: #f1f5f9;
+    border-radius: 99px;
+    height: 8px;
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+  .l4-timer-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--blue), var(--purple));
+    border-radius: 99px;
+    transition: width 1s linear;
+  }
+  .l4-game-q {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.25rem;
+    color: #1e293b;
+    margin-bottom: 18px;
+    line-height: 1.3;
+  }
+  .l4-game-choices {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .l4-game-choice {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 0.92rem;
+    padding: 12px 10px;
+    border-radius: 12px;
+    border: 2.5px solid var(--border);
+    background: #f8fafc;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .l4-game-choice:hover { border-color: var(--blue); background: var(--blue-light); color: var(--blue); }
+  .l4-game-choice.correct { background: var(--green-light); border-color: var(--green); color: #14532d; }
+  .l4-game-choice.wrong   { background: var(--red-light);   border-color: var(--red);   color: #7f1d1d; }
+  .l4-game-score { font-weight: 800; color: var(--gray); font-size: 0.9rem; margin-bottom: 12px; }
+  .l4-btn-close-game {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 0.85rem;
+    padding: 8px 20px;
+    border-radius: 10px;
+    border: 2px solid var(--border);
+    background: transparent;
+    color: var(--gray);
+    cursor: pointer;
+  }
+
+  /* Confetti */
+  .l4-confetti-wrap { position: fixed; inset: 0; pointer-events: none; z-index: 99999; }
+  @keyframes l4-fall {
+    to { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+  }
+  .l4-confetti-piece { position: fixed; top: -20px; animation: l4-fall linear forwards; }
+
+  @media (max-width: 700px) {
+    .l4-workspace { grid-template-columns: 1fr; }
+    .l4-panel { position: static; }
+    .l4-game-choices { grid-template-columns: 1fr; }
+  }
+</style>
+
 <header>
   <h1>⚙️ Word Engineers</h1>
-  <p>Build words using the root <strong>-GRAPH-</strong> (to write / to describe)</p>
+  <p>Build words using three roots: <strong>-GRAPH-</strong> (write) · <strong>-SCOPE-</strong> (look) · <strong>-PORT-</strong> (carry)</p>
 </header>
 
-<div class="workspace">
+<!-- Instructions -->
+<div class="l4-instructions">
+  <div class="l4-instr-box">
+    <div class="l4-instr-icon">📋</div>
+    <div>
+      <h3>How to Build a Word</h3>
+      <ol>
+        <li>Find the <strong>Prefix tile</strong> on the LEFT panel (e.g. GEO, TELE, EX)</li>
+        <li><strong>Drag it</strong> into the <strong>Prefix column</strong> of the matching row in the table</li>
+        <li>Find the <strong>Meaning tile</strong> on the RIGHT panel and drag it to the <strong>Meaning column</strong></li>
+        <li>Watch the <strong>Word column</strong> light up with the completed word! ✨</li>
+        <li>Click <strong>Check Answers</strong> when you're done, or <strong>Challenge Mode</strong> for a quiz!</li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<!-- Root Key -->
+<div class="l4-root-key">
+  <div class="l4-root-badge" style="background:#dce8ff;border-color:#93c5fd;color:#1e40af;">
+    <div class="l4-root-word">-GRAPH-</div>
+    <div class="l4-root-def">= write / describe</div>
+  </div>
+  <div class="l4-root-badge" style="background:#f3e8ff;border-color:#c084fc;color:#6b21a8;">
+    <div class="l4-root-word">-SCOPE-</div>
+    <div class="l4-root-def">= look / examine</div>
+  </div>
+  <div class="l4-root-badge" style="background:#ecfdf5;border-color:#6ee7b7;color:#065f46;">
+    <div class="l4-root-word">-PORT-</div>
+    <div class="l4-root-def">= carry</div>
+  </div>
+</div>
+
+<!-- Workspace -->
+<div class="l4-workspace">
 
   <!-- LEFT: Prefix Tiles -->
-  <div class="panel">
-    <h2 style="color:var(--blue)">🧩 Prefixes</h2>
-    <div class="tile tile-geo"   draggable="true" id="tile-geo"   data-type="prefix" data-val="GEO">GEO<br><span style="font-size:0.72rem;font-weight:700;opacity:0.75">(Earth)</span></div>
-    <div class="tile tile-demo"  draggable="true" id="tile-demo"  data-type="prefix" data-val="DEMO">DEMO<br><span style="font-size:0.72rem;font-weight:700;opacity:0.75">(People)</span></div>
-    <div class="tile tile-carto" draggable="true" id="tile-carto" data-type="prefix" data-val="CARTO">CARTO<br><span style="font-size:0.72rem;font-weight:700;opacity:0.75">(Map)</span></div>
-    <div class="tile tile-auto"  draggable="true" id="tile-auto"  data-type="prefix" data-val="AUTO">AUTO<br><span style="font-size:0.72rem;font-weight:700;opacity:0.75">(Self)</span></div>
-    <div class="tile tile-bio"   draggable="true" id="tile-bio"   data-type="prefix" data-val="BIO">BIO<br><span style="font-size:0.72rem;font-weight:700;opacity:0.75">(Life)</span></div>
-  <div class="tile tile-tele"  draggable="true" id="tile-tele"  data-type="prefix" data-val="TELE">TELE<br><span style="font-size:0.72rem;font-weight:700;opacity:0.75">(Far Away)</span></div>
-  <div class="tile tile-micro" draggable="true" id="tile-micro" data-type="prefix" data-val="MICRO">MICRO<br><span style="font-size:0.72rem;font-weight:700;opacity:0.75">(Small)</span></div>
-  <div class="tile tile-kale"  draggable="true" id="tile-kale"  data-type="prefix" data-val="KALEIDO">KALEIDO<br><span style="font-size:0.72rem;font-weight:700;opacity:0.75">(Beautiful)</span></div>
-  <div class="tile tile-trans" draggable="true" id="tile-trans" data-type="prefix" data-val="TRANS">TRANS<br><span style="font-size:0.72rem;font-weight:700;opacity:0.75">(Across)</span></div>
-  <div class="tile tile-ex"    draggable="true" id="tile-ex"    data-type="prefix" data-val="EX">EX<br><span style="font-size:0.72rem;font-weight:700;opacity:0.75">(Out)</span></div>
-  <div class="tile tile-im"    draggable="true" id="tile-im"    data-type="prefix" data-val="IM">IM<br><span style="font-size:0.72rem;font-weight:700;opacity:0.75">(Into)</span></div>
+  <div class="l4-panel">
+    <h2 style="color:#3b6cf7">🧩 Prefixes</h2>
+    <p class="l4-panel-hint">Drag to the PREFIX column →</p>
+
+    <div class="l4-root-divider-panel" style="background:#dce8ff;color:#1e40af;">-GRAPH- words</div>
+    <div class="l4-tile l4-tile-geo"   draggable="true" id="l4-tile-geo"   data-type="prefix" data-val="GEO">GEO<br><span style="font-size:0.68rem;opacity:0.75">(Earth)</span></div>
+    <div class="l4-tile l4-tile-demo"  draggable="true" id="l4-tile-demo"  data-type="prefix" data-val="DEMO">DEMO<br><span style="font-size:0.68rem;opacity:0.75">(People)</span></div>
+    <div class="l4-tile l4-tile-carto" draggable="true" id="l4-tile-carto" data-type="prefix" data-val="CARTO">CARTO<br><span style="font-size:0.68rem;opacity:0.75">(Map)</span></div>
+    <div class="l4-tile l4-tile-auto"  draggable="true" id="l4-tile-auto"  data-type="prefix" data-val="AUTO">AUTO<br><span style="font-size:0.68rem;opacity:0.75">(Self)</span></div>
+    <div class="l4-tile l4-tile-bio"   draggable="true" id="l4-tile-bio"   data-type="prefix" data-val="BIO">BIO<br><span style="font-size:0.68rem;opacity:0.75">(Life)</span></div>
+
+    <div class="l4-root-divider-panel" style="background:#f3e8ff;color:#6b21a8;">-SCOPE- words</div>
+    <div class="l4-tile l4-tile-tele"  draggable="true" id="l4-tile-tele"  data-type="prefix" data-val="TELE">TELE<br><span style="font-size:0.68rem;opacity:0.75">(Far Away)</span></div>
+    <div class="l4-tile l4-tile-micro" draggable="true" id="l4-tile-micro" data-type="prefix" data-val="MICRO">MICRO<br><span style="font-size:0.68rem;opacity:0.75">(Small)</span></div>
+    <div class="l4-tile l4-tile-kale"  draggable="true" id="l4-tile-kale"  data-type="prefix" data-val="KALEIDO">KALEIDO<br><span style="font-size:0.68rem;opacity:0.75">(Beautiful)</span></div>
+
+    <div class="l4-root-divider-panel" style="background:#ecfdf5;color:#065f46;">-PORT- words</div>
+    <div class="l4-tile l4-tile-trans" draggable="true" id="l4-tile-trans" data-type="prefix" data-val="TRANS">TRANS<br><span style="font-size:0.68rem;opacity:0.75">(Across)</span></div>
+    <div class="l4-tile l4-tile-ex"    draggable="true" id="l4-tile-ex"    data-type="prefix" data-val="EX">EX<br><span style="font-size:0.68rem;opacity:0.75">(Out)</span></div>
+    <div class="l4-tile l4-tile-im"    draggable="true" id="l4-tile-im"    data-type="prefix" data-val="IM">IM<br><span style="font-size:0.68rem;opacity:0.75">(Into)</span></div>
   </div>
 
-  <!-- CENTER: Matrix -->
-  <div class="matrix-wrap">
-    <h2>🗺️ Morphology Matrix — GRAPH · SCOPE · PORT</h2>
-    <table>
+  <!-- CENTER: Matrix Table -->
+  <div class="l4-matrix-wrap">
+    <h2>🗺️ Morphology Matrix</h2>
+    <table id="l4-table">
       <thead>
         <tr>
-          <th class="col-prefix">Prefix</th>
-          <th class="col-root">Root</th>
-          <th class="col-suffix">Suffix</th>
-          <th class="col-word">Word</th>
-          <th class="col-meaning">Meaning</th>
+          <th style="width:22%">PREFIX<br><span style="font-size:0.7rem;font-weight:600;opacity:0.85">← drag here</span></th>
+          <th style="width:14%">ROOT</th>
+          <th style="width:16%">ENDING</th>
+          <th style="width:22%">WORD ✨</th>
+          <th style="width:26%">MEANING<br><span style="font-size:0.7rem;font-weight:600;opacity:0.85">drag here →</span></th>
         </tr>
       </thead>
-      <tbody id="matrix-body">
+      <tbody id="l4-matrix-body">
         <!-- Rows injected by JS -->
       </tbody>
     </table>
 
-    <div class="btn-row">
-      <button class="btn-reset"  onclick="L4_resetAll()">🔄 Reset</button>
-      <button class="btn-check"  onclick="L4_checkAnswers()">✅ Check Answers</button>
-      <button class="btn-game"   onclick="L4_startGame()">🎮 Challenge Mode!</button>
-      <button class="btn-reveal" onclick="L4_revealAll()">💡 Reveal All</button>
+    <div class="l4-btn-row">
+      <button class="l4-btn l4-btn-reset"  onclick="L4_resetAll()">🔄 Reset</button>
+      <button class="l4-btn l4-btn-check"  onclick="L4_checkAnswers()">✅ Check Answers</button>
+      <button class="l4-btn l4-btn-game"   onclick="L4_startGame()">⚡ Challenge Mode!</button>
+      <button class="l4-btn l4-btn-reveal" onclick="L4_revealAll()">💡 Reveal All</button>
     </div>
-    <div id="feedback"></div>
+    <div class="l4-feedback" id="l4-feedback"></div>
   </div>
 
   <!-- RIGHT: Meaning Tiles -->
-  <div class="panel">
-    <h2 style="color:var(--green)">📖 Meanings</h2>
-    <div class="tile tile-earth"  draggable="true" id="tile-earth"  data-type="meaning" data-val="Earth">🌍 Earth</div>
-    <div class="tile tile-people" draggable="true" id="tile-people" data-type="meaning" data-val="People">👥 People</div>
-    <div class="tile tile-map"    draggable="true" id="tile-map"    data-type="meaning" data-val="Map">🗺️ Map</div>
-    <div class="tile tile-self"   draggable="true" id="tile-self"   data-type="meaning" data-val="Self">🪞 Self</div>
-    <div class="tile tile-life"   draggable="true" id="tile-life"   data-type="meaning" data-val="Life">🌿 Life</div>
-  <div class="tile tile-far"    draggable="true" id="tile-far"    data-type="meaning" data-val="Far">🔭 Far Away</div>
-  <div class="tile tile-small"  draggable="true" id="tile-small"  data-type="meaning" data-val="Small">🔬 Small</div>
-  <div class="tile tile-beauty" draggable="true" id="tile-beauty" data-type="meaning" data-val="Beauty">✨ Beautiful</div>
-  <div class="tile tile-across" draggable="true" id="tile-across" data-type="meaning" data-val="Across">↔️ Across</div>
-  <div class="tile tile-out"    draggable="true" id="tile-out"    data-type="meaning" data-val="Out">📤 Out</div>
-  <div class="tile tile-into"   draggable="true" id="tile-into"   data-type="meaning" data-val="Into">📥 Into</div>
+  <div class="l4-panel">
+    <h2 style="color:#22c55e">📖 Meanings</h2>
+    <p class="l4-panel-hint">← Drag to the MEANING column</p>
+
+    <div class="l4-root-divider-panel" style="background:#dce8ff;color:#1e40af;">-GRAPH- meanings</div>
+    <div class="l4-tile l4-tile-earth"  draggable="true" id="l4-tile-earth"  data-type="meaning" data-val="Earth">🌍 Earth</div>
+    <div class="l4-tile l4-tile-people" draggable="true" id="l4-tile-people" data-type="meaning" data-val="People">👥 People</div>
+    <div class="l4-tile l4-tile-map"    draggable="true" id="l4-tile-map"    data-type="meaning" data-val="Map">🗺️ Map</div>
+    <div class="l4-tile l4-tile-self"   draggable="true" id="l4-tile-self"   data-type="meaning" data-val="Self">🪞 Self</div>
+    <div class="l4-tile l4-tile-life"   draggable="true" id="l4-tile-life"   data-type="meaning" data-val="Life">🌿 Life</div>
+
+    <div class="l4-root-divider-panel" style="background:#f3e8ff;color:#6b21a8;">-SCOPE- meanings</div>
+    <div class="l4-tile l4-tile-far"    draggable="true" id="l4-tile-far"    data-type="meaning" data-val="Far Away">🔭 Far Away</div>
+    <div class="l4-tile l4-tile-small"  draggable="true" id="l4-tile-small"  data-type="meaning" data-val="Small">🔬 Small</div>
+    <div class="l4-tile l4-tile-beauty" draggable="true" id="l4-tile-beauty" data-type="meaning" data-val="Beautiful">✨ Beautiful</div>
+
+    <div class="l4-root-divider-panel" style="background:#ecfdf5;color:#065f46;">-PORT- meanings</div>
+    <div class="l4-tile l4-tile-across" draggable="true" id="l4-tile-across" data-type="meaning" data-val="Across">↔️ Across</div>
+    <div class="l4-tile l4-tile-out"    draggable="true" id="l4-tile-out"    data-type="meaning" data-val="Out">📤 Out</div>
+    <div class="l4-tile l4-tile-into"   draggable="true" id="l4-tile-into"   data-type="meaning" data-val="Into">📥 Into</div>
   </div>
 </div>
 
-<!-- Game overlay -->
-<div id="game-overlay">
-  <div class="game-box">
+<!-- Game Overlay -->
+<div class="l4-game-overlay" id="l4-game-overlay">
+  <div class="l4-game-box">
     <h2>⚡ Challenge Mode</h2>
     <p>Match the word part to its meaning — fast!</p>
-    <div id="timer-bar-wrap"><div id="timer-bar"></div></div>
-    <div class="game-q" id="game-q"></div>
-    <div class="game-choices" id="game-choices"></div>
-    <div id="game-score"></div>
-    <button class="btn-close-game" onclick="L4_closeGame()">✕ Close</button>
+    <div class="l4-timer-wrap"><div class="l4-timer-bar" id="l4-timer-bar"></div></div>
+    <div class="l4-game-q" id="l4-game-q"></div>
+    <div class="l4-game-choices" id="l4-game-choices"></div>
+    <div class="l4-game-score" id="l4-game-score"></div>
+    <button class="l4-btn-close-game" onclick="L4_closeGame()">✕ Close</button>
   </div>
 </div>
 
-<!-- Confetti layer -->
-<div id="confetti-wrap"></div>
-</div>
-<script>
+<!-- Confetti -->
+<div class="l4-confetti-wrap" id="l4-confetti-wrap"></div>
 
+<script>
 // ── Data ──
-const ROWS = [
-  // ── ROOT: -GRAPH- (write / describe) ──
-  { id:'geo',   root:'GRAPH', prefix:'GEO',   suffix:'GRAPHY',    word:'Geography',     meaning:'Earth',     rootColor:'#3b6cf7', prefixClass:'tile-geo',   meaningClass:'tile-earth'  },
-  { id:'demo',  root:'GRAPH', prefix:'DEMO',  suffix:'GRAPHY',    word:'Demography',    meaning:'People',    rootColor:'#3b6cf7', prefixClass:'tile-demo',  meaningClass:'tile-people' },
-  { id:'carto', root:'GRAPH', prefix:'CARTO', suffix:'GRAPHY',    word:'Cartography',   meaning:'Map',       rootColor:'#3b6cf7', prefixClass:'tile-carto', meaningClass:'tile-map'    },
-  { id:'auto',  root:'GRAPH', prefix:'AUTO',  suffix:'BIOGRAPHY', word:'Autobiography', meaning:'Self',      rootColor:'#3b6cf7', prefixClass:'tile-auto',  meaningClass:'tile-self'   },
-  { id:'bio',   root:'GRAPH', prefix:'BIO',   suffix:'GRAPHY',    word:'Biography',     meaning:'Life',      rootColor:'#3b6cf7', prefixClass:'tile-bio',   meaningClass:'tile-life'   },
-  // ── ROOT: -SCOPE- (look / examine) ──
-  { id:'tele',  root:'SCOPE', prefix:'TELE',  suffix:'SCOPE',     word:'Telescope',     meaning:'Far',       rootColor:'#8b5cf6', prefixClass:'tile-tele',  meaningClass:'tile-far'    },
-  { id:'micro', root:'SCOPE', prefix:'MICRO', suffix:'SCOPE',     word:'Microscope',    meaning:'Small',     rootColor:'#8b5cf6', prefixClass:'tile-micro', meaningClass:'tile-small'  },
-  { id:'kale',  root:'SCOPE', prefix:'KALEIDO',suffix:'SCOPE',    word:'Kaleidoscope',  meaning:'Beauty',    rootColor:'#8b5cf6', prefixClass:'tile-kale',  meaningClass:'tile-beauty' },
-  // ── ROOT: -PORT- (carry) ──
-  { id:'trans', root:'PORT',  prefix:'TRANS', suffix:'PORT',      word:'Transport',     meaning:'Across',    rootColor:'#10b981', prefixClass:'tile-trans', meaningClass:'tile-across' },
-  { id:'ex',    root:'PORT',  prefix:'EX',    suffix:'PORT',      word:'Export',        meaning:'Out',       rootColor:'#10b981', prefixClass:'tile-ex',    meaningClass:'tile-out'    },
-  { id:'im',    root:'PORT',  prefix:'IM',    suffix:'PORT',      word:'Import',        meaning:'Into',      rootColor:'#10b981', prefixClass:'tile-im',    meaningClass:'tile-into'   },
+const L4_ROWS = [
+  // GRAPH words
+  { id:'geo',   root:'GRAPH', prefix:'GEO',     ending:'GRAPHY',    word:'Geography',     meaning:'Earth',     rootColor:'#3b6cf7', prefixClass:'l4-tile-geo',   meaningClass:'l4-tile-earth'  },
+  { id:'demo',  root:'GRAPH', prefix:'DEMO',    ending:'GRAPHY',    word:'Demography',    meaning:'People',    rootColor:'#3b6cf7', prefixClass:'l4-tile-demo',  meaningClass:'l4-tile-people' },
+  { id:'carto', root:'GRAPH', prefix:'CARTO',   ending:'GRAPHY',    word:'Cartography',   meaning:'Map',       rootColor:'#3b6cf7', prefixClass:'l4-tile-carto', meaningClass:'l4-tile-map'    },
+  { id:'auto',  root:'GRAPH', prefix:'AUTO',    ending:'BIOGRAPHY', word:'Autobiography', meaning:'Self',      rootColor:'#3b6cf7', prefixClass:'l4-tile-auto',  meaningClass:'l4-tile-self'   },
+  { id:'bio',   root:'GRAPH', prefix:'BIO',     ending:'GRAPHY',    word:'Biography',     meaning:'Life',      rootColor:'#3b6cf7', prefixClass:'l4-tile-bio',   meaningClass:'l4-tile-life'   },
+  // SCOPE words
+  { id:'tele',  root:'SCOPE', prefix:'TELE',    ending:'SCOPE',     word:'Telescope',     meaning:'Far Away',  rootColor:'#8b5cf6', prefixClass:'l4-tile-tele',  meaningClass:'l4-tile-far'    },
+  { id:'micro', root:'SCOPE', prefix:'MICRO',   ending:'SCOPE',     word:'Microscope',    meaning:'Small',     rootColor:'#8b5cf6', prefixClass:'l4-tile-micro', meaningClass:'l4-tile-small'  },
+  { id:'kale',  root:'SCOPE', prefix:'KALEIDO', ending:'SCOPE',     word:'Kaleidoscope',  meaning:'Beautiful', rootColor:'#8b5cf6', prefixClass:'l4-tile-kale',  meaningClass:'l4-tile-beauty' },
+  // PORT words
+  { id:'trans', root:'PORT',  prefix:'TRANS',   ending:'PORT',      word:'Transport',     meaning:'Across',    rootColor:'#10b981', prefixClass:'l4-tile-trans', meaningClass:'l4-tile-across' },
+  { id:'ex',    root:'PORT',  prefix:'EX',      ending:'PORT',      word:'Export',        meaning:'Out',       rootColor:'#10b981', prefixClass:'l4-tile-ex',    meaningClass:'l4-tile-out'    },
+  { id:'im',    root:'PORT',  prefix:'IM',      ending:'PORT',      word:'Import',        meaning:'Into',      rootColor:'#10b981', prefixClass:'l4-tile-im',    meaningClass:'l4-tile-into'   },
 ];
 
 // ── Build Table ──
 function L4_buildTable() {
-  const tbody = document.getElementById('matrix-body');
+  const tbody = document.getElementById('l4-matrix-body');
   tbody.innerHTML = '';
   let lastRoot = null;
-  ROWS.forEach(function(row) {
+  L4_ROWS.forEach(function(row) {
+    // Section divider row when root changes
     if (row.root !== lastRoot) {
       const divRow = document.createElement('tr');
-      divRow.className = 'root-divider';
+      divRow.className = 'l4-root-row';
       const rootLabel = row.root === 'GRAPH' ? 'Write / Describe' : row.root === 'SCOPE' ? 'Look / Examine' : 'Carry';
-      divRow.innerHTML = '<td colspan="5" style="background:' + row.rootColor + '22;border-left:4px solid ' + row.rootColor + ';padding:8px 16px;font-family:Nunito,sans-serif;font-weight:900;font-size:0.82rem;letter-spacing:0.12em;text-transform:uppercase;color:' + row.rootColor + ';">📌 ROOT: -' + row.root + '-  ·  meaning: to ' + rootLabel + '</td>';
+      divRow.innerHTML = '<td colspan="5" style="background:' + row.rootColor + '18;border-left:4px solid ' + row.rootColor + ';color:' + row.rootColor + ';">📌 ROOT: -' + row.root + '- &nbsp;=&nbsp; to ' + rootLabel + '</td>';
       tbody.appendChild(divRow);
       lastRoot = row.root;
     }
     const tr = document.createElement('tr');
-    const rootStyle = 'background:' + row.rootColor + '22;color:' + row.rootColor + ';border:1.5px solid ' + row.rootColor + '55;';
-    const suffixLabel = (row.root === 'SCOPE' || row.root === 'PORT') ? '-' + row.root : '-' + row.suffix;
+    const rootStyle = 'background:' + row.rootColor + '18;color:' + row.rootColor + ';border:2px solid ' + row.rootColor + '44;';
     tr.innerHTML =
-      '<td><div class="drop-zone" id="dz-prefix-' + row.id + '" data-row="' + row.id + '" data-accepts="prefix" ondragover="L4_onDragOver(event)" ondragleave="L4_onDragLeave(event)" ondrop="L4_onDrop(event)">Drop prefix</div></td>' +
-      '<td><div class="root-cell" style="' + rootStyle + '">-' + row.root + '-</div></td>' +
-      '<td><div class="suffix-cell">' + suffixLabel + '</div></td>' +
-      '<td><div class="word-cell" id="word-' + row.id + '">?</div></td>' +
-      '<td><div class="drop-zone" id="dz-meaning-' + row.id + '" data-row="' + row.id + '" data-accepts="meaning" ondragover="L4_onDragOver(event)" ondragleave="L4_onDragLeave(event)" ondrop="L4_onDrop(event)">Drop meaning</div></td>';
+      '<td style="padding:6px;"><div class="l4-drop-zone" id="l4-dz-prefix-' + row.id + '" data-row="' + row.id + '" data-accepts="prefix" ondragover="L4_onDragOver(event)" ondragleave="L4_onDragLeave(event)" ondrop="L4_onDrop(event)">Drop prefix here</div></td>' +
+      '<td style="padding:6px;"><div class="l4-root-cell" style="' + rootStyle + '">-' + row.root + '-</div></td>' +
+      '<td style="padding:6px;"><div class="l4-suffix-cell">-' + row.ending + '</div></td>' +
+      '<td style="padding:6px;"><div class="l4-word-cell" id="l4-word-' + row.id + '">?</div></td>' +
+      '<td style="padding:6px;"><div class="l4-drop-zone" id="l4-dz-meaning-' + row.id + '" data-row="' + row.id + '" data-accepts="meaning" ondragover="L4_onDragOver(event)" ondragleave="L4_onDragLeave(event)" ondrop="L4_onDrop(event)">Drop meaning here</div></td>';
     tbody.appendChild(tr);
   });
 }
+
+// ── Drag State ──
+let L4_dragTile = null;
+document.addEventListener('dragstart', function(e) {
+  const t = e.target.closest('.l4-tile');
+  if (!t) return;
+  L4_dragTile = t;
+  setTimeout(function() { t.classList.add('dragging'); }, 0);
+});
+document.addEventListener('dragend', function(e) {
+  if (L4_dragTile) L4_dragTile.classList.remove('dragging');
+  L4_dragTile = null;
+});
 
 function L4_onDragOver(e) {
   e.preventDefault();
@@ -2631,20 +3140,16 @@ function L4_onDrop(e) {
   const dz = e.currentTarget;
   dz.classList.remove('drag-over');
   if (!L4_dragTile) return;
-
   const accepts = dz.dataset.accepts;
   const tileType = L4_dragTile.dataset.type;
   if (accepts !== tileType) {
-    L4_showFeedback('❌ Wrong spot! Prefixes go on the left, meanings go on the right.', false);
+    L4_showFeedback('❌ Wrong spot! Prefixes go in the PREFIX column, meanings go in the MEANING column.', false);
     return;
   }
-
-  // If already filled, return old tile
   if (dz.classList.contains('filled')) {
-    const old = dz.querySelector('.placed-tile');
+    const old = dz.querySelector('.l4-placed');
     if (old) L4_returnTile(old.dataset.tileId);
   }
-
   L4_placeTile(dz, L4_dragTile);
   L4_updateWordCell(dz.dataset.row);
 }
@@ -2652,22 +3157,17 @@ function L4_onDrop(e) {
 function L4_placeTile(dz, tile) {
   const tileId = tile.id;
   const val = tile.dataset.val;
-  const cls = Array.from(tile.classList).find(c => c.startsWith('tile-') && c !== 'tile');
-
-  // Create placed copy
+  const cls = Array.from(tile.classList).find(function(c) { return c.startsWith('l4-tile-') && c !== 'l4-tile'; });
   const placed = document.createElement('div');
-  placed.className = `placed-tile ${cls}`;
+  placed.className = 'l4-placed ' + cls;
   placed.dataset.tileId = tileId;
   placed.dataset.val = val;
-  placed.textContent = tile.textContent.split('\n')[0]; // just the label
+  placed.textContent = val;
   placed.title = 'Click to remove';
-  placed.onclick = () => { L4_returnTile(tileId); L4_updateWordCell(dz.dataset.row); };
-
+  placed.onclick = function() { L4_returnTile(tileId); L4_updateWordCell(dz.dataset.row); };
   dz.innerHTML = '';
   dz.appendChild(placed);
   dz.classList.add('filled');
-
-  // Hide original
   tile.classList.add('used');
   L4_clearFeedback();
 }
@@ -2675,9 +3175,8 @@ function L4_placeTile(dz, tile) {
 function L4_returnTile(tileId) {
   const orig = document.getElementById(tileId);
   if (orig) orig.classList.remove('used');
-  // Find and clear drop zone containing this tile
-  document.querySelectorAll('.drop-zone.filled').forEach(dz => {
-    const pt = dz.querySelector('.placed-tile');
+  document.querySelectorAll('.l4-drop-zone.filled').forEach(function(dz) {
+    const pt = dz.querySelector('.l4-placed');
     if (pt && pt.dataset.tileId === tileId) {
       dz.innerHTML = dz.dataset.accepts === 'prefix' ? 'Drop prefix here' : 'Drop meaning here';
       dz.classList.remove('filled');
@@ -2686,13 +3185,12 @@ function L4_returnTile(tileId) {
 }
 
 function L4_updateWordCell(rowId) {
-  const row = ROWS.find(r => r.id === rowId);
-  const prefixDz  = document.getElementById(`dz-prefix-${rowId}`);
-  const wordCell  = document.getElementById(`word-${rowId}`);
-  const pfx = prefixDz.querySelector('.placed-tile');
-  if (pfx) {
-    const w = row.word;
-    wordCell.textContent = w;
+  const row = L4_ROWS.find(function(r) { return r.id === rowId; });
+  const prefixDz = document.getElementById('l4-dz-prefix-' + rowId);
+  const wordCell = document.getElementById('l4-word-' + rowId);
+  const pfx = prefixDz ? prefixDz.querySelector('.l4-placed') : null;
+  if (pfx && pfx.dataset.val === row.prefix) {
+    wordCell.textContent = row.word;
     wordCell.classList.add('lit');
   } else {
     wordCell.textContent = '?';
@@ -2700,157 +3198,159 @@ function L4_updateWordCell(rowId) {
   }
 }
 
-// ── Check ──
+// ── Check Answers ──
 function L4_checkAnswers() {
   let correct = 0, total = 0;
-  ROWS.forEach(row => {
-    const pfxDz = document.getElementById(`dz-prefix-${row.id}`);
-    const mnDz  = document.getElementById(`dz-meaning-${row.id}`);
-    const pfxTile = pfxDz.querySelector('.placed-tile');
-    const mnTile  = mnDz.querySelector('.placed-tile');
-    if (pfxTile) {
-      total++;
-      if (pfxTile.dataset.val === row.prefix) correct++;
-    }
-    if (mnTile) {
-      total++;
-      if (mnTile.dataset.val === row.meaning) correct++;
-    }
+  L4_ROWS.forEach(function(row) {
+    const pfxDz = document.getElementById('l4-dz-prefix-' + row.id);
+    const mnDz  = document.getElementById('l4-dz-meaning-' + row.id);
+    if (!pfxDz || !mnDz) return;
+    const pfxTile = pfxDz.querySelector('.l4-placed');
+    const mnTile  = mnDz.querySelector('.l4-placed');
+    if (pfxTile) { total++; if (pfxTile.dataset.val === row.prefix) correct++; }
+    if (mnTile)  { total++; if (mnTile.dataset.val  === row.meaning) correct++; }
   });
-  if (total === 0) { L4_showFeedback('Start by dragging some tiles!', false); return; }
-  if (correct === total && total === ROWS.length * 2) {
-    L4_showFeedback(`🎉 Perfect! All ${correct} answers correct! Amazing work, Word Engineer!`, true);
+  if (total === 0) { L4_showFeedback('Start by dragging some tiles into the table!', false); return; }
+  const perfect = correct === total && total === L4_ROWS.length * 2;
+  if (perfect) {
+    L4_showFeedback('🎉 Perfect! All ' + correct + ' answers correct! Amazing work, Word Engineer!', true);
     L4_celebrate();
   } else {
-    L4_showFeedback(`✅ ${correct} out of ${total} correct. Keep going!`, correct > total/2);
+    L4_showFeedback('✅ ' + correct + ' out of ' + total + ' correct. Keep going!', correct > total / 2);
   }
 }
 
+// ── Reveal All ──
 function L4_revealAll() {
   L4_resetAll();
-  setTimeout(() => {
-    ROWS.forEach(row => {
-      const pfxDz = document.getElementById(`dz-prefix-${row.id}`);
-      const mnDz  = document.getElementById(`dz-meaning-${row.id}`);
-      const pfxTile = document.getElementById(`tile-${row.id}`);
-      const mnTile  = document.getElementById(`tile-${row.meaning.toLowerCase()}`);
-      if (pfxTile && !pfxTile.classList.contains('used')) L4_placeTile(pfxDz, pfxTile);
-      if (mnTile  && !mnTile.classList.contains('used'))  L4_placeTile(mnDz,  mnTile);
+  setTimeout(function() {
+    L4_ROWS.forEach(function(row) {
+      const pfxDz  = document.getElementById('l4-dz-prefix-' + row.id);
+      const mnDz   = document.getElementById('l4-dz-meaning-' + row.id);
+      const pfxTile = document.getElementById('l4-tile-' + row.id);
+      const mnTile  = document.getElementById('l4-tile-' + row.meaningClass.replace('l4-tile-', ''));
+      if (pfxDz && pfxTile && !pfxTile.classList.contains('used')) L4_placeTile(pfxDz, pfxTile);
+      if (mnDz  && mnTile  && !mnTile.classList.contains('used'))  L4_placeTile(mnDz,  mnTile);
       L4_updateWordCell(row.id);
     });
   }, 50);
 }
 
+// ── Reset ──
 function L4_resetAll() {
-  document.querySelectorAll('.tile').forEach(t => t.classList.remove('used'));
-  
+  // Clear all drop zones
+  document.querySelectorAll('.l4-drop-zone').forEach(function(dz) {
+    dz.innerHTML = dz.dataset.accepts === 'prefix' ? 'Drop prefix here' : 'Drop meaning here';
+    dz.classList.remove('filled');
+  });
+  // Restore all tiles
+  document.querySelectorAll('.l4-tile').forEach(function(t) { t.classList.remove('used'); });
+  // Clear word cells
+  L4_ROWS.forEach(function(row) {
+    const wc = document.getElementById('l4-word-' + row.id);
+    if (wc) { wc.textContent = '?'; wc.classList.remove('lit'); }
+  });
   L4_clearFeedback();
 }
 
 // ── Feedback ──
 function L4_showFeedback(msg, ok) {
-  const el = document.getElementById('feedback');
+  const el = document.getElementById('l4-feedback');
   el.textContent = msg;
-  el.className = ok ? 'feedback-ok' : 'feedback-err';
+  el.className = 'l4-feedback ' + (ok ? 'l4-feedback-ok' : 'l4-feedback-err');
 }
 function L4_clearFeedback() {
-  const el = document.getElementById('feedback');
-  el.textContent = '';
-  el.className = '';
+  const el = document.getElementById('l4-feedback');
+  if (el) { el.textContent = ''; el.className = 'l4-feedback'; }
 }
 
 // ── Celebrate ──
 function L4_celebrate() {
-  const wrap = document.getElementById('confetti-wrap');
+  const wrap = document.getElementById('l4-confetti-wrap');
   wrap.innerHTML = '';
   const colors = ['#3b6cf7','#22c55e','#f59e0b','#ef4444','#8b5cf6','#14b8a6'];
   for (let i = 0; i < 80; i++) {
     const el = document.createElement('div');
-    el.className = 'confetti-piece';
-    el.style.left = Math.random() * 100 + 'vw';
-    el.style.animationDelay = Math.random() * 1.5 + 's';
+    el.className = 'l4-confetti-piece';
+    el.style.left = (Math.random() * 100) + 'vw';
+    el.style.animationDelay = (Math.random() * 1.5) + 's';
     el.style.animationDuration = (1.5 + Math.random()) + 's';
     el.style.background = colors[Math.floor(Math.random() * colors.length)];
     el.style.width = el.style.height = (8 + Math.random() * 10) + 'px';
     el.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
     wrap.appendChild(el);
-    setTimeout(() => el.remove(), 3500);
+    setTimeout(function() { el.remove(); }, 3500);
   }
 }
 
-// ── Game Mode ──
-const GAME_Q = [
-  // ── -GRAPH- questions ──
-  { q:'What does the root -GRAPH- mean?',      choices:['Draw','Run','Write / Describe','Read'],          ans:'Write / Describe' },
-  { q:'What does the prefix GEO- mean?',        choices:['Earth','People','Map','Self'],                   ans:'Earth'  },
-  { q:'What does the prefix DEMO- mean?',       choices:['Map','People','Life','Earth'],                   ans:'People' },
-  { q:'What does the prefix CARTO- mean?',      choices:['Self','Life','Map','People'],                    ans:'Map'    },
-  { q:'What does the prefix AUTO- mean?',       choices:['Life','Earth','People','Self'],                  ans:'Self'   },
-  { q:'What does the prefix BIO- mean?',        choices:['Map','Self','Earth','Life'],                     ans:'Life'   },
-  { q:'GEOGRAPHY = GEO + GRAPH. It describes…',choices:['The People','The Earth','Your Life','Maps'],      ans:'The Earth' },
-  { q:'BIOGRAPHY = BIO + GRAPH. It describes…',choices:['Maps','The Earth','A Person's Life','Yourself'], ans:'A Person's Life' },
-  // ── -SCOPE- questions ──
-  { q:'What does the root -SCOPE- mean?',       choices:['Write','Carry','Look / Examine','Run'],          ans:'Look / Examine' },
-  { q:'What does the prefix TELE- mean?',       choices:['Small','Beautiful','Far Away','Across'],         ans:'Far'  },
-  { q:'What does the prefix MICRO- mean?',      choices:['Far Away','Small','Beautiful','Into'],           ans:'Small'    },
-  { q:'What does the prefix KALEIDO- mean?',    choices:['Far','Across','Out','Beauty'],           ans:'Beauty' },
-  { q:'A TELESCOPE helps you see things that are…', choices:['Small','Beauty','Far','Alive'],      ans:'Far'  },
-  { q:'A MICROSCOPE helps you see things that are…',choices:['Far Away','Beautiful','Across','Very Small'],ans:'Very Small' },
-  // ── -PORT- questions ──
-  { q:'What does the root -PORT- mean?',        choices:['Write','Carry','Look','Measure'],                ans:'Carry'    },
-  { q:'What does the prefix TRANS- mean?',      choices:['Out','Into','Beautiful','Across'],               ans:'Across'   },
-  { q:'What does the prefix EX- mean?',         choices:['Into','Across','Out','Self'],                    ans:'Out'      },
-  { q:'What does the prefix IM- mean?',         choices:['Out','Across','Into','Far Away'],                ans:'Into'     },
-  { q:'EXPORT = EX + PORT. It means to carry goods…', choices:['Into a country','Across the ocean','Out of a country','Far away'], ans:'Out of a country' },
-  { q:'IMPORT = IM + PORT. It means to carry goods…', choices:['Out of a country','Into a country','Across borders','Far away'],   ans:'Into a country'   },
+// ── Challenge Mode ──
+const L4_GAME_Q = [
+  { q:'What does the root -GRAPH- mean?',            choices:['Draw','Run','Write / Describe','Read'],              ans:'Write / Describe'  },
+  { q:'What does the prefix GEO- mean?',             choices:['Earth','People','Map','Self'],                       ans:'Earth'             },
+  { q:'What does the prefix DEMO- mean?',            choices:['Map','People','Life','Earth'],                       ans:'People'            },
+  { q:'What does the prefix CARTO- mean?',           choices:['Self','Life','Map','People'],                        ans:'Map'               },
+  { q:'What does the prefix AUTO- mean?',            choices:['Life','Earth','People','Self'],                      ans:'Self'              },
+  { q:'What does the prefix BIO- mean?',             choices:['Map','Self','Earth','Life'],                         ans:'Life'              },
+  { q:'GEOGRAPHY = GEO + GRAPH. It describes…',      choices:['The People','The Earth','Your Life','Maps'],         ans:'The Earth'         },
+  { q:'BIOGRAPHY = BIO + GRAPH. It describes…',      choices:['Maps','The Earth','A Person's Life','Yourself'],   ans:'A Person's Life'  },
+  { q:'What does the root -SCOPE- mean?',            choices:['Write','Carry','Look / Examine','Run'],              ans:'Look / Examine'    },
+  { q:'What does the prefix TELE- mean?',            choices:['Small','Beautiful','Far Away','Across'],             ans:'Far Away'          },
+  { q:'What does the prefix MICRO- mean?',           choices:['Far Away','Small','Beautiful','Into'],               ans:'Small'             },
+  { q:'What does the prefix KALEIDO- mean?',         choices:['Far Away','Across','Out','Beautiful'],               ans:'Beautiful'         },
+  { q:'A TELESCOPE helps you see things that are…',  choices:['Small','Beautiful','Far Away','Alive'],              ans:'Far Away'          },
+  { q:'A MICROSCOPE helps you see things that are…', choices:['Far Away','Beautiful','Across','Very Small'],        ans:'Very Small'        },
+  { q:'What does the root -PORT- mean?',             choices:['Write','Carry','Look','Measure'],                    ans:'Carry'             },
+  { q:'What does the prefix TRANS- mean?',           choices:['Out','Into','Beautiful','Across'],                   ans:'Across'            },
+  { q:'What does the prefix EX- mean?',              choices:['Into','Across','Out','Self'],                        ans:'Out'               },
+  { q:'What does the prefix IM- mean?',              choices:['Out','Across','Into','Far Away'],                    ans:'Into'              },
+  { q:'EXPORT = EX + PORT. It means to carry goods…',choices:['Into a country','Across the ocean','Out of a country','Far away'],  ans:'Out of a country' },
+  { q:'IMPORT = IM + PORT. It means to carry goods…',choices:['Out of a country','Into a country','Across borders','Far away'],   ans:'Into a country'   },
 ];
 
 let L4_gameIdx = 0, L4_gameScore = 0, L4_gameTimer = null, L4_timeLeft = 0;
 
 function L4_startGame() {
   L4_gameIdx = 0; L4_gameScore = 0;
-  document.getElementById('game-overlay').classList.add('active');
+  document.getElementById('l4-game-overlay').classList.add('active');
+  document.getElementById('l4-timer-bar').parentElement.style.display = '';
   L4_showGameQ();
 }
 function L4_closeGame() {
   clearInterval(L4_gameTimer);
-  document.getElementById('game-overlay').classList.remove('active');
+  document.getElementById('l4-game-overlay').classList.remove('active');
 }
 function L4_showGameQ() {
-  if (L4_gameIdx >= GAME_Q.length) {
-    L4_endGame(); return;
-  }
-  const q = GAME_Q[L4_gameIdx];
-  document.getElementById('game-q').textContent = q.q;
-  document.getElementById('game-score').textContent = `Score: ${L4_gameScore} / ${GAME_Q.length}`;
-  const choicesEl = document.getElementById('game-choices');
+  if (L4_gameIdx >= L4_GAME_Q.length) { L4_endGame(); return; }
+  const q = L4_GAME_Q[L4_gameIdx];
+  document.getElementById('l4-game-q').textContent = q.q;
+  document.getElementById('l4-game-score').textContent = 'Score: ' + L4_gameScore + ' / ' + L4_GAME_Q.length;
+  const choicesEl = document.getElementById('l4-game-choices');
   choicesEl.innerHTML = '';
-  q.choices.forEach(c => {
+  q.choices.forEach(function(c) {
     const btn = document.createElement('button');
-    btn.className = 'game-choice';
+    btn.className = 'l4-game-choice';
     btn.textContent = c;
-    btn.onclick = () => L4_pickAnswer(btn, c, q.ans);
+    btn.onclick = function() { L4_pickAnswer(btn, c, q.ans); };
     choicesEl.appendChild(btn);
   });
-  // Timer
   L4_timeLeft = 10;
-  document.getElementById('timer-bar').style.width = '100%';
+  document.getElementById('l4-timer-bar').style.width = '100%';
   clearInterval(L4_gameTimer);
-  L4_gameTimer = setInterval(() => {
+  L4_gameTimer = setInterval(function() {
     L4_timeLeft--;
-    document.getElementById('timer-bar').style.width = (L4_timeLeft * 10) + '%';
+    document.getElementById('l4-timer-bar').style.width = (L4_timeLeft * 10) + '%';
     if (L4_timeLeft <= 0) { clearInterval(L4_gameTimer); L4_autoNext(); }
   }, 1000);
 }
 function L4_pickAnswer(btn, chosen, correct) {
   clearInterval(L4_gameTimer);
-  document.querySelectorAll('.game-choice').forEach(b => b.onclick = null);
+  document.querySelectorAll('.l4-game-choice').forEach(function(b) { b.onclick = null; });
   if (chosen === correct) {
     btn.classList.add('correct');
     L4_gameScore++;
   } else {
     btn.classList.add('wrong');
-    document.querySelectorAll('.game-choice').forEach(b => {
+    document.querySelectorAll('.l4-game-choice').forEach(function(b) {
       if (b.textContent === correct) b.classList.add('correct');
     });
   }
@@ -2858,24 +3358,23 @@ function L4_pickAnswer(btn, chosen, correct) {
   setTimeout(L4_showGameQ, 1200);
 }
 function L4_autoNext() {
-  document.querySelectorAll('.game-choice').forEach(b => b.onclick = null);
+  document.querySelectorAll('.l4-game-choice').forEach(function(b) { b.onclick = null; });
   L4_gameIdx++;
   L4_showGameQ();
 }
 function L4_endGame() {
   clearInterval(L4_gameTimer);
-  document.getElementById('timer-bar-wrap').style.display = 'none';
-  document.getElementById('game-q').textContent = '🏆 Finished!';
-  document.getElementById('game-choices').innerHTML = '';
-  const pct = Math.round(L4_gameScore / GAME_Q.length * 100);
-  let msg = pct === 100 ? '🌟 Perfect Score! You are a TRUE Word Engineer!' : pct >= 70 ? '🎉 Great job! Keep building!' : '💪 Good effort! Try again to beat your score!';
-  document.getElementById('game-score').innerHTML = `<strong>${L4_gameScore} / ${GAME_Q.length}</strong> (${pct}%)<br><br>${msg}`;
+  document.getElementById('l4-timer-bar').parentElement.style.display = 'none';
+  document.getElementById('l4-game-q').textContent = '🏆 Finished!';
+  document.getElementById('l4-game-choices').innerHTML = '';
+  const pct = Math.round(L4_gameScore / L4_GAME_Q.length * 100);
+  const msg = pct === 100 ? '🌟 Perfect Score! You are a TRUE Word Engineer!' : pct >= 70 ? '🎉 Great job! Keep building!' : '💪 Good effort! Try again to beat your score!';
+  document.getElementById('l4-game-score').innerHTML = '<strong>' + L4_gameScore + ' / ' + L4_GAME_Q.length + '</strong> (' + pct + '%)<br><br>' + msg;
   if (pct === 100) L4_celebrate();
 }
 
 // ── Init ──
-
-window.L4_init = function(){ L4_buildTable(); };
+window.L4_init = function() { L4_buildTable(); };
 </script>
 
 <div class="section" id="section-quiz">
