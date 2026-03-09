@@ -749,6 +749,22 @@
   .tile-self   { background:#fff7ed; color:#9a3412; border-color:#fdba74; }
   .tile-life   { background:#f0fdf4; color:#14532d; border-color:#86efac; }
 
+  /* SCOPE prefix tiles */
+  .tile-tele  { background:#f3e8ff; color:#6b21a8; border-color:#c084fc; }
+  .tile-micro { background:#fdf4ff; color:#7e22ce; border-color:#d8b4fe; }
+  .tile-kale  { background:#fce7f3; color:#9d174d; border-color:#f9a8d4; }
+  /* PORT prefix tiles */
+  .tile-trans { background:#ecfdf5; color:#065f46; border-color:#6ee7b7; }
+  .tile-ex    { background:#fff7ed; color:#9a3412; border-color:#fdba74; }
+  .tile-im    { background:#eff6ff; color:#1e3a8a; border-color:#93c5fd; }
+  /* New meaning tiles */
+  .tile-far    { background:#f3e8ff; color:#6b21a8; border-color:#c084fc; }
+  .tile-small  { background:#fdf4ff; color:#7e22ce; border-color:#d8b4fe; }
+  .tile-beauty { background:#fce7f3; color:#9d174d; border-color:#f9a8d4; }
+  .tile-across { background:#ecfdf5; color:#065f46; border-color:#6ee7b7; }
+  .tile-out    { background:#fff7ed; color:#9a3412; border-color:#fdba74; }
+  .tile-into   { background:#eff6ff; color:#1e3a8a; border-color:#93c5fd; }
+
   /* ── Matrix ── */
   .matrix-wrap {
     background: var(--card);
@@ -2488,11 +2504,17 @@ init();
     <div class="tile tile-carto" draggable="true" id="tile-carto" data-type="prefix" data-val="CARTO">CARTO<br><span style="font-size:0.72rem;font-weight:700;opacity:0.75">(Map)</span></div>
     <div class="tile tile-auto"  draggable="true" id="tile-auto"  data-type="prefix" data-val="AUTO">AUTO<br><span style="font-size:0.72rem;font-weight:700;opacity:0.75">(Self)</span></div>
     <div class="tile tile-bio"   draggable="true" id="tile-bio"   data-type="prefix" data-val="BIO">BIO<br><span style="font-size:0.72rem;font-weight:700;opacity:0.75">(Life)</span></div>
+  <div class="tile tile-tele"  draggable="true" id="tile-tele"  data-type="prefix" data-val="TELE">TELE<br><span style="font-size:0.72rem;font-weight:700;opacity:0.75">(Far Away)</span></div>
+  <div class="tile tile-micro" draggable="true" id="tile-micro" data-type="prefix" data-val="MICRO">MICRO<br><span style="font-size:0.72rem;font-weight:700;opacity:0.75">(Small)</span></div>
+  <div class="tile tile-kale"  draggable="true" id="tile-kale"  data-type="prefix" data-val="KALEIDO">KALEIDO<br><span style="font-size:0.72rem;font-weight:700;opacity:0.75">(Beautiful)</span></div>
+  <div class="tile tile-trans" draggable="true" id="tile-trans" data-type="prefix" data-val="TRANS">TRANS<br><span style="font-size:0.72rem;font-weight:700;opacity:0.75">(Across)</span></div>
+  <div class="tile tile-ex"    draggable="true" id="tile-ex"    data-type="prefix" data-val="EX">EX<br><span style="font-size:0.72rem;font-weight:700;opacity:0.75">(Out)</span></div>
+  <div class="tile tile-im"    draggable="true" id="tile-im"    data-type="prefix" data-val="IM">IM<br><span style="font-size:0.72rem;font-weight:700;opacity:0.75">(Into)</span></div>
   </div>
 
   <!-- CENTER: Matrix -->
   <div class="matrix-wrap">
-    <h2>🗺️ Morphology Matrix</h2>
+    <h2>🗺️ Morphology Matrix — GRAPH · SCOPE · PORT</h2>
     <table>
       <thead>
         <tr>
@@ -2525,6 +2547,12 @@ init();
     <div class="tile tile-map"    draggable="true" id="tile-map"    data-type="meaning" data-val="Map">🗺️ Map</div>
     <div class="tile tile-self"   draggable="true" id="tile-self"   data-type="meaning" data-val="Self">🪞 Self</div>
     <div class="tile tile-life"   draggable="true" id="tile-life"   data-type="meaning" data-val="Life">🌿 Life</div>
+  <div class="tile tile-far"    draggable="true" id="tile-far"    data-type="meaning" data-val="Far Away">🔭 Far Away</div>
+  <div class="tile tile-small"  draggable="true" id="tile-small"  data-type="meaning" data-val="Small">🔬 Small</div>
+  <div class="tile tile-beauty" draggable="true" id="tile-beauty" data-type="meaning" data-val="Beautiful">✨ Beautiful</div>
+  <div class="tile tile-across" draggable="true" id="tile-across" data-type="meaning" data-val="Across">↔️ Across</div>
+  <div class="tile tile-out"    draggable="true" id="tile-out"    data-type="meaning" data-val="Out">📤 Out</div>
+  <div class="tile tile-into"   draggable="true" id="tile-into"   data-type="meaning" data-val="Into">📥 Into</div>
   </div>
 </div>
 
@@ -2548,54 +2576,48 @@ init();
 
 // ── Data ──
 const ROWS = [
-  { id:'geo',   prefix:'GEO',   suffix:'GRAPHY', word:'Geography',  meaning:'Earth',  prefixClass:'tile-geo',   meaningClass:'tile-earth'  },
-  { id:'demo',  prefix:'DEMO',  suffix:'GRAPHY', word:'Demography', meaning:'People', prefixClass:'tile-demo',  meaningClass:'tile-people' },
-  { id:'carto', prefix:'CARTO', suffix:'GRAPHY', word:'Cartography',meaning:'Map',    prefixClass:'tile-carto', meaningClass:'tile-map'    },
-  { id:'auto',  prefix:'AUTO',  suffix:'BIOGRAPHY', word:'Autobiography', meaning:'Self', prefixClass:'tile-auto', meaningClass:'tile-self' },
-  { id:'bio',   prefix:'BIO',   suffix:'GRAPHY', word:'Biography',  meaning:'Life',   prefixClass:'tile-bio',   meaningClass:'tile-life'   },
+  // ── ROOT: -GRAPH- (write / describe) ──
+  { id:'geo',   root:'GRAPH', prefix:'GEO',   suffix:'GRAPHY',    word:'Geography',     meaning:'Earth',     rootColor:'#3b6cf7', prefixClass:'tile-geo',   meaningClass:'tile-earth'  },
+  { id:'demo',  root:'GRAPH', prefix:'DEMO',  suffix:'GRAPHY',    word:'Demography',    meaning:'People',    rootColor:'#3b6cf7', prefixClass:'tile-demo',  meaningClass:'tile-people' },
+  { id:'carto', root:'GRAPH', prefix:'CARTO', suffix:'GRAPHY',    word:'Cartography',   meaning:'Map',       rootColor:'#3b6cf7', prefixClass:'tile-carto', meaningClass:'tile-map'    },
+  { id:'auto',  root:'GRAPH', prefix:'AUTO',  suffix:'BIOGRAPHY', word:'Autobiography', meaning:'Self',      rootColor:'#3b6cf7', prefixClass:'tile-auto',  meaningClass:'tile-self'   },
+  { id:'bio',   root:'GRAPH', prefix:'BIO',   suffix:'GRAPHY',    word:'Biography',     meaning:'Life',      rootColor:'#3b6cf7', prefixClass:'tile-bio',   meaningClass:'tile-life'   },
+  // ── ROOT: -SCOPE- (look / examine) ──
+  { id:'tele',  root:'SCOPE', prefix:'TELE',  suffix:'SCOPE',     word:'Telescope',     meaning:'Far Away',  rootColor:'#8b5cf6', prefixClass:'tile-tele',  meaningClass:'tile-far'    },
+  { id:'micro', root:'SCOPE', prefix:'MICRO', suffix:'SCOPE',     word:'Microscope',    meaning:'Small',     rootColor:'#8b5cf6', prefixClass:'tile-micro', meaningClass:'tile-small'  },
+  { id:'kale',  root:'SCOPE', prefix:'KALEIDO',suffix:'SCOPE',    word:'Kaleidoscope',  meaning:'Beautiful', rootColor:'#8b5cf6', prefixClass:'tile-kale',  meaningClass:'tile-beauty' },
+  // ── ROOT: -PORT- (carry) ──
+  { id:'trans', root:'PORT',  prefix:'TRANS', suffix:'PORT',      word:'Transport',     meaning:'Across',    rootColor:'#10b981', prefixClass:'tile-trans', meaningClass:'tile-across' },
+  { id:'ex',    root:'PORT',  prefix:'EX',    suffix:'PORT',      word:'Export',        meaning:'Out',       rootColor:'#10b981', prefixClass:'tile-ex',    meaningClass:'tile-out'    },
+  { id:'im',    root:'PORT',  prefix:'IM',    suffix:'PORT',      word:'Import',        meaning:'Into',      rootColor:'#10b981', prefixClass:'tile-im',    meaningClass:'tile-into'   },
 ];
 
 // ── Build Table ──
 function L4_buildTable() {
   const tbody = document.getElementById('matrix-body');
   tbody.innerHTML = '';
-  ROWS.forEach(row => {
+  let lastRoot = null;
+  ROWS.forEach(function(row) {
+    if (row.root !== lastRoot) {
+      const divRow = document.createElement('tr');
+      divRow.className = 'root-divider';
+      const rootLabel = row.root === 'GRAPH' ? 'Write / Describe' : row.root === 'SCOPE' ? 'Look / Examine' : 'Carry';
+      divRow.innerHTML = '<td colspan="5" style="background:' + row.rootColor + '22;border-left:4px solid ' + row.rootColor + ';padding:8px 16px;font-family:Nunito,sans-serif;font-weight:900;font-size:0.82rem;letter-spacing:0.12em;text-transform:uppercase;color:' + row.rootColor + ';">📌 ROOT: -' + row.root + '-  ·  meaning: to ' + rootLabel + '</td>';
+      tbody.appendChild(divRow);
+      lastRoot = row.root;
+    }
     const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>
-        <div class="drop-zone" id="dz-prefix-${row.id}"
-          data-row="${row.id}" data-accepts="prefix"
-          ondragover="L4_onDragOver(event)" ondragleave="L4_onDragLeave(event)" ondrop="L4_onDrop(event)">
-          Drop prefix here
-        </div>
-      </td>
-      <td><div class="root-cell">-GRAPH-</div></td>
-      <td><div class="suffix-cell">-${row.suffix}</div></td>
-      <td><div class="word-cell" id="word-${row.id}">?</div></td>
-      <td>
-        <div class="drop-zone" id="dz-meaning-${row.id}"
-          data-row="${row.id}" data-accepts="meaning"
-          ondragover="L4_onDragOver(event)" ondragleave="L4_onDragLeave(event)" ondrop="L4_onDrop(event)">
-          Drop meaning here
-        </div>
-      </td>
-    `;
+    const rootStyle = 'background:' + row.rootColor + '22;color:' + row.rootColor + ';border:1.5px solid ' + row.rootColor + '55;';
+    const suffixLabel = (row.root === 'SCOPE' || row.root === 'PORT') ? '-' + row.root : '-' + row.suffix;
+    tr.innerHTML =
+      '<td><div class="drop-zone" id="dz-prefix-' + row.id + '" data-row="' + row.id + '" data-accepts="prefix" ondragover="L4_onDragOver(event)" ondragleave="L4_onDragLeave(event)" ondrop="L4_onDrop(event)">Drop prefix</div></td>' +
+      '<td><div class="root-cell" style="' + rootStyle + '">-' + row.root + '-</div></td>' +
+      '<td><div class="suffix-cell">' + suffixLabel + '</div></td>' +
+      '<td><div class="word-cell" id="word-' + row.id + '">?</div></td>' +
+      '<td><div class="drop-zone" id="dz-meaning-' + row.id + '" data-row="' + row.id + '" data-accepts="meaning" ondragover="L4_onDragOver(event)" ondragleave="L4_onDragLeave(event)" ondrop="L4_onDrop(event)">Drop meaning</div></td>';
     tbody.appendChild(tr);
   });
 }
-
-// ── Drag State ──
-let L4_dragTile = null;
-document.addEventListener('dragstart', e => {
-  const t = e.target.closest('.tile');
-  if (!t) return;
-  L4_dragTile = t;
-  setTimeout(() => t.classList.add('dragging'), 0);
-});
-document.addEventListener('dragend', e => {
-  if (L4_dragTile) L4_dragTile.classList.remove('dragging');
-  L4_dragTile = null;
-});
 
 function L4_onDragOver(e) {
   e.preventDefault();
@@ -2758,16 +2780,29 @@ function L4_celebrate() {
 
 // ── Game Mode ──
 const GAME_Q = [
-  { q:'What does GEO mean?',   choices:['Earth','People','Map','Self'],   ans:'Earth'  },
-  { q:'What does DEMO mean?',  choices:['Map','People','Life','Earth'],   ans:'People' },
-  { q:'What does CARTO mean?', choices:['Self','Life','Map','People'],    ans:'Map'    },
-  { q:'What does AUTO mean?',  choices:['Life','Earth','People','Self'],  ans:'Self'   },
-  { q:'What does BIO mean?',   choices:['Map','Self','Earth','Life'],     ans:'Life'   },
-  { q:'GRAPH means…',          choices:['Draw','Run','Write/Describe','Read'], ans:'Write/Describe' },
-  { q:'Geography describes…',  choices:['People','The Earth','Life','Maps'], ans:'The Earth' },
-  { q:'Demography describes…', choices:['Maps','The Earth','People','Self'], ans:'People' },
-  { q:'Cartography describes…',choices:['Maps','Life','People','The Earth'], ans:'Maps' },
-  { q:'Autobiography describes…',choices:['Maps','The Earth','Yourself','Life'], ans:'Yourself' },
+  // ── -GRAPH- questions ──
+  { q:'What does the root -GRAPH- mean?',      choices:['Draw','Run','Write / Describe','Read'],          ans:'Write / Describe' },
+  { q:'What does the prefix GEO- mean?',        choices:['Earth','People','Map','Self'],                   ans:'Earth'  },
+  { q:'What does the prefix DEMO- mean?',       choices:['Map','People','Life','Earth'],                   ans:'People' },
+  { q:'What does the prefix CARTO- mean?',      choices:['Self','Life','Map','People'],                    ans:'Map'    },
+  { q:'What does the prefix AUTO- mean?',       choices:['Life','Earth','People','Self'],                  ans:'Self'   },
+  { q:'What does the prefix BIO- mean?',        choices:['Map','Self','Earth','Life'],                     ans:'Life'   },
+  { q:'GEOGRAPHY = GEO + GRAPH. It describes…',choices:['The People','The Earth','Your Life','Maps'],      ans:'The Earth' },
+  { q:'BIOGRAPHY = BIO + GRAPH. It describes…',choices:['Maps','The Earth','A Person's Life','Yourself'], ans:'A Person's Life' },
+  // ── -SCOPE- questions ──
+  { q:'What does the root -SCOPE- mean?',       choices:['Write','Carry','Look / Examine','Run'],          ans:'Look / Examine' },
+  { q:'What does the prefix TELE- mean?',       choices:['Small','Beautiful','Far Away','Across'],         ans:'Far Away'  },
+  { q:'What does the prefix MICRO- mean?',      choices:['Far Away','Small','Beautiful','Into'],           ans:'Small'    },
+  { q:'What does the prefix KALEIDO- mean?',    choices:['Far Away','Across','Out','Beautiful'],           ans:'Beautiful' },
+  { q:'A TELESCOPE helps you see things that are…', choices:['Small','Beautiful','Far Away','Alive'],      ans:'Far Away'  },
+  { q:'A MICROSCOPE helps you see things that are…',choices:['Far Away','Beautiful','Across','Very Small'],ans:'Very Small' },
+  // ── -PORT- questions ──
+  { q:'What does the root -PORT- mean?',        choices:['Write','Carry','Look','Measure'],                ans:'Carry'    },
+  { q:'What does the prefix TRANS- mean?',      choices:['Out','Into','Beautiful','Across'],               ans:'Across'   },
+  { q:'What does the prefix EX- mean?',         choices:['Into','Across','Out','Self'],                    ans:'Out'      },
+  { q:'What does the prefix IM- mean?',         choices:['Out','Across','Into','Far Away'],                ans:'Into'     },
+  { q:'EXPORT = EX + PORT. It means to carry goods…', choices:['Into a country','Across the ocean','Out of a country','Far away'], ans:'Out of a country' },
+  { q:'IMPORT = IM + PORT. It means to carry goods…', choices:['Out of a country','Into a country','Across borders','Far away'],   ans:'Into a country'   },
 ];
 
 let L4_gameIdx = 0, L4_gameScore = 0, L4_gameTimer = null, L4_timeLeft = 0;
