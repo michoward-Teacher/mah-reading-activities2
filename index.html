@@ -2487,695 +2487,724 @@ init();
 
 <div class="section" id="section-lesson4">
 <div style="position:sticky;top:0;z-index:100;padding:10px 20px;background:#1e293b;border-bottom:1px solid rgba(255,255,255,0.1);">
-<button onclick="goHome()" style="background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);color:#fff;padding:8px 20px;border-radius:8px;cursor:pointer;font-size:0.9rem;font-family:inherit;font-weight:600;">← Back to Activities</button>
+<button onclick="goHome()" style="background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);color:#fff;padding:8px 20px;border-radius:8px;cursor:pointer;font-size:0.9rem;font-family:inherit;font-weight:600;">&#8592; Back to Activities</button>
 </div>
-
 <style>
-  #section-lesson4 { --blue:#3b6cf7; --blue-lt:#dce8ff; --green:#22c55e; --green-lt:#dcfce7; --yellow:#f59e0b; --purple:#8b5cf6; --purple-lt:#ede9fe; --red:#ef4444; --red-lt:#fee2e2; --teal:#14b8a6; --gray:#64748b; --border:#cbd5e1; --shadow:0 4px 20px rgba(59,108,247,0.10); --bg:#f0f4ff; --card:#fff; }
-  #section-lesson4 { font-family:'Nunito',sans-serif; background:var(--bg); min-height:100vh; padding-bottom:60px; }
-  #section-lesson4 *, #section-lesson4 *::before, #section-lesson4 *::after { box-sizing:border-box; }
-
-  /* Header */
-  #section-lesson4 header { text-align:center; padding:24px 20px 16px; }
-  #section-lesson4 header h1 { font-family:'Fredoka One',cursive; font-size:2.2rem; color:var(--blue); margin-bottom:4px; }
-  #section-lesson4 header p  { color:var(--gray); font-size:0.95rem; font-weight:600; }
-
-  /* Instructions */
-  .l4-instr { max-width:860px; margin:0 auto 18px; padding:0 16px; }
-  .l4-instr-box { background:#dce8ff; border:2px solid var(--blue); border-radius:14px; padding:14px 18px; display:flex; gap:12px; align-items:flex-start; }
-  .l4-instr-box .icon { font-size:1.6rem; flex-shrink:0; }
-  .l4-instr-box h3 { font-family:'Fredoka One',cursive; color:var(--blue); font-size:0.95rem; margin-bottom:4px; }
-  .l4-instr-box ol { padding-left:16px; color:#1e3a8a; font-size:0.85rem; font-weight:700; line-height:1.9; }
-
-  /* Root badges */
-  .l4-root-key { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; max-width:860px; margin:0 auto 18px; padding:0 16px; }
-  .l4-root-badge { display:inline-flex; align-items:center; gap:8px; padding:8px 14px; border-radius:10px; font-weight:800; font-size:0.85rem; border:2.5px solid; }
-  .l4-root-badge b { font-family:'Fredoka One',cursive; font-size:1rem; }
-
-  /* Workspace */
-  .l4-workspace { display:grid; grid-template-columns:160px 1fr 160px; gap:14px; max-width:1050px; margin:0 auto; padding:0 14px; }
-
-  /* Tile panels */
-  .l4-panel { background:var(--card); border-radius:16px; padding:14px 10px; box-shadow:var(--shadow); position:sticky; top:58px; max-height:calc(100vh - 70px); overflow-y:auto; }
-  .l4-panel h2 { font-family:'Fredoka One',cursive; font-size:0.95rem; text-align:center; padding-bottom:8px; margin-bottom:6px; border-bottom:2px dashed var(--border); }
-  .l4-panel-hint { font-size:0.68rem; color:var(--gray); font-weight:700; text-align:center; margin-bottom:8px; }
-  .l4-pdiv { font-size:0.63rem; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; padding:3px 6px; border-radius:6px; margin:8px 0 5px; text-align:center; }
-
-  /* Draggable tiles */
-  .l4-tile { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:7px 5px; border-radius:10px; margin-bottom:7px; font-weight:800; font-size:0.85rem; cursor:grab; user-select:none; border:2.5px solid transparent; text-align:center; min-height:40px; line-height:1.2; transition:transform 0.1s, box-shadow 0.1s, opacity 0.15s; position:relative; }
-  .l4-tile:hover { transform:scale(1.07); box-shadow:0 5px 14px rgba(0,0,0,0.14); }
-  .l4-tile.used { opacity:0.22; pointer-events:none; }
-  .l4-tile.dragging-active { opacity:0.3; }
-  .l4-tile span { font-size:0.64rem; opacity:0.72; font-weight:700; }
-
-  /* Colors */
-  .lt-geo   { background:#dce8ff; color:#1e40af; border-color:#93c5fd; }
-  .lt-demo  { background:#ede9fe; color:#5b21b6; border-color:#c4b5fd; }
-  .lt-carto { background:#ccfbf1; color:#0f766e; border-color:#5eead4; }
-  .lt-auto  { background:#fef3c7; color:#92400e; border-color:#fcd34d; }
-  .lt-bio   { background:#fee2e2; color:#991b1b; border-color:#fca5a5; }
-  .lt-tele  { background:#f3e8ff; color:#6b21a8; border-color:#c084fc; }
-  .lt-micro { background:#fdf4ff; color:#7e22ce; border-color:#d8b4fe; }
-  .lt-kale  { background:#fce7f3; color:#9d174d; border-color:#f9a8d4; }
-  .lt-trans { background:#ecfdf5; color:#065f46; border-color:#6ee7b7; }
-  .lt-ex    { background:#fff7ed; color:#9a3412; border-color:#fdba74; }
-  .lt-im    { background:#eff6ff; color:#1e3a8a; border-color:#93c5fd; }
-  .lt-earth  { background:#d1fae5; color:#065f46; border-color:#6ee7b7; }
-  .lt-people { background:#e0e7ff; color:#3730a3; border-color:#a5b4fc; }
-  .lt-map    { background:#fce7f3; color:#9d174d; border-color:#f9a8d4; }
-  .lt-self   { background:#fff7ed; color:#9a3412; border-color:#fdba74; }
-  .lt-life   { background:#f0fdf4; color:#14532d; border-color:#86efac; }
-  .lt-far    { background:#f3e8ff; color:#6b21a8; border-color:#c084fc; }
-  .lt-small  { background:#fdf4ff; color:#7e22ce; border-color:#d8b4fe; }
-  .lt-beauty { background:#fce7f3; color:#9d174d; border-color:#f9a8d4; }
-  .lt-across { background:#ecfdf5; color:#065f46; border-color:#6ee7b7; }
-  .lt-out    { background:#fff7ed; color:#9a3412; border-color:#fdba74; }
-  .lt-into   { background:#eff6ff; color:#1e3a8a; border-color:#93c5fd; }
-
-  /* Matrix center */
-  .l4-matrix { background:var(--card); border-radius:18px; padding:18px 14px 16px; box-shadow:var(--shadow); }
-  .l4-matrix h2 { font-family:'Fredoka One',cursive; font-size:1.1rem; color:var(--blue); text-align:center; margin-bottom:14px; }
-
-  .l4-matrix table { width:100%; border-collapse:collapse; }
-  .l4-matrix thead th { background:var(--blue); color:#fff; font-family:'Fredoka One',cursive; font-size:0.8rem; padding:7px 6px; text-align:center; letter-spacing:0.04em; }
-  .l4-matrix thead th:first-child { border-radius:8px 0 0 8px; }
-  .l4-matrix thead th:last-child  { border-radius:0 8px 8px 0; }
-  .l4-matrix tbody tr { border-bottom:1px solid #f1f5f9; }
-  .l4-matrix tbody tr:hover { background:#f8faff; }
-
-  /* Root divider rows */
-  .l4-root-row td { padding:8px 10px; font-weight:900; font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; border-left:4px solid; }
-
-  /* Drop zones */
-  .l4-dz { min-height:42px; border:2px dashed #cbd5e1; border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:0.7rem; font-weight:700; color:#94a3b8; padding:4px; transition:all 0.15s; cursor:pointer; margin:3px; }
-  .l4-dz.over  { border-color:var(--blue); background:var(--blue-lt); color:var(--blue); transform:scale(1.03); border-style:solid; }
-  .l4-dz.filled { border-style:solid; border-color:transparent; padding:2px; background:transparent; }
-
-  /* Placed tile inside drop zone */
-  .l4-placed { width:100%; padding:6px 5px; border-radius:7px; font-weight:800; font-size:0.82rem; text-align:center; cursor:pointer; border:2px solid transparent; }
-  .l4-placed::after { content:' ✕'; font-size:0.65rem; opacity:0.5; }
-  .l4-placed:hover { opacity:0.75; }
-
-  /* Root / Suffix / Word cells */
-  .l4-root-cell   { text-align:center; font-family:'Fredoka One',cursive; font-size:0.92rem; padding:6px 4px; border-radius:7px; font-weight:900; }
-  .l4-suffix-cell { text-align:center; font-weight:800; font-size:0.82rem; color:var(--gray); padding:6px 4px; }
-  .l4-word-cell   { text-align:center; font-family:'Fredoka One',cursive; font-size:0.95rem; color:#94a3b8; padding:6px 4px; transition:color 0.25s, transform 0.25s; min-width:70px; }
-  .l4-word-cell.lit { color:var(--blue); transform:scale(1.1); }
-
-  /* Build zone */
-  .l4-build-section { margin-top:18px; border-top:2.5px dashed var(--border); padding-top:14px; }
-  .l4-build-section h3 { font-family:'Fredoka One',cursive; font-size:1rem; color:#8b5cf6; text-align:center; margin-bottom:10px; }
-  .l4-build-row td { padding:4px 3px; }
-  .l4-build-dz { min-height:40px; border:2px dashed #cbd5e1; border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:0.68rem; font-weight:700; color:#94a3b8; padding:4px; transition:all 0.15s; cursor:pointer; margin:2px; }
-  .l4-build-dz.over  { border-color:#8b5cf6; background:#ede9fe; color:#6b21a8; transform:scale(1.03); border-style:solid; }
-  .l4-build-dz.filled { border-style:solid; border-color:transparent; padding:2px; }
-  .l4-build-word { text-align:center; font-family:'Fredoka One',cursive; font-size:1rem; color:#94a3b8; padding:6px 4px; transition:color 0.25s; font-weight:900; }
-  .l4-build-word.lit { color:#8b5cf6; }
-  .l4-build-clear { font-size:0.7rem; background:#f1f5f9; border:none; border-radius:6px; padding:4px 8px; cursor:pointer; color:var(--gray); font-weight:700; }
-  .l4-build-clear:hover { background:#e2e8f0; }
-
-  /* Buttons */
-  .l4-btn-row { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-top:14px; padding-top:12px; border-top:2px dashed var(--border); }
-  .l4-btn { font-family:'Nunito',sans-serif; font-weight:800; font-size:0.85rem; padding:9px 16px; border-radius:11px; border:none; cursor:pointer; transition:transform 0.12s, box-shadow 0.12s; }
-  .l4-btn:hover { transform:translateY(-2px); box-shadow:0 4px 12px rgba(0,0,0,0.14); }
-  .l4-btn-reset  { background:#f1f5f9; color:#475569; }
-  .l4-btn-check  { background:var(--green); color:#fff; }
-  .l4-btn-game   { background:var(--yellow); color:#fff; }
-  .l4-btn-reveal { background:var(--purple); color:#fff; }
-
-  /* Feedback */
-  .l4-fb { text-align:center; min-height:24px; font-weight:800; font-size:0.9rem; margin-top:8px; padding:7px 10px; border-radius:9px; }
-  .l4-fb-ok  { background:var(--green-lt); color:#14532d; }
-  .l4-fb-err { background:var(--red-lt);   color:#7f1d1d; }
-
-  /* Floating ghost while dragging */
-  #l4-ghost { position:fixed; pointer-events:none; z-index:9000; opacity:0.85; transform:translate(-50%,-50%) scale(1.08); display:none; padding:7px 12px; border-radius:10px; font-family:'Nunito',sans-serif; font-weight:800; font-size:0.9rem; border:2.5px solid; white-space:nowrap; box-shadow:0 8px 24px rgba(0,0,0,0.2); }
-
-  /* Game overlay */
-  .l4-game-ov { display:none; position:fixed; inset:0; background:rgba(15,23,42,0.85); z-index:9999; align-items:center; justify-content:center; }
-  .l4-game-ov.active { display:flex; }
-  .l4-game-box { background:#fff; border-radius:22px; padding:28px 24px; max-width:480px; width:90%; text-align:center; box-shadow:0 24px 80px rgba(0,0,0,0.4); }
-  .l4-game-box h2 { font-family:'Fredoka One',cursive; font-size:1.5rem; color:var(--blue); margin-bottom:4px; }
-  .l4-game-box p  { color:var(--gray); font-size:0.85rem; margin-bottom:14px; font-weight:600; }
-  .l4-timer-wrap { background:#f1f5f9; border-radius:99px; height:7px; margin-bottom:18px; overflow:hidden; }
-  .l4-timer-bar  { height:100%; background:linear-gradient(90deg,var(--blue),var(--purple)); border-radius:99px; transition:width 1s linear; }
-  .l4-game-q     { font-family:'Fredoka One',cursive; font-size:1.2rem; color:#1e293b; margin-bottom:16px; line-height:1.3; }
-  .l4-choices    { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:14px; }
-  .l4-choice     { font-family:'Nunito',sans-serif; font-weight:800; font-size:0.88rem; padding:10px 8px; border-radius:10px; border:2.5px solid var(--border); background:#f8fafc; cursor:pointer; transition:all 0.12s; }
-  .l4-choice:hover       { border-color:var(--blue); background:var(--blue-lt); color:var(--blue); }
-  .l4-choice.correct     { background:var(--green-lt); border-color:var(--green); color:#14532d; }
-  .l4-choice.wrong       { background:var(--red-lt);   border-color:var(--red);   color:#7f1d1d; }
-  .l4-game-score { font-weight:800; color:var(--gray); font-size:0.88rem; margin-bottom:10px; }
-  .l4-close-game { font-family:'Nunito',sans-serif; font-weight:800; font-size:0.82rem; padding:7px 18px; border-radius:9px; border:2px solid var(--border); background:transparent; color:var(--gray); cursor:pointer; }
-
-  /* Confetti */
-  .l4-confetti { position:fixed; inset:0; pointer-events:none; z-index:99999; overflow:hidden; }
-  @keyframes l4fall { to { transform:translateY(110vh) rotate(720deg); opacity:0; } }
-  .l4-cp { position:fixed; top:-20px; animation:l4fall linear forwards; }
-
-  @media (max-width:680px) {
-    .l4-workspace { grid-template-columns:1fr; }
-    .l4-panel { position:static; max-height:none; }
-    .l4-choices { grid-template-columns:1fr; }
-  }
+#L4{font-family:'Nunito',sans-serif;background:#f0f4ff;padding:0 0 60px;min-height:100vh;}
+#L4 *{box-sizing:border-box;margin:0;padding:0;}
+#L4 h1{font-family:'Fredoka One',cursive;font-size:2rem;color:#3b6cf7;text-align:center;padding:20px 16px 4px;}
+#L4 .sub{text-align:center;color:#64748b;font-size:.9rem;font-weight:600;padding-bottom:14px;}
+/* Instructions */
+#L4 .instr{max-width:820px;margin:0 auto 14px;padding:0 14px;}
+#L4 .instrbox{background:#dce8ff;border:2px solid #3b6cf7;border-radius:12px;padding:12px 16px;display:flex;gap:10px;}
+#L4 .instrbox ol{padding-left:16px;color:#1e3a8a;font-size:.82rem;font-weight:700;line-height:1.9;}
+/* Root badges */
+#L4 .rootkey{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;padding:0 14px 14px;}
+#L4 .rbadge{padding:7px 13px;border-radius:9px;font-weight:800;font-size:.82rem;border:2.5px solid;font-family:'Fredoka One',cursive;}
+/* Main layout */
+#L4 .workspace{display:grid;grid-template-columns:140px 1fr 140px;gap:10px;max-width:1000px;margin:0 auto;padding:0 10px;}
+/* Side panels */
+#L4 .panel{background:#fff;border-radius:14px;padding:10px 8px;box-shadow:0 3px 14px rgba(59,108,247,.09);position:sticky;top:56px;max-height:calc(100vh - 68px);overflow-y:auto;}
+#L4 .panel h2{font-family:'Fredoka One',cursive;font-size:.88rem;text-align:center;padding-bottom:7px;margin-bottom:5px;border-bottom:2px dashed #e2e8f0;}
+#L4 .phint{font-size:.65rem;color:#64748b;font-weight:700;text-align:center;margin-bottom:6px;}
+#L4 .pdiv{font-size:.61rem;font-weight:900;letter-spacing:.07em;text-transform:uppercase;padding:3px 5px;border-radius:5px;margin:7px 0 4px;text-align:center;}
+/* Tiles */
+#L4 .tile{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 4px;border-radius:9px;margin-bottom:5px;font-weight:800;font-size:.82rem;cursor:pointer;user-select:none;border:2.5px solid;text-align:center;min-height:36px;line-height:1.2;transition:transform .1s,opacity .15s;}
+#L4 .tile:hover{transform:scale(1.07);}
+#L4 .tile.picked{outline:3px solid #f59e0b;outline-offset:2px;transform:scale(1.06);}
+#L4 .tile.used{opacity:.2;pointer-events:none;}
+#L4 .tile span{font-size:.6rem;opacity:.72;font-weight:700;}
+/* Tile colors */
+.tc-geo{background:#dce8ff;color:#1e40af;border-color:#93c5fd;}
+.tc-demo{background:#ede9fe;color:#5b21b6;border-color:#c4b5fd;}
+.tc-carto{background:#ccfbf1;color:#0f766e;border-color:#5eead4;}
+.tc-auto{background:#fef3c7;color:#92400e;border-color:#fcd34d;}
+.tc-bio{background:#fee2e2;color:#991b1b;border-color:#fca5a5;}
+.tc-tele{background:#f3e8ff;color:#6b21a8;border-color:#c084fc;}
+.tc-micro{background:#fdf4ff;color:#7e22ce;border-color:#d8b4fe;}
+.tc-kale{background:#fce7f3;color:#9d174d;border-color:#f9a8d4;}
+.tc-trans{background:#ecfdf5;color:#065f46;border-color:#6ee7b7;}
+.tc-ex{background:#fff7ed;color:#9a3412;border-color:#fdba74;}
+.tc-im{background:#eff6ff;color:#1e3a8a;border-color:#93c5fd;}
+.tc-GRAPH{background:#dce8ff;color:#1e40af;border-color:#93c5fd;}
+.tc-SCOPE{background:#f3e8ff;color:#6b21a8;border-color:#c084fc;}
+.tc-PORT{background:#ecfdf5;color:#065f46;border-color:#6ee7b7;}
+.tc-earth{background:#d1fae5;color:#065f46;border-color:#6ee7b7;}
+.tc-people{background:#e0e7ff;color:#3730a3;border-color:#a5b4fc;}
+.tc-map{background:#fce7f3;color:#9d174d;border-color:#f9a8d4;}
+.tc-self{background:#fff7ed;color:#9a3412;border-color:#fdba74;}
+.tc-life{background:#f0fdf4;color:#14532d;border-color:#86efac;}
+.tc-far{background:#f3e8ff;color:#6b21a8;border-color:#c084fc;}
+.tc-small{background:#fdf4ff;color:#7e22ce;border-color:#d8b4fe;}
+.tc-beauty{background:#fce7f3;color:#9d174d;border-color:#f9a8d4;}
+.tc-across{background:#ecfdf5;color:#065f46;border-color:#6ee7b7;}
+.tc-out{background:#fff7ed;color:#9a3412;border-color:#fdba74;}
+.tc-into{background:#eff6ff;color:#1e3a8a;border-color:#93c5fd;}
+/* Center matrix */
+#L4 .matrix{background:#fff;border-radius:16px;padding:14px 10px;box-shadow:0 3px 14px rgba(59,108,247,.09);}
+#L4 .matrix h2{font-family:'Fredoka One',cursive;font-size:1rem;color:#3b6cf7;text-align:center;margin-bottom:12px;}
+#L4 table{width:100%;border-collapse:collapse;}
+#L4 thead th{background:#3b6cf7;color:#fff;font-family:'Fredoka One',cursive;font-size:.75rem;padding:6px 4px;text-align:center;}
+#L4 thead th:first-child{border-radius:7px 0 0 7px;}
+#L4 thead th:last-child{border-radius:0 7px 7px 0;}
+#L4 tbody tr{border-bottom:1px solid #f1f5f9;}
+/* Drop zones */
+#L4 .dz{min-height:38px;border:2px dashed #cbd5e1;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.67rem;font-weight:700;color:#94a3b8;padding:3px;transition:all .15s;cursor:pointer;margin:2px;}
+#L4 .dz.ready{border-color:#f59e0b;background:#fffbeb;color:#92400e;border-style:solid;}
+#L4 .dz.filled{border-style:solid;border-color:transparent;padding:2px;}
+/* Placed chip inside drop zone */
+#L4 .chip{width:100%;padding:5px 4px;border-radius:6px;font-weight:800;font-size:.78rem;text-align:center;cursor:pointer;border:2px solid transparent;}
+#L4 .chip:hover::after{content:' ✕';font-size:.6rem;opacity:.6;}
+/* Static cells */
+#L4 .scell{text-align:center;font-weight:800;font-size:.78rem;color:#64748b;padding:5px 3px;}
+#L4 .wcell{text-align:center;font-family:'Fredoka One',cursive;font-size:.9rem;color:#94a3b8;padding:5px 3px;transition:color .2s,transform .2s;}
+#L4 .wcell.lit{color:#3b6cf7;transform:scale(1.1);}
+/* Root divider rows */
+#L4 .rdiv td{padding:6px 9px;font-weight:900;font-size:.68rem;letter-spacing:.09em;text-transform:uppercase;border-left:4px solid;}
+/* Build section */
+#L4 .buildsec{margin-top:16px;border-top:2.5px dashed #e2e8f0;padding-top:12px;}
+#L4 .buildsec h3{font-family:'Fredoka One',cursive;font-size:.92rem;color:#8b5cf6;text-align:center;margin-bottom:10px;}
+#L4 .build-th{background:#8b5cf6 !important;}
+#L4 .bwcell{text-align:center;font-family:'Fredoka One',cursive;font-size:.92rem;color:#94a3b8;padding:5px 3px;}
+#L4 .bwcell.lit{color:#8b5cf6;}
+#L4 .clrbtn{font-size:.67rem;background:#f1f5f9;border:none;border-radius:6px;padding:3px 7px;cursor:pointer;color:#64748b;font-weight:700;font-family:'Nunito',sans-serif;}
+/* Buttons */
+#L4 .btns{display:flex;gap:7px;justify-content:center;flex-wrap:wrap;margin-top:12px;padding-top:10px;border-top:2px dashed #e2e8f0;}
+#L4 .btn{font-family:'Nunito',sans-serif;font-weight:800;font-size:.82rem;padding:8px 14px;border-radius:10px;border:none;cursor:pointer;transition:transform .12s;}
+#L4 .btn:hover{transform:translateY(-2px);}
+#L4 .b-reset{background:#f1f5f9;color:#475569;}
+#L4 .b-check{background:#22c55e;color:#fff;}
+#L4 .b-game{background:#f59e0b;color:#fff;}
+#L4 .b-reveal{background:#8b5cf6;color:#fff;}
+/* Feedback */
+#L4 .fb{text-align:center;font-weight:800;font-size:.86rem;margin-top:7px;padding:6px 9px;border-radius:8px;min-height:22px;}
+#L4 .fb.ok{background:#dcfce7;color:#14532d;}
+#L4 .fb.err{background:#fee2e2;color:#7f1d1d;}
+/* Game overlay */
+#L4 .gov{display:none;position:fixed;inset:0;background:rgba(15,23,42,.85);z-index:9999;align-items:center;justify-content:center;}
+#L4 .gov.on{display:flex;}
+#L4 .gbox{background:#fff;border-radius:20px;padding:24px 20px;max-width:440px;width:90%;text-align:center;}
+#L4 .gbox h2{font-family:'Fredoka One',cursive;font-size:1.4rem;color:#3b6cf7;margin-bottom:3px;}
+#L4 .gbox p{color:#64748b;font-size:.8rem;font-weight:600;margin-bottom:10px;}
+#L4 .tbar-wrap{background:#f1f5f9;border-radius:99px;height:6px;margin-bottom:14px;overflow:hidden;}
+#L4 .tbar{height:100%;background:linear-gradient(90deg,#3b6cf7,#8b5cf6);border-radius:99px;transition:width 1s linear;}
+#L4 .gq{font-family:'Fredoka One',cursive;font-size:1.1rem;color:#1e293b;margin-bottom:12px;line-height:1.3;}
+#L4 .gchs{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:10px;}
+#L4 .gch{font-family:'Nunito',sans-serif;font-weight:800;font-size:.84rem;padding:9px 7px;border-radius:9px;border:2.5px solid #cbd5e1;background:#f8fafc;cursor:pointer;transition:all .12s;}
+#L4 .gch:hover{border-color:#3b6cf7;background:#dce8ff;}
+#L4 .gch.ok{background:#dcfce7;border-color:#22c55e;color:#14532d;}
+#L4 .gch.no{background:#fee2e2;border-color:#ef4444;color:#7f1d1d;}
+#L4 .gscore{font-weight:800;color:#64748b;font-size:.84rem;margin-bottom:8px;}
+#L4 .closeg{font-family:'Nunito',sans-serif;font-weight:800;font-size:.78rem;padding:6px 14px;border-radius:8px;border:2px solid #e2e8f0;background:transparent;color:#64748b;cursor:pointer;}
+/* Confetti */
+#L4 .cf{position:fixed;inset:0;pointer-events:none;z-index:99999;overflow:hidden;}
+@keyframes L4fall{to{transform:translateY(110vh) rotate(720deg);opacity:0;}}
+#L4 .cp{position:fixed;top:-20px;animation:L4fall linear forwards;}
+@media(max-width:640px){#L4 .workspace{grid-template-columns:1fr;}#L4 .panel{position:static;max-height:none;}#L4 .gchs{grid-template-columns:1fr;}}
 </style>
 
-<header>
-  <h1>⚙️ Word Engineers</h1>
-  <p>Build words using three roots: <strong>-GRAPH-</strong> (write) · <strong>-SCOPE-</strong> (look) · <strong>-PORT-</strong> (carry)</p>
-</header>
+<div id="L4">
+<h1>&#9881;&#65039; Word Engineers</h1>
+<p class="sub">Build words using roots: <strong>-GRAPH-</strong> (write) &middot; <strong>-SCOPE-</strong> (look) &middot; <strong>-PORT-</strong> (carry)</p>
 
-<div class="l4-instr">
-  <div class="l4-instr-box">
-    <div class="icon">📋</div>
-    <div>
-      <h3>How to Build a Word</h3>
-      <ol>
-        <li><strong>Click a tile</strong> on the LEFT or RIGHT panel to pick it up</li>
-        <li>Then <strong>click the drop zone</strong> in the table to place it — or just drag &amp; drop!</li>
-        <li>When both PREFIX and MEANING are placed, the <strong>Word column lights up ✨</strong></li>
-        <li>Use the <strong>🔨 Build Your Own</strong> section below to freely combine any prefix + root!</li>
-        <li>Click any placed tile to <strong>remove it</strong> and try again</li>
-      </ol>
-    </div>
+<div class="instr">
+  <div class="instrbox">
+    <div style="font-size:1.4rem;flex-shrink:0;padding-top:2px">&#128203;</div>
+    <ol>
+      <li><strong>Click any tile</strong> in a side panel &mdash; it turns gold &#10024;</li>
+      <li><strong>Click an empty box</strong> in the table to place it</li>
+      <li>Fill PREFIX + ROOT + ENDING &rarr; the <strong>Word lights up!</strong></li>
+      <li>Use <strong>&#128296; Build Your Own</strong> below to mix any tiles freely</li>
+      <li>Click a placed tile to <strong>remove it</strong> and try again</li>
+    </ol>
   </div>
 </div>
 
-<div class="l4-root-key">
-  <div class="l4-root-badge" style="background:#dce8ff;border-color:#93c5fd;color:#1e40af;"><b>-GRAPH-</b><span>= write / describe</span></div>
-  <div class="l4-root-badge" style="background:#f3e8ff;border-color:#c084fc;color:#6b21a8;"><b>-SCOPE-</b><span>= look / examine</span></div>
-  <div class="l4-root-badge" style="background:#ecfdf5;border-color:#6ee7b7;color:#065f46;"><b>-PORT-</b><span>= carry</span></div>
+<div class="rootkey">
+  <div class="rbadge" style="background:#dce8ff;border-color:#93c5fd;color:#1e40af;">-GRAPH- = write / describe</div>
+  <div class="rbadge" style="background:#f3e8ff;border-color:#c084fc;color:#6b21a8;">-SCOPE- = look / examine</div>
+  <div class="rbadge" style="background:#ecfdf5;border-color:#6ee7b7;color:#065f46;">-PORT- = carry</div>
 </div>
 
-<div class="l4-workspace">
-
-  <!-- LEFT: Prefix Tiles -->
-  <div class="l4-panel">
-    <h2 style="color:#3b6cf7">🧩 Prefixes</h2>
-    <p class="l4-panel-hint">Click to pick up, then click a drop zone</p>
-    <div class="l4-pdiv" style="background:#dce8ff;color:#1e40af;">—GRAPH— words</div>
-    <div class="l4-tile lt-geo"   id="l4t-geo"   data-type="prefix" data-val="GEO"     data-cls="lt-geo">GEO<span>(Earth)</span></div>
-    <div class="l4-tile lt-demo"  id="l4t-demo"  data-type="prefix" data-val="DEMO"    data-cls="lt-demo">DEMO<span>(People)</span></div>
-    <div class="l4-tile lt-carto" id="l4t-carto" data-type="prefix" data-val="CARTO"   data-cls="lt-carto">CARTO<span>(Map)</span></div>
-    <div class="l4-tile lt-auto"  id="l4t-auto"  data-type="prefix" data-val="AUTO"    data-cls="lt-auto">AUTO<span>(Self)</span></div>
-    <div class="l4-tile lt-bio"   id="l4t-bio"   data-type="prefix" data-val="BIO"     data-cls="lt-bio">BIO<span>(Life)</span></div>
-    <div class="l4-pdiv" style="background:#f3e8ff;color:#6b21a8;">—SCOPE— words</div>
-    <div class="l4-tile lt-tele"  id="l4t-tele"  data-type="prefix" data-val="TELE"    data-cls="lt-tele">TELE<span>(Far Away)</span></div>
-    <div class="l4-tile lt-micro" id="l4t-micro" data-type="prefix" data-val="MICRO"   data-cls="lt-micro">MICRO<span>(Small)</span></div>
-    <div class="l4-tile lt-kale"  id="l4t-kale"  data-type="prefix" data-val="KALEIDO" data-cls="lt-kale">KALEIDO<span>(Beautiful)</span></div>
-    <div class="l4-pdiv" style="background:#ecfdf5;color:#065f46;">—PORT— words</div>
-    <div class="l4-tile lt-trans" id="l4t-trans" data-type="prefix" data-val="TRANS"   data-cls="lt-trans">TRANS<span>(Across)</span></div>
-    <div class="l4-tile lt-ex"    id="l4t-ex"    data-type="prefix" data-val="EX"      data-cls="lt-ex">EX<span>(Out)</span></div>
-    <div class="l4-tile lt-im"    id="l4t-im"    data-type="prefix" data-val="IM"      data-cls="lt-im">IM<span>(Into)</span></div>
+<div class="workspace">
+  <!-- LEFT PANEL: Prefixes -->
+  <div class="panel">
+    <h2 style="color:#3b6cf7">&#129513; Prefixes</h2>
+    <p class="phint">&#128071; Click a tile, then click a box</p>
+    <div class="pdiv" style="background:#dce8ff;color:#1e40af;">GRAPH words</div>
+    <div class="tile tc-geo"   data-tid="T_geo"   data-type="prefix" data-val="GEO"    >GEO<span>(Earth)</span></div>
+    <div class="tile tc-demo"  data-tid="T_demo"  data-type="prefix" data-val="DEMO"   >DEMO<span>(People)</span></div>
+    <div class="tile tc-carto" data-tid="T_carto" data-type="prefix" data-val="CARTO"  >CARTO<span>(Map)</span></div>
+    <div class="tile tc-auto"  data-tid="T_auto"  data-type="prefix" data-val="AUTO"   >AUTO<span>(Self)</span></div>
+    <div class="tile tc-bio"   data-tid="T_bio"   data-type="prefix" data-val="BIO"    >BIO<span>(Life)</span></div>
+    <div class="pdiv" style="background:#f3e8ff;color:#6b21a8;">SCOPE words</div>
+    <div class="tile tc-tele"  data-tid="T_tele"  data-type="prefix" data-val="TELE"   >TELE<span>(Far Away)</span></div>
+    <div class="tile tc-micro" data-tid="T_micro" data-type="prefix" data-val="MICRO"  >MICRO<span>(Small)</span></div>
+    <div class="tile tc-kale"  data-tid="T_kale"  data-type="prefix" data-val="KALEIDO">KALEIDO<span>(Beautiful)</span></div>
+    <div class="pdiv" style="background:#ecfdf5;color:#065f46;">PORT words</div>
+    <div class="tile tc-trans" data-tid="T_trans" data-type="prefix" data-val="TRANS"  >TRANS<span>(Across)</span></div>
+    <div class="tile tc-ex"    data-tid="T_ex"    data-type="prefix" data-val="EX"     >EX<span>(Out)</span></div>
+    <div class="tile tc-im"    data-tid="T_im"    data-type="prefix" data-val="IM"     >IM<span>(Into)</span></div>
+    <div class="pdiv" style="background:#e2e8f0;color:#475569;">Root Words</div>
+    <div class="tile tc-GRAPH" data-tid="T_GRAPH" data-type="root"   data-val="GRAPH"  >-GRAPH-<span>(write)</span></div>
+    <div class="tile tc-SCOPE" data-tid="T_SCOPE" data-type="root"   data-val="SCOPE"  >-SCOPE-<span>(look)</span></div>
+    <div class="tile tc-PORT"  data-tid="T_PORT"  data-type="root"   data-val="PORT"   >-PORT-<span>(carry)</span></div>
   </div>
 
-  <!-- CENTER: Matrix -->
-  <div class="l4-matrix">
-    <h2>🗺️ Morphology Matrix</h2>
-    <table>
+  <!-- CENTER MATRIX -->
+  <div class="matrix">
+    <h2>&#128506;&#65039; Morphology Matrix</h2>
+    <table id="L4main">
       <thead><tr>
-        <th style="width:22%">PREFIX<br><small style="font-size:0.65rem;opacity:0.85;font-family:Nunito,sans-serif;">← click tile, then click here</small></th>
-        <th style="width:13%">ROOT</th>
+        <th style="width:22%">PREFIX<br><small style="font-size:.6rem;font-family:Nunito,sans-serif;opacity:.85">&#8592; click tile, click here</small></th>
+        <th style="width:18%">ROOT<br><small style="font-size:.6rem;font-family:Nunito,sans-serif;opacity:.85">place root here</small></th>
         <th style="width:16%">ENDING</th>
-        <th style="width:22%">WORD ✨</th>
-        <th style="width:27%">MEANING<br><small style="font-size:0.65rem;opacity:0.85;font-family:Nunito,sans-serif;">click tile, then click here →</small></th>
+        <th style="width:24%">WORD &#10024;</th>
+        <th style="width:20%">MEANING<br><small style="font-size:.6rem;font-family:Nunito,sans-serif;opacity:.85">click tile, click here &#8594;</small></th>
       </tr></thead>
-      <tbody id="l4-tbody"></tbody>
+      <tbody id="L4tbody"></tbody>
     </table>
 
-    <!-- Build Your Own -->
-    <div class="l4-build-section">
-      <h3>🔨 Build Your Own — mix any prefix + root!</h3>
+    <div class="buildsec">
+      <h3>&#128296; Build Your Own &mdash; drag any prefix + root freely!</h3>
       <table>
         <thead><tr>
-          <th style="background:#8b5cf6;width:26%;border-radius:8px 0 0 8px;font-family:'Fredoka One',cursive;font-size:0.8rem;padding:7px 6px;color:#fff;">ANY PREFIX</th>
-          <th style="background:#8b5cf6;width:20%;font-family:'Fredoka One',cursive;font-size:0.8rem;padding:7px 6px;color:#fff;">ROOT</th>
-          <th style="background:#8b5cf6;width:30%;font-family:'Fredoka One',cursive;font-size:0.8rem;padding:7px 6px;color:#fff;">WORD YOU BUILT ✨</th>
-          <th style="background:#8b5cf6;width:24%;border-radius:0 8px 8px 0;font-family:'Fredoka One',cursive;font-size:0.8rem;padding:7px 6px;color:#fff;">CLEAR</th>
+          <th class="build-th" style="width:28%;border-radius:7px 0 0 7px;font-family:'Fredoka One',cursive;font-size:.75rem;padding:6px 4px;color:#fff;">ANY PREFIX</th>
+          <th class="build-th" style="width:20%;font-family:'Fredoka One',cursive;font-size:.75rem;padding:6px 4px;color:#fff;">ANY ROOT</th>
+          <th class="build-th" style="width:14%;font-family:'Fredoka One',cursive;font-size:.75rem;padding:6px 4px;color:#fff;">ENDING</th>
+          <th class="build-th" style="width:24%;font-family:'Fredoka One',cursive;font-size:.75rem;padding:6px 4px;color:#fff;">WORD &#10024;</th>
+          <th class="build-th" style="width:14%;border-radius:0 7px 7px 0;font-family:'Fredoka One',cursive;font-size:.75rem;padding:6px 4px;color:#fff;">CLEAR</th>
         </tr></thead>
-        <tbody id="l4-build-tbody"></tbody>
+        <tbody id="L4btbody"></tbody>
       </table>
     </div>
 
-    <div class="l4-btn-row">
-      <button class="l4-btn l4-btn-reset"  onclick="L4_resetAll()">🔄 Reset All</button>
-      <button class="l4-btn l4-btn-check"  onclick="L4_checkAnswers()">✅ Check Answers</button>
-      <button class="l4-btn l4-btn-game"   onclick="L4_startGame()">⚡ Challenge Mode!</button>
-      <button class="l4-btn l4-btn-reveal" onclick="L4_revealAll()">💡 Reveal All</button>
+    <div class="btns">
+      <button class="btn b-reset"  data-act="reset" >&#128260; Reset All</button>
+      <button class="btn b-check"  data-act="check" >&#9989; Check Answers</button>
+      <button class="btn b-game"   data-act="game"  >&#9889; Challenge Mode!</button>
+      <button class="btn b-reveal" data-act="reveal">&#128161; Reveal All</button>
     </div>
-    <div class="l4-fb" id="l4-fb"></div>
+    <div class="fb" id="L4fb"></div>
   </div>
 
-  <!-- RIGHT: Meaning Tiles -->
-  <div class="l4-panel">
-    <h2 style="color:#22c55e">📖 Meanings</h2>
-    <p class="l4-panel-hint">Click to pick up, then click a drop zone</p>
-    <div class="l4-pdiv" style="background:#dce8ff;color:#1e40af;">—GRAPH— meanings</div>
-    <div class="l4-tile lt-earth"  id="l4t-earth"  data-type="meaning" data-val="Earth"     data-cls="lt-earth">🌍 Earth</div>
-    <div class="l4-tile lt-people" id="l4t-people" data-type="meaning" data-val="People"    data-cls="lt-people">👥 People</div>
-    <div class="l4-tile lt-map"    id="l4t-map"    data-type="meaning" data-val="Map"       data-cls="lt-map">🗺️ Map</div>
-    <div class="l4-tile lt-self"   id="l4t-self"   data-type="meaning" data-val="Self"      data-cls="lt-self">🪞 Self</div>
-    <div class="l4-tile lt-life"   id="l4t-life"   data-type="meaning" data-val="Life"      data-cls="lt-life">🌿 Life</div>
-    <div class="l4-pdiv" style="background:#f3e8ff;color:#6b21a8;">—SCOPE— meanings</div>
-    <div class="l4-tile lt-far"    id="l4t-far"    data-type="meaning" data-val="Far Away"  data-cls="lt-far">🔭 Far Away</div>
-    <div class="l4-tile lt-small"  id="l4t-small"  data-type="meaning" data-val="Small"     data-cls="lt-small">🔬 Small</div>
-    <div class="l4-tile lt-beauty" id="l4t-beauty" data-type="meaning" data-val="Beautiful" data-cls="lt-beauty">✨ Beautiful</div>
-    <div class="l4-pdiv" style="background:#ecfdf5;color:#065f46;">—PORT— meanings</div>
-    <div class="l4-tile lt-across" id="l4t-across" data-type="meaning" data-val="Across"    data-cls="lt-across">↔️ Across</div>
-    <div class="l4-tile lt-out"    id="l4t-out"    data-type="meaning" data-val="Out"       data-cls="lt-out">📤 Out</div>
-    <div class="l4-tile lt-into"   id="l4t-into"   data-type="meaning" data-val="Into"      data-cls="lt-into">📥 Into</div>
+  <!-- RIGHT PANEL: Meanings -->
+  <div class="panel">
+    <h2 style="color:#22c55e">&#128218; Meanings</h2>
+    <p class="phint">Click to select, then click a box &#128071;</p>
+    <div class="pdiv" style="background:#dce8ff;color:#1e40af;">GRAPH meanings</div>
+    <div class="tile tc-earth"  data-tid="T_earth"  data-type="meaning" data-val="Earth"    >&#127757; Earth</div>
+    <div class="tile tc-people" data-tid="T_people" data-type="meaning" data-val="People"   >&#128101; People</div>
+    <div class="tile tc-map"    data-tid="T_map"    data-type="meaning" data-val="Map"      >&#128506; Map</div>
+    <div class="tile tc-self"   data-tid="T_self"   data-type="meaning" data-val="Self"     >&#129710; Self</div>
+    <div class="tile tc-life"   data-tid="T_life"   data-type="meaning" data-val="Life"     >&#127807; Life</div>
+    <div class="pdiv" style="background:#f3e8ff;color:#6b21a8;">SCOPE meanings</div>
+    <div class="tile tc-far"    data-tid="T_far"    data-type="meaning" data-val="Far Away" >&#128301; Far Away</div>
+    <div class="tile tc-small"  data-tid="T_small"  data-type="meaning" data-val="Small"   >&#128301; Small</div>
+    <div class="tile tc-beauty" data-tid="T_beauty" data-type="meaning" data-val="Beautiful">&#10024; Beautiful</div>
+    <div class="pdiv" style="background:#ecfdf5;color:#065f46;">PORT meanings</div>
+    <div class="tile tc-across" data-tid="T_across" data-type="meaning" data-val="Across"  >&#8596; Across</div>
+    <div class="tile tc-out"    data-tid="T_out"    data-type="meaning" data-val="Out"     >&#128228; Out</div>
+    <div class="tile tc-into"   data-tid="T_into"   data-type="meaning" data-val="Into"    >&#128229; Into</div>
   </div>
 </div>
 
-<!-- Game Overlay -->
-<div class="l4-game-ov" id="l4-game-ov">
-  <div class="l4-game-box">
-    <h2>⚡ Challenge Mode</h2>
-    <p>Match the word part to its meaning — fast!</p>
-    <div class="l4-timer-wrap"><div class="l4-timer-bar" id="l4-tbar"></div></div>
-    <div class="l4-game-q" id="l4-gq"></div>
-    <div class="l4-choices" id="l4-gc"></div>
-    <div class="l4-game-score" id="l4-gs"></div>
-    <button class="l4-close-game" onclick="L4_closeGame()">✕ Close</button>
+<!-- Game overlay -->
+<div class="gov" id="L4gov">
+  <div class="gbox">
+    <h2>&#9889; Challenge Mode</h2>
+    <p>Match the word part to its meaning!</p>
+    <div class="tbar-wrap"><div class="tbar" id="L4tbar"></div></div>
+    <div class="gq" id="L4gq"></div>
+    <div class="gchs" id="L4gchs"></div>
+    <div class="gscore" id="L4gscore"></div>
+    <button class="closeg" data-act="closegame">&#10005; Close</button>
   </div>
 </div>
-<div class="l4-confetti" id="l4-cf"></div>
+<div class="cf" id="L4cf"></div>
+</div><!-- #L4 -->
 
 <script>
-// ════════════════════════════════════════════════
-//  DATA
-// ════════════════════════════════════════════════
-var L4R = [
-  {id:'geo',   root:'GRAPH',prefix:'GEO',    ending:'GRAPHY',   word:'Geography',    meaning:'Earth',    rc:'#3b6cf7',mc:'lt-earth' },
-  {id:'demo',  root:'GRAPH',prefix:'DEMO',   ending:'GRAPHY',   word:'Demography',   meaning:'People',   rc:'#3b6cf7',mc:'lt-people'},
-  {id:'carto', root:'GRAPH',prefix:'CARTO',  ending:'GRAPHY',   word:'Cartography',  meaning:'Map',      rc:'#3b6cf7',mc:'lt-map'   },
-  {id:'auto',  root:'GRAPH',prefix:'AUTO',   ending:'BIOGRAPHY',word:'Autobiography',meaning:'Self',     rc:'#3b6cf7',mc:'lt-self'  },
-  {id:'bio',   root:'GRAPH',prefix:'BIO',    ending:'GRAPHY',   word:'Biography',    meaning:'Life',     rc:'#3b6cf7',mc:'lt-life'  },
-  {id:'tele',  root:'SCOPE',prefix:'TELE',   ending:'SCOPE',    word:'Telescope',    meaning:'Far Away', rc:'#8b5cf6',mc:'lt-far'   },
-  {id:'micro', root:'SCOPE',prefix:'MICRO',  ending:'SCOPE',    word:'Microscope',   meaning:'Small',    rc:'#8b5cf6',mc:'lt-small' },
-  {id:'kale',  root:'SCOPE',prefix:'KALEIDO',ending:'SCOPE',    word:'Kaleidoscope', meaning:'Beautiful',rc:'#8b5cf6',mc:'lt-beauty'},
-  {id:'trans', root:'PORT', prefix:'TRANS',  ending:'PORT',     word:'Transport',    meaning:'Across',   rc:'#10b981',mc:'lt-across'},
-  {id:'ex',    root:'PORT', prefix:'EX',     ending:'PORT',     word:'Export',       meaning:'Out',      rc:'#10b981',mc:'lt-out'   },
-  {id:'im',    root:'PORT', prefix:'IM',     ending:'PORT',     word:'Import',       meaning:'Into',     rc:'#10b981',mc:'lt-into'  },
+(function(){
+"use strict";
+/* ───────────────────────────────────────────
+   DATA
+─────────────────────────────────────────── */
+var ROWS = [
+  {id:"r_geo",  pfx:"GEO",    root:"GRAPH",end:"GRAPHY",   word:"Geography",    mn:"Earth",    rc:"#3b6cf7"},
+  {id:"r_demo", pfx:"DEMO",   root:"GRAPH",end:"GRAPHY",   word:"Demography",   mn:"People",   rc:"#3b6cf7"},
+  {id:"r_carto",pfx:"CARTO",  root:"GRAPH",end:"GRAPHY",   word:"Cartography",  mn:"Map",      rc:"#3b6cf7"},
+  {id:"r_auto", pfx:"AUTO",   root:"GRAPH",end:"BIOGRAPHY",word:"Autobiography",mn:"Self",     rc:"#3b6cf7"},
+  {id:"r_bio",  pfx:"BIO",    root:"GRAPH",end:"GRAPHY",   word:"Biography",    mn:"Life",     rc:"#3b6cf7"},
+  {id:"r_tele", pfx:"TELE",   root:"SCOPE",end:"SCOPE",    word:"Telescope",    mn:"Far Away", rc:"#8b5cf6"},
+  {id:"r_micro",pfx:"MICRO",  root:"SCOPE",end:"SCOPE",    word:"Microscope",   mn:"Small",    rc:"#8b5cf6"},
+  {id:"r_kale", pfx:"KALEIDO",root:"SCOPE",end:"SCOPE",    word:"Kaleidoscope", mn:"Beautiful",rc:"#8b5cf6"},
+  {id:"r_trans",pfx:"TRANS",  root:"PORT", end:"PORT",     word:"Transport",    mn:"Across",   rc:"#10b981"},
+  {id:"r_ex",   pfx:"EX",     root:"PORT", end:"PORT",     word:"Export",       mn:"Out",      rc:"#10b981"},
+  {id:"r_im",   pfx:"IM",     root:"PORT", end:"PORT",     word:"Import",       mn:"Into",     rc:"#10b981"}
+];
+var BUILD = [
+  {id:"b1",rc:"#3b6cf7"},{id:"b2",rc:"#8b5cf6"},{id:"b3",rc:"#10b981"},
+  {id:"b4",rc:"#3b6cf7"},{id:"b5",rc:"#8b5cf6"},{id:"b6",rc:"#10b981"}
+];
+var GQ=[
+  {q:"What does -GRAPH- mean?",           ch:["Draw","Run","Write/Describe","Read"],       ans:"Write/Describe"},
+  {q:"What does GEO- mean?",              ch:["Earth","People","Map","Self"],              ans:"Earth"},
+  {q:"What does DEMO- mean?",             ch:["Map","People","Life","Earth"],              ans:"People"},
+  {q:"What does CARTO- mean?",            ch:["Self","Life","Map","People"],              ans:"Map"},
+  {q:"What does AUTO- mean?",             ch:["Life","Earth","People","Self"],            ans:"Self"},
+  {q:"What does BIO- mean?",              ch:["Map","Self","Earth","Life"],               ans:"Life"},
+  {q:"GEOGRAPHY describes...",            ch:["The People","The Earth","Your Life","Maps"],ans:"The Earth"},
+  {q:"BIOGRAPHY describes...",            ch:["Maps","The Earth","A Person's Life","Yourself"],ans:"A Person's Life"},
+  {q:"What does -SCOPE- mean?",           ch:["Write","Carry","Look/Examine","Run"],      ans:"Look/Examine"},
+  {q:"What does TELE- mean?",             ch:["Small","Beautiful","Far Away","Across"],   ans:"Far Away"},
+  {q:"What does MICRO- mean?",            ch:["Far Away","Small","Beautiful","Into"],     ans:"Small"},
+  {q:"What does KALEIDO- mean?",          ch:["Far Away","Across","Out","Beautiful"],     ans:"Beautiful"},
+  {q:"TELESCOPE helps you see...",        ch:["Small things","Beautiful things","Far Away things","Living things"],ans:"Far Away things"},
+  {q:"MICROSCOPE helps you see...",       ch:["Far Away things","Beautiful things","Across borders","Very Small things"],ans:"Very Small things"},
+  {q:"What does -PORT- mean?",            ch:["Write","Carry","Look","Measure"],          ans:"Carry"},
+  {q:"What does TRANS- mean?",            ch:["Out","Into","Beautiful","Across"],         ans:"Across"},
+  {q:"What does EX- mean?",              ch:["Into","Across","Out","Self"],              ans:"Out"},
+  {q:"What does IM- mean?",              ch:["Out","Across","Into","Far Away"],          ans:"Into"},
+  {q:"EXPORT means carrying goods...",    ch:["Into a country","Across the ocean","Out of a country","Far away"],ans:"Out of a country"},
+  {q:"IMPORT means carrying goods...",    ch:["Out of a country","Into a country","Across borders","Far away"],ans:"Into a country"}
 ];
 
-// Build rows for "Build Your Own" — 9 blank rows (3 per root)
-var L4B = [
-  {id:'b1',root:'GRAPH',rc:'#3b6cf7'},{id:'b2',root:'GRAPH',rc:'#3b6cf7'},{id:'b3',root:'GRAPH',rc:'#3b6cf7'},
-  {id:'b4',root:'SCOPE',rc:'#8b5cf6'},{id:'b5',root:'SCOPE',rc:'#8b5cf6'},{id:'b6',root:'SCOPE',rc:'#8b5cf6'},
-  {id:'b7',root:'PORT', rc:'#10b981'},{id:'b8',root:'PORT', rc:'#10b981'},{id:'b9',root:'PORT', rc:'#10b981'},
-];
+/* ───────────────────────────────────────────
+   STATE
+─────────────────────────────────────────── */
+var picked = null; // the currently selected tile element
 
-// ════════════════════════════════════════════════
-//  CLICK-TO-PLACE SYSTEM (no HTML5 drag needed)
-// ════════════════════════════════════════════════
-var L4_held = null; // { tileEl, val, type, cls, label }
+/* ───────────────────────────────────────────
+   BUILD DOM - called every time section opens
+─────────────────────────────────────────── */
+function init(){
+  buildMainTable();
+  buildBuildTable();
+  bindButtons();
+  bindTiles();
+  setFb("","");
+}
 
-function L4_tileClick(tileEl) {
-  if (tileEl.classList.contains('used')) return;
-  // If already held, deselect it
-  if (L4_held && L4_held.tileEl === tileEl) {
-    tileEl.style.outline = '';
-    L4_held = null;
-    L4_setFb('','');
+function buildMainTable(){
+  var tbody = document.getElementById("L4tbody");
+  if(!tbody) return;
+  tbody.innerHTML="";
+  var lastRoot="";
+  ROWS.forEach(function(row){
+    if(row.root!==lastRoot){
+      var lbl=row.root==="GRAPH"?"Write / Describe":row.root==="SCOPE"?"Look / Examine":"Carry";
+      var dr=document.createElement("tr"); dr.className="rdiv";
+      var td=document.createElement("td"); td.setAttribute("colspan","5");
+      td.style.cssText="background:"+row.rc+"18;border-left-color:"+row.rc+";color:"+row.rc+";";
+      td.textContent="ROOT: -"+row.root+"- = "+lbl;
+      dr.appendChild(td); tbody.appendChild(dr);
+      lastRoot=row.root;
+    }
+    var tr=document.createElement("tr");
+    // prefix dz
+    tr.appendChild(makeDzCell("dz_p_"+row.id,"prefix",row.id,"main","Drop prefix"));
+    // root dz
+    tr.appendChild(makeDzCell("dz_r_"+row.id,"root",row.id,"main","Drop root"));
+    // ending (static)
+    var etd=document.createElement("td");
+    var ed=document.createElement("div"); ed.className="scell"; ed.textContent="-"+row.end;
+    etd.appendChild(ed); tr.appendChild(etd);
+    // word cell
+    var wtd=document.createElement("td");
+    var wd=document.createElement("div"); wd.className="wcell"; wd.id="wc_"+row.id; wd.textContent="?";
+    wtd.appendChild(wd); tr.appendChild(wtd);
+    // meaning dz
+    tr.appendChild(makeDzCell("dz_m_"+row.id,"meaning",row.id,"main","Drop meaning"));
+    tbody.appendChild(tr);
+  });
+}
+
+function buildBuildTable(){
+  var tbody=document.getElementById("L4btbody");
+  if(!tbody) return;
+  tbody.innerHTML="";
+  BUILD.forEach(function(brow){
+    var tr=document.createElement("tr");
+    tr.appendChild(makeDzCell("bdz_p_"+brow.id,"prefix",brow.id,"build","Any prefix"));
+    tr.appendChild(makeDzCell("bdz_r_"+brow.id,"root",brow.id,"build","Any root"));
+    // ending (static placeholder)
+    var etd=document.createElement("td");
+    var ed=document.createElement("div"); ed.className="scell"; ed.id="bend_"+brow.id; ed.textContent="-???";
+    etd.appendChild(ed); tr.appendChild(etd);
+    // word cell
+    var wtd=document.createElement("td");
+    var wd=document.createElement("div"); wd.className="bwcell"; wd.id="bwc_"+brow.id; wd.textContent="?";
+    wtd.appendChild(wd); tr.appendChild(wtd);
+    // clear btn
+    var ctd=document.createElement("td"); ctd.style.textAlign="center";
+    var cb=document.createElement("button"); cb.className="clrbtn";
+    cb.textContent="x clear"; cb.dataset.brow=brow.id;
+    cb.addEventListener("click",function(){ clearBuildRow(brow.id); });
+    ctd.appendChild(cb); tr.appendChild(ctd);
+    tbody.appendChild(tr);
+  });
+}
+
+function makeDzCell(dzId,accepts,rowId,zone,placeholder){
+  var td=document.createElement("td");
+  var dz=document.createElement("div");
+  dz.className="dz";
+  dz.id=dzId;
+  dz.dataset.accepts=accepts;
+  dz.dataset.row=rowId;
+  dz.dataset.zone=zone;
+  dz.textContent=placeholder;
+  dz.addEventListener("click",function(){ onDzClick(dz); });
+  td.appendChild(dz);
+  return td;
+}
+
+/* ───────────────────────────────────────────
+   BIND TILES AND BUTTONS
+─────────────────────────────────────────── */
+function bindTiles(){
+  document.querySelectorAll("#L4 .tile").forEach(function(t){
+    // Remove old listener by cloning, then re-add
+    var clone=t.cloneNode(true);
+    t.parentNode.replaceChild(clone,t);
+    clone.addEventListener("click",function(){ onTileClick(clone); });
+  });
+}
+
+function bindButtons(){
+  document.querySelectorAll("#L4 .btn").forEach(function(b){
+    var clone=b.cloneNode(true);
+    b.parentNode.replaceChild(clone,b);
+    var act=clone.dataset.act;
+    clone.addEventListener("click",function(){
+      if(act==="reset")  resetAll();
+      if(act==="check")  checkAnswers();
+      if(act==="game")   startGame();
+      if(act==="reveal") revealAll();
+    });
+  });
+  var cg=document.querySelector("#L4 .closeg");
+  if(cg){
+    var cgc=cg.cloneNode(true); cg.parentNode.replaceChild(cgc,cg);
+    cgc.addEventListener("click",closeGame);
+  }
+}
+
+/* ───────────────────────────────────────────
+   TILE CLICK
+─────────────────────────────────────────── */
+function onTileClick(tile){
+  if(tile.classList.contains("used")) return;
+  // Deselect if clicking same tile
+  if(picked===tile){
+    tile.classList.remove("picked");
+    picked=null;
+    setFb("","");
+    // remove ready highlights
+    document.querySelectorAll("#L4 .dz.ready").forEach(function(d){d.classList.remove("ready");});
     return;
   }
   // Deselect previous
-  if (L4_held) L4_held.tileEl.style.outline = '';
-  L4_held = {
-    tileEl: tileEl,
-    val:    tileEl.dataset.val,
-    type:   tileEl.dataset.type,
-    cls:    tileEl.dataset.cls,
-    label:  tileEl.childNodes[0].textContent.trim()
-  };
-  tileEl.style.outline = '3px solid #f59e0b';
-  tileEl.style.outlineOffset = '2px';
-  L4_setFb('✅ Tile selected! Now click a drop zone in the table.', true);
+  if(picked){ picked.classList.remove("picked"); }
+  picked=tile;
+  tile.classList.add("picked");
+  // Highlight matching drop zones
+  document.querySelectorAll("#L4 .dz.ready").forEach(function(d){d.classList.remove("ready");});
+  var type=tile.dataset.type;
+  document.querySelectorAll("#L4 .dz:not(.filled)").forEach(function(d){
+    if(d.dataset.accepts===type) d.classList.add("ready");
+  });
+  setFb("Tile selected! Now click a glowing drop zone.","ok");
 }
 
-function L4_dzClick(dzEl, rowId, accepts, isBuild) {
-  if (!L4_held) {
-    // If zone is filled, click to remove
-    if (dzEl.classList.contains('filled')) {
-      var placed = dzEl.querySelector('.l4-placed');
-      if (placed) L4_removePlaced(placed, dzEl, rowId, isBuild);
+/* ───────────────────────────────────────────
+   DROP ZONE CLICK
+─────────────────────────────────────────── */
+function onDzClick(dz){
+  // If nothing picked - maybe remove existing chip
+  if(!picked){
+    if(dz.classList.contains("filled")){
+      removeChip(dz);
     } else {
-      L4_setFb('👆 First click a tile on the left or right panel to pick it up!', false);
+      setFb("Pick a tile first, then click here!","err");
     }
     return;
   }
-  if (L4_held.type !== accepts) {
-    L4_setFb('❌ Wrong spot! Prefixes go in the PREFIX column, meanings go in the MEANING column.', false);
+  var accepts=dz.dataset.accepts;
+  if(picked.dataset.type!==accepts){
+    setFb("Wrong spot! "+acceptsLabel(accepts)+" go here.","err");
     return;
   }
-  // Clear existing tile in this zone
-  if (dzEl.classList.contains('filled')) {
-    var old = dzEl.querySelector('.l4-placed');
-    if (old) L4_removePlaced(old, dzEl, rowId, isBuild);
+  if(dz.classList.contains("filled")) removeChip(dz);
+  placeChip(dz);
+}
+
+function acceptsLabel(t){
+  if(t==="prefix") return "Prefixes";
+  if(t==="root") return "Root words";
+  return "Meanings";
+}
+
+function placeChip(dz){
+  var tile=picked;
+  tile.classList.remove("picked");
+  tile.classList.add("used");
+  picked=null;
+  document.querySelectorAll("#L4 .dz.ready").forEach(function(d){d.classList.remove("ready");});
+
+  var chip=document.createElement("div");
+  // Inherit tile color classes
+  chip.className="chip "+Array.from(tile.classList).filter(function(c){return c.startsWith("tc-");}).join(" ");
+  chip.dataset.tid=tile.dataset.tid;
+  chip.dataset.val=tile.dataset.val;
+  chip.textContent=tile.dataset.val;
+  chip.title="Click to remove";
+  chip.addEventListener("click",function(e){ e.stopPropagation(); removeChip(dz); });
+
+  dz.innerHTML="";
+  dz.appendChild(chip);
+  dz.classList.add("filled");
+  dz.classList.remove("ready");
+  setFb("","");
+  refreshWord(dz.dataset.row, dz.dataset.zone);
+}
+
+function removeChip(dz){
+  var chip=dz.querySelector(".chip");
+  if(chip){
+    // Return tile to panel
+    var orig=document.querySelector("#L4 [data-tid='"+chip.dataset.tid+"']");
+    if(orig){ orig.classList.remove("used","picked"); }
   }
-  L4_place(dzEl, rowId, accepts, isBuild);
+  var zone=dz.dataset.zone;
+  var accepts=dz.dataset.accepts;
+  dz.textContent= zone==="build" ?
+    (accepts==="prefix"?"Any prefix":"Any root") :
+    (accepts==="prefix"?"Drop prefix":accepts==="root"?"Drop root":"Drop meaning");
+  dz.classList.remove("filled","ready");
+  refreshWord(dz.dataset.row, zone);
 }
 
-function L4_place(dzEl, rowId, accepts, isBuild) {
-  var h = L4_held;
-  h.tileEl.style.outline = '';
-  h.tileEl.classList.add('used');
-
-  var p = document.createElement('div');
-  p.className = 'l4-placed ' + h.cls;
-  p.dataset.tileId = h.tileEl.id;
-  p.dataset.val = h.val;
-  p.textContent = h.val;
-  p.title = 'Click to remove';
-  p.onclick = function(e) {
-    e.stopPropagation();
-    L4_removePlaced(p, dzEl, rowId, isBuild);
-  };
-
-  dzEl.innerHTML = '';
-  dzEl.appendChild(p);
-  dzEl.classList.add('filled');
-  L4_held = null;
-  L4_setFb('','');
-
-  if (isBuild) L4_updateBuildWord(rowId);
-  else         L4_updateMatrixWord(rowId);
-}
-
-function L4_removePlaced(placedEl, dzEl, rowId, isBuild) {
-  var orig = document.getElementById(placedEl.dataset.tileId);
-  if (orig) { orig.classList.remove('used'); orig.style.outline = ''; }
-  dzEl.innerHTML = dzEl.dataset.accepts === 'prefix' ? 'Drop prefix' : 'Drop meaning';
-  dzEl.classList.remove('filled');
-  if (isBuild) L4_updateBuildWord(rowId);
-  else         L4_updateMatrixWord(rowId);
-}
-
-// ════════════════════════════════════════════════
-//  ALSO SUPPORT DRAG & DROP (belt + suspenders)
-// ════════════════════════════════════════════════
-var L4_drag = null;
-document.addEventListener('dragstart', function(e) {
-  var t = e.target.closest ? e.target.closest('.l4-tile') : null;
-  if (!t || t.classList.contains('used')) return;
-  L4_drag = t;
-  e.dataTransfer.setData('text/plain', t.id);
-  e.dataTransfer.effectAllowed = 'move';
-  setTimeout(function(){ t.classList.add('dragging-active'); }, 0);
-});
-document.addEventListener('dragend', function() {
-  if (L4_drag) { L4_drag.classList.remove('dragging-active'); L4_drag = null; }
-});
-
-function L4_dzDragOver(e) { e.preventDefault(); e.dataTransfer.dropEffect='move'; e.currentTarget.classList.add('over'); }
-function L4_dzDragLeave(e) { e.currentTarget.classList.remove('over'); }
-function L4_dzDrop(e, rowId, accepts, isBuild) {
-  e.preventDefault();
-  e.currentTarget.classList.remove('over');
-  if (!L4_drag) return;
-  if (L4_drag.classList.contains('used')) return;
-  var realType = L4_drag.dataset.type;
-  if (realType !== accepts) { L4_setFb('❌ Wrong column! Prefixes go LEFT, Meanings go RIGHT.', false); return; }
-  // Simulate click-to-place using drag tile
-  if (L4_held) { L4_held.tileEl.style.outline=''; }
-  L4_held = {
-    tileEl: L4_drag,
-    val:    L4_drag.dataset.val,
-    type:   L4_drag.dataset.type,
-    cls:    L4_drag.dataset.cls,
-    label:  L4_drag.childNodes[0] ? L4_drag.childNodes[0].textContent.trim() : L4_drag.dataset.val
-  };
-  L4_place(e.currentTarget, rowId, accepts, isBuild);
-}
-
-// ════════════════════════════════════════════════
-//  BUILD TABLE (matrix rows)
-// ════════════════════════════════════════════════
-function L4_buildTable() {
-  var tbody = document.getElementById('l4-tbody');
-  if (!tbody) return;
-  tbody.innerHTML = '';
-  var lastRoot = null;
-  L4R.forEach(function(row) {
-    if (row.root !== lastRoot) {
-      var div = document.createElement('tr');
-      div.className = 'l4-root-row';
-      var lbl = row.root==='GRAPH'?'Write / Describe':row.root==='SCOPE'?'Look / Examine':'Carry';
-      div.innerHTML = '<td colspan="5" style="background:'+row.rc+'18;border-left:4px solid '+row.rc+';color:'+row.rc+';">📌 ROOT: -'+row.root+'- = to '+lbl+'</td>';
-      tbody.appendChild(div);
-      lastRoot = row.root;
+/* ───────────────────────────────────────────
+   WORD PREVIEW
+─────────────────────────────────────────── */
+function refreshWord(rowId, zone){
+  if(zone==="main"){
+    var row=ROWS.find(function(r){return r.id===rowId;});
+    if(!row) return;
+    var pDz=document.getElementById("dz_p_"+rowId);
+    var rDz=document.getElementById("dz_r_"+rowId);
+    var wc=document.getElementById("wc_"+rowId);
+    if(!pDz||!rDz||!wc) return;
+    var pc=pDz.querySelector(".chip");
+    var rc=rDz.querySelector(".chip");
+    if(pc && rc && pc.dataset.val===row.pfx && rc.dataset.val===row.root){
+      wc.textContent=row.word; wc.classList.add("lit");
+    } else {
+      wc.textContent="?"; wc.classList.remove("lit");
     }
-    var tr = document.createElement('tr');
-    var rs = 'background:'+row.rc+'18;color:'+row.rc+';border:2px solid '+row.rc+'44;';
-    tr.innerHTML =
-      '<td><div class="l4-dz" id="ldz-pfx-'+row.id+'" data-accepts="prefix"'+
-        ' onclick="L4_dzClick(this,\''+row.id+'\',\'prefix\',false)"'+
-        ' ondragover="L4_dzDragOver(event)" ondragleave="L4_dzDragLeave(event)"'+
-        ' ondrop="L4_dzDrop(event,\''+row.id+'\',\'prefix\',false)">Drop prefix</div></td>'+
-      '<td><div class="l4-root-cell" style="'+rs+'">-'+row.root+'-</div></td>'+
-      '<td><div class="l4-suffix-cell">-'+row.ending+'</div></td>'+
-      '<td><div class="l4-word-cell" id="lwc-'+row.id+'">?</div></td>'+
-      '<td><div class="l4-dz" id="ldz-mn-'+row.id+'" data-accepts="meaning"'+
-        ' onclick="L4_dzClick(this,\''+row.id+'\',\'meaning\',false)"'+
-        ' ondragover="L4_dzDragOver(event)" ondragleave="L4_dzDragLeave(event)"'+
-        ' ondrop="L4_dzDrop(event,\''+row.id+'\',\'meaning\',false)">Drop meaning</div></td>';
-    tbody.appendChild(tr);
-  });
-
-  // Build-your-own rows
-  var btbody = document.getElementById('l4-build-tbody');
-  if (!btbody) return;
-  btbody.innerHTML = '';
-  var lastBRoot = null;
-  L4B.forEach(function(row) {
-    if (row.root !== lastBRoot) {
-      var div = document.createElement('tr');
-      div.innerHTML = '<td colspan="4" style="background:'+row.rc+'18;border-left:4px solid '+row.rc+';color:'+row.rc+';padding:6px 10px;font-weight:900;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;">Use -'+row.root+'- root</td>';
-      btbody.appendChild(div);
-      lastBRoot = row.root;
-    }
-    var tr = document.createElement('tr');
-    tr.innerHTML =
-      '<td><div class="l4-build-dz" id="lbdz-pfx-'+row.id+'" data-accepts="prefix"'+
-        ' onclick="L4_dzClick(this,\''+row.id+'\',\'prefix\',true)"'+
-        ' ondragover="L4_dzDragOver(event)" ondragleave="L4_dzDragLeave(event)"'+
-        ' ondrop="L4_dzDrop(event,\''+row.id+'\',\'prefix\',true)">Any prefix</div></td>'+
-      '<td><div class="l4-root-cell" style="background:'+row.rc+'18;color:'+row.rc+';border:2px solid '+row.rc+'44;font-family:Fredoka One,cursive;font-size:0.88rem;padding:5px;border-radius:7px;text-align:center;">-'+row.root+'-</div></td>'+
-      '<td><div class="l4-build-word" id="lbwc-'+row.id+'">?</div></td>'+
-      '<td style="text-align:center;"><button class="l4-build-clear" onclick="L4_clearBuildRow(\''+row.id+'\')">✕ clear</button></td>';
-    btbody.appendChild(tr);
-  });
-
-  // Attach click listeners to all tiles
-  document.querySelectorAll('#section-lesson4 .l4-tile').forEach(function(t) {
-    t.addEventListener('click', function(){ L4_tileClick(t); });
-  });
-}
-
-// ════════════════════════════════════════════════
-//  WORD CELL UPDATES
-// ════════════════════════════════════════════════
-function L4_updateMatrixWord(rowId) {
-  var row = L4R.find(function(r){ return r.id===rowId; });
-  if (!row) return;
-  var pfxDz = document.getElementById('ldz-pfx-'+rowId);
-  var wc    = document.getElementById('lwc-'+rowId);
-  if (!pfxDz || !wc) return;
-  var pfx = pfxDz.querySelector('.l4-placed');
-  if (pfx && pfx.dataset.val === row.prefix) {
-    wc.textContent = row.word; wc.classList.add('lit');
   } else {
-    wc.textContent = '?'; wc.classList.remove('lit');
-  }
-}
-
-function L4_updateBuildWord(rowId) {
-  var brow = L4B.find(function(r){ return r.id===rowId; });
-  if (!brow) return;
-  var pfxDz = document.getElementById('lbdz-pfx-'+rowId);
-  var wc    = document.getElementById('lbwc-'+rowId);
-  if (!pfxDz || !wc) return;
-  var pfx = pfxDz.querySelector('.l4-placed');
-  if (pfx) {
-    wc.textContent = pfx.dataset.val + brow.root.charAt(0) + brow.root.slice(1).toLowerCase();
-    wc.classList.add('lit');
-  } else {
-    wc.textContent = '?'; wc.classList.remove('lit');
-  }
-}
-
-function L4_clearBuildRow(rowId) {
-  ['lbdz-pfx-'].forEach(function(pre) {
-    var dz = document.getElementById(pre+rowId);
-    if (!dz) return;
-    var p = dz.querySelector('.l4-placed');
-    if (p) {
-      var orig = document.getElementById(p.dataset.tileId);
-      if (orig) orig.classList.remove('used');
+    // Build zone
+    var pDz2=document.getElementById("bdz_p_"+rowId);
+    var rDz2=document.getElementById("bdz_r_"+rowId);
+    var wc2=document.getElementById("bwc_"+rowId);
+    var end2=document.getElementById("bend_"+rowId);
+    if(!pDz2||!rDz2||!wc2) return;
+    var pc2=pDz2.querySelector(".chip");
+    var rc2=rDz2.querySelector(".chip");
+    if(pc2 && rc2){
+      var rootVal=rc2.dataset.val;
+      var pfxVal=pc2.dataset.val;
+      var ending=rootVal==="GRAPH"?"GRAPHY":rootVal==="SCOPE"?"SCOPE":"PORT";
+      wc2.textContent=pfxVal+"-"+rootVal+"-"+ending;
+      wc2.classList.add("lit");
+      if(end2) end2.textContent="-"+ending;
+    } else {
+      wc2.textContent="?"; wc2.classList.remove("lit");
+      if(end2) end2.textContent="-???";
     }
-    dz.innerHTML = 'Any prefix';
-    dz.classList.remove('filled');
-  });
-  var wc = document.getElementById('lbwc-'+rowId);
-  if (wc) { wc.textContent='?'; wc.classList.remove('lit'); }
+  }
 }
 
-// ════════════════════════════════════════════════
-//  CHECK / REVEAL / RESET
-// ════════════════════════════════════════════════
-function L4_checkAnswers() {
+/* ───────────────────────────────────────────
+   CLEAR / RESET
+─────────────────────────────────────────── */
+function clearBuildRow(rowId){
+  ["bdz_p_","bdz_r_"].forEach(function(pre){
+    var dz=document.getElementById(pre+rowId);
+    if(dz && dz.classList.contains("filled")) removeChip(dz);
+  });
+}
+
+function resetAll(){
+  if(picked){ picked.classList.remove("picked"); picked=null; }
+  // Return all tiles
+  document.querySelectorAll("#L4 .tile").forEach(function(t){
+    t.classList.remove("used","picked");
+  });
+  // Clear all drop zones
+  document.querySelectorAll("#L4 .dz, #L4 .l4bdz").forEach(function(dz){
+    var zone=dz.dataset.zone;
+    var accepts=dz.dataset.accepts;
+    dz.textContent= zone==="build" ?
+      (accepts==="prefix"?"Any prefix":"Any root") :
+      (accepts==="prefix"?"Drop prefix":accepts==="root"?"Drop root":"Drop meaning");
+    dz.classList.remove("filled","ready");
+  });
+  // Reset word cells
+  ROWS.forEach(function(row){
+    var wc=document.getElementById("wc_"+row.id);
+    if(wc){wc.textContent="?";wc.classList.remove("lit");}
+  });
+  BUILD.forEach(function(brow){
+    var wc=document.getElementById("bwc_"+brow.id);
+    if(wc){wc.textContent="?";wc.classList.remove("lit");}
+    var en=document.getElementById("bend_"+brow.id);
+    if(en) en.textContent="-???";
+  });
+  setFb("","");
+}
+
+/* ───────────────────────────────────────────
+   CHECK ANSWERS
+─────────────────────────────────────────── */
+function checkAnswers(){
   var correct=0, total=0;
-  L4R.forEach(function(row) {
-    var pfx = document.getElementById('ldz-pfx-'+row.id);
-    var mn  = document.getElementById('ldz-mn-'+row.id);
-    if (!pfx||!mn) return;
-    var pp = pfx.querySelector('.l4-placed');
-    var mp = mn.querySelector('.l4-placed');
-    if (pp) { total++; if (pp.dataset.val===row.prefix)  correct++; }
-    if (mp) { total++; if (mp.dataset.val===row.meaning) correct++; }
-  });
-  if (total===0) { L4_setFb('Start by placing some tiles!', false); return; }
-  if (correct===total && total===L4R.length*2) {
-    L4_setFb('🎉 Perfect! All '+correct+' correct! You are a Word Engineer!', true);
-    L4_celebrate();
-  } else {
-    L4_setFb('✅ '+correct+' out of '+total+' correct — keep going!', correct>total/2);
-  }
-}
-
-function L4_revealAll() {
-  L4_resetAll();
-  setTimeout(function() {
-    L4R.forEach(function(row) {
-      var pfxDz = document.getElementById('ldz-pfx-'+row.id);
-      var mnDz  = document.getElementById('ldz-mn-'+row.id);
-      var pfxT  = document.getElementById('l4t-'+row.id);
-      var mnT   = document.getElementById('l4t-'+row.mc.replace('lt-',''));
-      if (pfxDz && pfxT && !pfxT.classList.contains('used')) {
-        L4_held = {tileEl:pfxT, val:pfxT.dataset.val, type:'prefix', cls:pfxT.dataset.cls, label:pfxT.dataset.val};
-        L4_place(pfxDz, row.id, 'prefix', false);
-      }
-      if (mnDz && mnT && !mnT.classList.contains('used')) {
-        L4_held = {tileEl:mnT, val:mnT.dataset.val, type:'meaning', cls:mnT.dataset.cls, label:mnT.dataset.val};
-        L4_place(mnDz, row.id, 'meaning', false);
-      }
+  ROWS.forEach(function(row){
+    var pDz=document.getElementById("dz_p_"+row.id);
+    var rDz=document.getElementById("dz_r_"+row.id);
+    var mDz=document.getElementById("dz_m_"+row.id);
+    [
+      {dz:pDz, correct:row.pfx},
+      {dz:rDz, correct:row.root},
+      {dz:mDz, correct:row.mn}
+    ].forEach(function(check){
+      if(!check.dz) return;
+      var chip=check.dz.querySelector(".chip");
+      if(chip){ total++; if(chip.dataset.val===check.correct) correct++; }
     });
-  }, 60);
-}
-
-function L4_resetAll() {
-  if (L4_held) { L4_held.tileEl.style.outline=''; L4_held=null; }
-  document.querySelectorAll('#section-lesson4 .l4-dz, #section-lesson4 .l4-build-dz').forEach(function(dz) {
-    dz.innerHTML = dz.dataset.accepts==='prefix' ? (dz.classList.contains('l4-build-dz')?'Any prefix':'Drop prefix') : 'Drop meaning';
-    dz.classList.remove('filled','over');
   });
-  document.querySelectorAll('#section-lesson4 .l4-tile').forEach(function(t){ t.classList.remove('used','dragging-active'); t.style.outline=''; });
-  L4R.forEach(function(row){ var w=document.getElementById('lwc-'+row.id); if(w){w.textContent='?';w.classList.remove('lit');} });
-  L4B.forEach(function(row){ var w=document.getElementById('lbwc-'+row.id); if(w){w.textContent='?';w.classList.remove('lit');} });
-  L4_setFb('','');
-}
-
-// ════════════════════════════════════════════════
-//  FEEDBACK / CELEBRATE
-// ════════════════════════════════════════════════
-function L4_setFb(msg, ok) {
-  var el = document.getElementById('l4-fb');
-  if (!el) return;
-  el.textContent = msg;
-  el.className = msg ? ('l4-fb '+(ok?'l4-fb-ok':'l4-fb-err')) : 'l4-fb';
-}
-
-function L4_celebrate() {
-  var wrap = document.getElementById('l4-cf');
-  wrap.innerHTML='';
-  var colors=['#3b6cf7','#22c55e','#f59e0b','#ef4444','#8b5cf6','#14b8a6'];
-  for (var i=0;i<80;i++) {
-    var el=document.createElement('div');
-    el.className='l4-cp';
-    el.style.left=(Math.random()*100)+'vw';
-    el.style.animationDelay=(Math.random()*1.5)+'s';
-    el.style.animationDuration=(1.5+Math.random())+'s';
-    el.style.background=colors[Math.floor(Math.random()*colors.length)];
-    el.style.width=el.style.height=(8+Math.random()*10)+'px';
-    el.style.borderRadius=Math.random()>.5?'50%':'2px';
-    wrap.appendChild(el);
-    setTimeout(function(e){return function(){e.remove();};}(el),3500);
+  if(total===0){ setFb("Place some tiles first!","err"); return; }
+  var max=ROWS.length*3;
+  if(correct===total && total===max){
+    setFb("PERFECT! All "+correct+" correct - you are a TRUE Word Engineer!","ok");
+    celebrate();
+  } else {
+    setFb(correct+" out of "+total+" correct - keep going!",correct>total/2?"ok":"err");
   }
 }
 
-// ════════════════════════════════════════════════
-//  CHALLENGE MODE
-// ════════════════════════════════════════════════
-var L4Q = [
-  {q:'What does the root -GRAPH- mean?',           ch:['Draw','Run','Write / Describe','Read'],             ans:'Write / Describe'},
-  {q:'What does GEO- mean?',                        ch:['Earth','People','Map','Self'],                      ans:'Earth'},
-  {q:'What does DEMO- mean?',                       ch:['Map','People','Life','Earth'],                      ans:'People'},
-  {q:'What does CARTO- mean?',                      ch:['Self','Life','Map','People'],                       ans:'Map'},
-  {q:'What does AUTO- mean?',                       ch:['Life','Earth','People','Self'],                     ans:'Self'},
-  {q:'What does BIO- mean?',                        ch:['Map','Self','Earth','Life'],                        ans:'Life'},
-  {q:'GEOGRAPHY = GEO + GRAPH. It describes…',      ch:['The People','The Earth','Your Life','Maps'],        ans:'The Earth'},
-  {q:'BIOGRAPHY = BIO + GRAPH. It describes…',      ch:['Maps','The Earth','A Person\'s Life','Yourself'],  ans:'A Person\'s Life'},
-  {q:'What does the root -SCOPE- mean?',            ch:['Write','Carry','Look / Examine','Run'],             ans:'Look / Examine'},
-  {q:'What does TELE- mean?',                       ch:['Small','Beautiful','Far Away','Across'],            ans:'Far Away'},
-  {q:'What does MICRO- mean?',                      ch:['Far Away','Small','Beautiful','Into'],              ans:'Small'},
-  {q:'What does KALEIDO- mean?',                    ch:['Far Away','Across','Out','Beautiful'],              ans:'Beautiful'},
-  {q:'A TELESCOPE helps you see things that are…',  ch:['Small','Beautiful','Far Away','Alive'],             ans:'Far Away'},
-  {q:'A MICROSCOPE helps you see things that are…', ch:['Far Away','Beautiful','Across','Very Small'],       ans:'Very Small'},
-  {q:'What does the root -PORT- mean?',             ch:['Write','Carry','Look','Measure'],                   ans:'Carry'},
-  {q:'What does TRANS- mean?',                      ch:['Out','Into','Beautiful','Across'],                  ans:'Across'},
-  {q:'What does EX- mean?',                         ch:['Into','Across','Out','Self'],                       ans:'Out'},
-  {q:'What does IM- mean?',                         ch:['Out','Across','Into','Far Away'],                   ans:'Into'},
-  {q:'EXPORT means to carry goods…',                ch:['Into a country','Across the ocean','Out of a country','Far away'], ans:'Out of a country'},
-  {q:'IMPORT means to carry goods…',                ch:['Out of a country','Into a country','Across borders','Far away'],  ans:'Into a country'},
-];
-var L4gi=0, L4gs=0, L4gt=null, L4gl=0;
+/* ───────────────────────────────────────────
+   REVEAL ALL
+─────────────────────────────────────────── */
+function revealAll(){
+  resetAll();
+  setTimeout(function(){
+    ROWS.forEach(function(row){
+      var placements=[
+        {dzId:"dz_p_"+row.id, tid:"T_"+row.pfx.charAt(0)+row.pfx.slice(1).toLowerCase()},
+        {dzId:"dz_r_"+row.id, tid:"T_"+row.root},
+        {dzId:"dz_m_"+row.id, tid:"T_"+row.mn.split(" ").join("").toLowerCase()}
+      ];
+      // Fix tile ID lookups
+      var pfxTile=document.querySelector("#L4 [data-val='"+row.pfx+"'][data-type='prefix']");
+      var rootTile=document.querySelector("#L4 [data-val='"+row.root+"'][data-type='root']");
+      var mnTile=document.querySelector("#L4 [data-val='"+row.mn+"'][data-type='meaning']");
+      [[pfxTile,"dz_p_"+row.id],[rootTile,"dz_r_"+row.id],[mnTile,"dz_m_"+row.id]].forEach(function(pair){
+        var tile=pair[0], dzId=pair[1];
+        var dz=document.getElementById(dzId);
+        if(!tile || !dz || tile.classList.contains("used")) return;
+        picked=tile; tile.classList.add("picked");
+        placeChip(dz);
+      });
+    });
+  },80);
+}
 
-function L4_startGame(){ L4gi=0;L4gs=0; document.getElementById('l4-game-ov').classList.add('active'); document.getElementById('l4-tbar').parentElement.style.display=''; L4_showQ(); }
-function L4_closeGame(){ clearInterval(L4gt); document.getElementById('l4-game-ov').classList.remove('active'); }
-function L4_showQ(){
-  if(L4gi>=L4Q.length){L4_endGame();return;}
-  var q=L4Q[L4gi];
-  document.getElementById('l4-gq').textContent=q.q;
-  document.getElementById('l4-gs').textContent='Score: '+L4gs+' / '+L4Q.length;
-  var gc=document.getElementById('l4-gc'); gc.innerHTML='';
+/* ───────────────────────────────────────────
+   FEEDBACK
+─────────────────────────────────────────── */
+function setFb(msg,type){
+  var el=document.getElementById("L4fb");
+  if(!el) return;
+  el.textContent=msg;
+  el.className=msg?"fb "+type:"fb";
+}
+
+/* ───────────────────────────────────────────
+   CONFETTI
+─────────────────────────────────────────── */
+function celebrate(){
+  var wrap=document.getElementById("L4cf"); wrap.innerHTML="";
+  var cols=["#3b6cf7","#22c55e","#f59e0b","#ef4444","#8b5cf6","#14b8a6"];
+  for(var i=0;i<80;i++){
+    var el=document.createElement("div"); el.className="cp";
+    el.style.left=(Math.random()*100)+"vw";
+    el.style.animationDelay=(Math.random()*1.5)+"s";
+    el.style.animationDuration=(1.5+Math.random())+"s";
+    el.style.background=cols[Math.floor(Math.random()*cols.length)];
+    var sz=(8+Math.random()*10)+"px"; el.style.width=sz; el.style.height=sz;
+    el.style.borderRadius=Math.random()>.5?"50%":"2px";
+    wrap.appendChild(el);
+    setTimeout((function(e){return function(){e.remove();};})(el),3500);
+  }
+}
+
+/* ───────────────────────────────────────────
+   CHALLENGE GAME
+─────────────────────────────────────────── */
+var gi=0,gs=0,gt=null;
+function startGame(){
+  gi=0;gs=0;
+  document.getElementById("L4gov").classList.add("on");
+  showQ();
+}
+function closeGame(){
+  clearInterval(gt);
+  document.getElementById("L4gov").classList.remove("on");
+}
+function showQ(){
+  if(gi>=GQ.length){endGame();return;}
+  var q=GQ[gi];
+  document.getElementById("L4gq").textContent=q.q;
+  document.getElementById("L4gscore").textContent="Score: "+gs+" / "+GQ.length;
+  var gc=document.getElementById("L4gchs"); gc.innerHTML="";
   q.ch.forEach(function(c){
-    var b=document.createElement('button'); b.className='l4-choice'; b.textContent=c;
-    b.onclick=function(){L4_pick(b,c,q.ans);}; gc.appendChild(b);
+    var b=document.createElement("button"); b.className="gch"; b.textContent=c;
+    b.addEventListener("click",function(){pickAns(b,c,q.ans);}); gc.appendChild(b);
   });
-  L4gl=10; document.getElementById('l4-tbar').style.width='100%';
-  clearInterval(L4gt);
-  L4gt=setInterval(function(){L4gl--;document.getElementById('l4-tbar').style.width=(L4gl*10)+'%';if(L4gl<=0){clearInterval(L4gt);L4gi++;L4_showQ();}},1000);
+  var gl=10; document.getElementById("L4tbar").style.width="100%";
+  clearInterval(gt);
+  gt=setInterval(function(){
+    gl--; document.getElementById("L4tbar").style.width=(gl*10)+"%";
+    if(gl<=0){clearInterval(gt);gi++;showQ();}
+  },1000);
 }
-function L4_pick(btn,chosen,correct){
-  clearInterval(L4gt);
-  document.querySelectorAll('.l4-choice').forEach(function(b){b.onclick=null;});
-  if(chosen===correct){btn.classList.add('correct');L4gs++;}
-  else{btn.classList.add('wrong');document.querySelectorAll('.l4-choice').forEach(function(b){if(b.textContent===correct)b.classList.add('correct');});}
-  L4gi++; setTimeout(L4_showQ,1200);
+function pickAns(btn,chosen,correct){
+  clearInterval(gt);
+  document.querySelectorAll("#L4 .gch").forEach(function(b){b.style.pointerEvents="none";});
+  if(chosen===correct){btn.classList.add("ok");gs++;}
+  else{btn.classList.add("no");document.querySelectorAll("#L4 .gch").forEach(function(b){if(b.textContent===correct)b.classList.add("ok");});}
+  gi++; setTimeout(showQ,1200);
 }
-function L4_endGame(){
-  clearInterval(L4gt);
-  document.getElementById('l4-tbar').parentElement.style.display='none';
-  document.getElementById('l4-gq').textContent='🏆 Finished!';
-  document.getElementById('l4-gc').innerHTML='';
-  var pct=Math.round(L4gs/L4Q.length*100);
-  var msg=pct===100?'🌟 Perfect! TRUE Word Engineer!':pct>=70?'🎉 Great job!':'💪 Try again!';
-  document.getElementById('l4-gs').innerHTML='<strong>'+L4gs+'/'+L4Q.length+'</strong> ('+pct+'%)<br><br>'+msg;
-  if(pct===100)L4_celebrate();
+function endGame(){
+  clearInterval(gt);
+  document.getElementById("L4tbar").style.width="0";
+  document.getElementById("L4gq").textContent="Finished!";
+  document.getElementById("L4gchs").innerHTML="";
+  var pct=Math.round(gs/GQ.length*100);
+  document.getElementById("L4gscore").innerHTML="<strong>"+gs+"/"+GQ.length+"</strong> ("+pct+"%)<br><br>"+(pct===100?"PERFECT - TRUE Word Engineer!":pct>=70?"Great job!":"Try again!");
+  if(pct===100) celebrate();
 }
 
-// ════════════════════════════════════════════════
-//  INIT
-// ════════════════════════════════════════════════
-window.L4_init = function() {
-  L4_buildTable();
-};
+/* ───────────────────────────────────────────
+   INIT HOOK
+─────────────────────────────────────────── */
+window.L4_init=init;
+// Also run now (safe even if hidden - addEventListener works on hidden elements)
+init();
 
-// Also auto-init if section is already visible (safety fallback)
-(function tryInit(){
-  var sec = document.getElementById('section-lesson4');
-  if (sec && sec.style.display !== 'none') { L4_buildTable(); }
 })();
 </script>
 
