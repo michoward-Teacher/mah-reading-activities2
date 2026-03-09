@@ -3375,6 +3375,37 @@ function L4_endGame() {
 
 // ── Init ──
 window.L4_init = function() { L4_buildTable(); };
+
+// Safety fallback: also build when section becomes visible via observer
+(function() {
+  var built = false;
+  function tryBuild() {
+    if (built) return;
+    var el = document.getElementById('l4-matrix-body');
+    if (el && el.children.length === 0) {
+      L4_buildTable();
+      built = true;
+    }
+  }
+  // Try on DOM ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', tryBuild);
+  } else {
+    tryBuild();
+  }
+  // Also watch for when the section gets shown
+  var section = document.getElementById('section-lesson4');
+  if (section && typeof MutationObserver !== 'undefined') {
+    new MutationObserver(function(mutations) {
+      mutations.forEach(function(m) {
+        if (m.type === 'attributes' && m.attributeName === 'style') {
+          var s = section.style.display;
+          if (s === 'block' || s === '') tryBuild();
+        }
+      });
+    }).observe(section, { attributes: true });
+  }
+})();
 </script>
 
 <div class="section" id="section-quiz">
