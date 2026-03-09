@@ -2547,9 +2547,9 @@ init();
     <div class="tile tile-map"    draggable="true" id="tile-map"    data-type="meaning" data-val="Map">🗺️ Map</div>
     <div class="tile tile-self"   draggable="true" id="tile-self"   data-type="meaning" data-val="Self">🪞 Self</div>
     <div class="tile tile-life"   draggable="true" id="tile-life"   data-type="meaning" data-val="Life">🌿 Life</div>
-  <div class="tile tile-far"    draggable="true" id="tile-far"    data-type="meaning" data-val="Far Away">🔭 Far Away</div>
+  <div class="tile tile-far"    draggable="true" id="tile-far"    data-type="meaning" data-val="Far">🔭 Far Away</div>
   <div class="tile tile-small"  draggable="true" id="tile-small"  data-type="meaning" data-val="Small">🔬 Small</div>
-  <div class="tile tile-beauty" draggable="true" id="tile-beauty" data-type="meaning" data-val="Beautiful">✨ Beautiful</div>
+  <div class="tile tile-beauty" draggable="true" id="tile-beauty" data-type="meaning" data-val="Beauty">✨ Beautiful</div>
   <div class="tile tile-across" draggable="true" id="tile-across" data-type="meaning" data-val="Across">↔️ Across</div>
   <div class="tile tile-out"    draggable="true" id="tile-out"    data-type="meaning" data-val="Out">📤 Out</div>
   <div class="tile tile-into"   draggable="true" id="tile-into"   data-type="meaning" data-val="Into">📥 Into</div>
@@ -2583,9 +2583,9 @@ const ROWS = [
   { id:'auto',  root:'GRAPH', prefix:'AUTO',  suffix:'BIOGRAPHY', word:'Autobiography', meaning:'Self',      rootColor:'#3b6cf7', prefixClass:'tile-auto',  meaningClass:'tile-self'   },
   { id:'bio',   root:'GRAPH', prefix:'BIO',   suffix:'GRAPHY',    word:'Biography',     meaning:'Life',      rootColor:'#3b6cf7', prefixClass:'tile-bio',   meaningClass:'tile-life'   },
   // ── ROOT: -SCOPE- (look / examine) ──
-  { id:'tele',  root:'SCOPE', prefix:'TELE',  suffix:'SCOPE',     word:'Telescope',     meaning:'Far Away',  rootColor:'#8b5cf6', prefixClass:'tile-tele',  meaningClass:'tile-far'    },
+  { id:'tele',  root:'SCOPE', prefix:'TELE',  suffix:'SCOPE',     word:'Telescope',     meaning:'Far',       rootColor:'#8b5cf6', prefixClass:'tile-tele',  meaningClass:'tile-far'    },
   { id:'micro', root:'SCOPE', prefix:'MICRO', suffix:'SCOPE',     word:'Microscope',    meaning:'Small',     rootColor:'#8b5cf6', prefixClass:'tile-micro', meaningClass:'tile-small'  },
-  { id:'kale',  root:'SCOPE', prefix:'KALEIDO',suffix:'SCOPE',    word:'Kaleidoscope',  meaning:'Beautiful', rootColor:'#8b5cf6', prefixClass:'tile-kale',  meaningClass:'tile-beauty' },
+  { id:'kale',  root:'SCOPE', prefix:'KALEIDO',suffix:'SCOPE',    word:'Kaleidoscope',  meaning:'Beauty',    rootColor:'#8b5cf6', prefixClass:'tile-kale',  meaningClass:'tile-beauty' },
   // ── ROOT: -PORT- (carry) ──
   { id:'trans', root:'PORT',  prefix:'TRANS', suffix:'PORT',      word:'Transport',     meaning:'Across',    rootColor:'#10b981', prefixClass:'tile-trans', meaningClass:'tile-across' },
   { id:'ex',    root:'PORT',  prefix:'EX',    suffix:'PORT',      word:'Export',        meaning:'Out',       rootColor:'#10b981', prefixClass:'tile-ex',    meaningClass:'tile-out'    },
@@ -2791,10 +2791,10 @@ const GAME_Q = [
   { q:'BIOGRAPHY = BIO + GRAPH. It describes…',choices:['Maps','The Earth','A Person's Life','Yourself'], ans:'A Person's Life' },
   // ── -SCOPE- questions ──
   { q:'What does the root -SCOPE- mean?',       choices:['Write','Carry','Look / Examine','Run'],          ans:'Look / Examine' },
-  { q:'What does the prefix TELE- mean?',       choices:['Small','Beautiful','Far Away','Across'],         ans:'Far Away'  },
+  { q:'What does the prefix TELE- mean?',       choices:['Small','Beautiful','Far Away','Across'],         ans:'Far'  },
   { q:'What does the prefix MICRO- mean?',      choices:['Far Away','Small','Beautiful','Into'],           ans:'Small'    },
-  { q:'What does the prefix KALEIDO- mean?',    choices:['Far Away','Across','Out','Beautiful'],           ans:'Beautiful' },
-  { q:'A TELESCOPE helps you see things that are…', choices:['Small','Beautiful','Far Away','Alive'],      ans:'Far Away'  },
+  { q:'What does the prefix KALEIDO- mean?',    choices:['Far','Across','Out','Beauty'],           ans:'Beauty' },
+  { q:'A TELESCOPE helps you see things that are…', choices:['Small','Beauty','Far','Alive'],      ans:'Far'  },
   { q:'A MICROSCOPE helps you see things that are…',choices:['Far Away','Beautiful','Across','Very Small'],ans:'Very Small' },
   // ── -PORT- questions ──
   { q:'What does the root -PORT- mean?',        choices:['Write','Carry','Look','Measure'],                ans:'Carry'    },
